@@ -1,0 +1,357 @@
+'use client';
+
+import { useState } from 'react';
+import { X, HelpCircle } from 'lucide-react';
+import ImageUploadSection from './ImageUploadSection';
+
+interface Step1FreightDimensionsProps {
+  onNext: (data: any) => void;
+  onClose: () => void;
+  onBack?: () => void;
+}
+
+export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step1FreightDimensionsProps) {
+  const [formData, setFormData] = useState({
+    shippingItem: '',
+    quantity: 1,
+    length: {
+      feet: '',
+      inches: ''
+    },
+    width: {
+      feet: '',
+      inches: ''
+    },
+    height: {
+      feet: '',
+      inches: ''
+    },
+    weight: 0,
+    hasHazmat: false,
+    transportMethod: 'hauled' as 'hauled' | 'towed' | 'driven',
+    images: [] as File[]
+  });
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleDimensionChange = (dimension: string, unit: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [dimension]: {
+        ...prev[dimension as keyof typeof prev] as any,
+        [unit]: value
+      }
+    }));
+  };
+
+  const handleNext = () => {
+    // Validate required fields
+    if (!formData.shippingItem.trim()) {
+      alert('Please enter what you are shipping');
+      return;
+    }
+
+    if (!formData.length.feet && !formData.length.inches) {
+      alert('Please enter length dimensions');
+      return;
+    }
+
+    if (!formData.width.feet && !formData.width.inches) {
+      alert('Please enter width dimensions');
+      return;
+    }
+
+    if (!formData.height.feet && !formData.height.inches) {
+      alert('Please enter height dimensions');
+      return;
+    }
+
+    if (formData.weight <= 0) {
+      alert('Please enter a valid weight');
+      return;
+    }
+
+    onNext({
+      type: 'freight',
+      shippingItem: formData.shippingItem,
+      quantity: formData.quantity,
+      dimensions: {
+        length: formData.length,
+        width: formData.width,
+        height: formData.height
+      },
+      weight: formData.weight,
+      hasHazmat: formData.hasHazmat,
+      transportMethod: formData.transportMethod
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
+          <h2 className="text-2xl font-bold text-gray-900">Dimensions</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* What are you shipping? */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              What are you shipping? <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.shippingItem}
+              onChange={(e) => handleInputChange('shippingItem', e.target.value)}
+              placeholder="Shipping item"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Quantity */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Quantity
+            </label>
+            <input
+              type="number"
+              value={formData.quantity}
+              onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 1)}
+              min="1"
+              className="w-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Load Dimensions */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Load Dimensions</h3>
+            
+            {/* Dimensions Diagram */}
+            <div className="mb-6 flex justify-center">
+              <img 
+                src="/dimensions-image.png" 
+                alt="Dimensions diagram" 
+                className="max-w-full h-auto"
+              />
+            </div>
+
+            {/* Length (A) */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Length (A) <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  value={formData.length.feet}
+                  onChange={(e) => handleDimensionChange('length', 'feet', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">ft</span>
+                <input
+                  type="number"
+                  value={formData.length.inches}
+                  onChange={(e) => handleDimensionChange('length', 'inches', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  max="11"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">in</span>
+              </div>
+            </div>
+
+            {/* Width (B) */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Width (B) <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  value={formData.width.feet}
+                  onChange={(e) => handleDimensionChange('width', 'feet', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">ft</span>
+                <input
+                  type="number"
+                  value={formData.width.inches}
+                  onChange={(e) => handleDimensionChange('width', 'inches', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  max="11"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">in</span>
+              </div>
+            </div>
+
+            {/* Height (C) */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Height (C) <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  value={formData.height.feet}
+                  onChange={(e) => handleDimensionChange('height', 'feet', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">ft</span>
+                <input
+                  type="number"
+                  value={formData.height.inches}
+                  onChange={(e) => handleDimensionChange('height', 'inches', e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  max="11"
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">in</span>
+              </div>
+            </div>
+
+            {/* Weight */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Weight <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || 0)}
+                  placeholder="0"
+                  min="0"
+                  className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                />
+                <span className="text-gray-600">lbs</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Hazmat Placards */}
+          <div>
+            <div className="flex items-center mb-3">
+              <label className="block text-sm font-medium text-gray-700">
+                Does this item have Hazmat Placards?
+              </label>
+              <HelpCircle className="w-4 h-4 text-blue-500 ml-2" />
+            </div>
+            <div className="flex space-x-6">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hazmat"
+                  checked={formData.hasHazmat === true}
+                  onChange={() => handleInputChange('hasHazmat', true)}
+                  className="mr-2 text-yellow-600 focus:ring-yellow-500"
+                />
+                <span className="text-gray-700">Yes</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="hazmat"
+                  checked={formData.hasHazmat === false}
+                  onChange={() => handleInputChange('hasHazmat', false)}
+                  className="mr-2 text-yellow-600 focus:ring-yellow-500"
+                />
+                <span className="text-gray-700">No</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Transport Method */}
+          <div>
+            <div className="flex items-center mb-3">
+              <label className="block text-sm font-medium text-gray-700">
+                How do you want your item transported
+              </label>
+              <HelpCircle className="w-4 h-4 text-blue-500 ml-2" />
+            </div>
+            <div className="space-y-3">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transport"
+                  value="hauled"
+                  checked={formData.transportMethod === 'hauled'}
+                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
+                />
+                <span className="text-gray-700">Hauled</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transport"
+                  value="towed"
+                  checked={formData.transportMethod === 'towed'}
+                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
+                />
+                <span className="text-gray-700">Towed/Power Only</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transport"
+                  value="driven"
+                  checked={formData.transportMethod === 'driven'}
+                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
+                />
+                <span className="text-gray-700">Driven Away</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Image Upload Section */}
+          <ImageUploadSection
+            images={formData.images}
+            onImagesChange={(images) => handleInputChange('images', images)}
+          />
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between pt-6">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Back
+              </button>
+            )}
+            <button
+              onClick={handleNext}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors uppercase tracking-wide"
+            >
+              Next Step
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -109,7 +109,7 @@ export default function EstimateResults({ estimate, estimateData, onClose, onNew
         <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Your Estimate</h2>
-            <p className="text-gray-600">Hauln' Heavy Transport Services</p>
+            <p className="text-gray-600">Hauln&apos; Heavy Transport Services</p>
           </div>
           <button
             onClick={onClose}
@@ -290,7 +290,7 @@ export default function EstimateResults({ estimate, estimateData, onClose, onNew
                 Your estimate has been sent to <strong>{contactInfo.email}</strong>
               </p>
               <p className="text-sm text-gray-500">
-                We've also sent the details to our team. Someone will contact you shortly.
+                We&apos;ve also sent the details to our team. Someone will contact you shortly.
               </p>
             </div>
           )}

@@ -119,7 +119,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
               </div>
             </div>
             <p className="text-sm text-gray-600 mt-2">
-              Can't find it in the list? Post it under{' '}
+              Can&apos;t find it in the list? Post it under{' '}
               <a href="#" className="text-blue-600 hover:underline">Freight</a>
             </p>
           </div>

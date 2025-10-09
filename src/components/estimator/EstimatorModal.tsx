@@ -42,9 +42,18 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
       ...(prev || {}),
       category,
       equipment: {} as any,
-      locations: {} as any,
-      characteristics: {} as any
-    }));
+      freight: undefined,
+      characteristics: {} as any,
+      locations: {
+        pickup: {} as any,
+        dropoff: {} as any
+      },
+      scheduling: {
+        pickup: {} as any,
+        delivery: {} as any
+      },
+      additionalInfo: {} as any
+    } as EstimateData));
     setCurrentStep(1);
   };
 
@@ -52,9 +61,17 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     setFormData(prev => ({
       ...(prev || {}),
       ...(step1Data.type === 'freight' ? { freight: step1Data } : { equipment: step1Data }),
-      locations: {} as any,
-      characteristics: {} as any
-    }));
+      characteristics: {} as any,
+      locations: {
+        pickup: {} as any,
+        dropoff: {} as any
+      },
+      scheduling: {
+        pickup: {} as any,
+        delivery: {} as any
+      },
+      additionalInfo: {} as any
+    } as EstimateData));
     setCurrentStep(2);
   };
 
@@ -62,7 +79,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     setFormData(prev => ({
       ...(prev || {}),
       ...locationsData
-    }));
+    } as EstimateData));
     setCurrentStep(3);
   };
 
@@ -70,7 +87,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     setFormData(prev => ({
       ...(prev || {}),
       ...schedulingData
-    }));
+    } as EstimateData));
     setCurrentStep(4);
   };
 
@@ -78,7 +95,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     setFormData(prev => ({
       ...(prev || {}),
       ...additionalInfoData
-    }));
+    } as EstimateData));
     // Now we have all the data, calculate the estimate
     const completeData = {
       ...formData,
@@ -96,7 +113,13 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const calculateEstimate = (data: EstimateData): EstimateResult => {
     // Basic calculation logic - this would be more sophisticated in production
-    const { equipment, characteristics, locations, scheduling, additionalInfo } = data;
+    const { equipment, freight, characteristics, locations, scheduling, additionalInfo } = data;
+    
+    // Determine if we're dealing with equipment or freight
+    const itemData = equipment || freight;
+    if (!itemData) {
+      throw new Error('No equipment or freight data provided');
+    }
     
     // Base cost calculation (simplified)
     const baseRate = 2.50; // per mile
@@ -104,14 +127,14 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     let baseCost = baseRate * estimatedMiles;
 
     // Weight adjustments
-    if (equipment.weight > 10000) {
+    if (itemData.weight > 10000) {
       baseCost *= 1.2; // 20% surcharge for heavy loads
     }
 
     // Oversize adjustments
-    const totalLength = equipment.dimensions.length.feet + (equipment.dimensions.length.inches / 12);
-    const totalWidth = equipment.dimensions.width.feet + (equipment.dimensions.width.inches / 12);
-    const totalHeight = equipment.dimensions.height.feet + (equipment.dimensions.height.inches / 12);
+    const totalLength = itemData.dimensions.length.feet + (itemData.dimensions.length.inches / 12);
+    const totalWidth = itemData.dimensions.width.feet + (itemData.dimensions.width.inches / 12);
+    const totalHeight = itemData.dimensions.height.feet + (itemData.dimensions.height.inches / 12);
 
     let oversizeFee = 0;
     if (totalLength > 48 || totalWidth > 8.5 || totalHeight > 13.5) {
@@ -123,37 +146,42 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     let hazmatFee = 0;
     let additionalFees = 0;
 
-    if (characteristics.hasHazmat) {
+    // Check for hazmat (from either equipment characteristics or freight data)
+    const hasHazmat = characteristics?.hasHazmat || (freight?.hasHazmat) || false;
+    if (hasHazmat) {
       hazmatFee = baseCost * 0.25; // 25% hazmat fee
     }
 
-    if (characteristics.hasDuals) {
+    if (characteristics?.hasDuals) {
       additionalFees += 200;
     }
 
-    if (characteristics.hasAttachments) {
+    if (characteristics?.hasAttachments) {
       additionalFees += 150;
     }
 
-    if (characteristics.transportMethod === 'towed') {
+    // Check transport method (from either equipment characteristics or freight data)
+    const transportMethod = characteristics?.transportMethod || freight?.transportMethod;
+    if (transportMethod === 'towed') {
       additionalFees += 300;
-    } else if (characteristics.transportMethod === 'driven') {
+    } else if (transportMethod === 'driven') {
       additionalFees += 500;
     }
 
     // Location-based fees
-    if (locations.pickup.addressType === 'port' || locations.dropoff.addressType === 'port') {
+    if (locations?.pickup?.addressType === 'port' || locations?.dropoff?.addressType === 'port') {
       additionalFees += 300; // Port access fee
     }
 
-    if (locations.pickup.addressType === 'residential' || locations.dropoff.addressType === 'residential') {
+    if (locations?.pickup?.addressType === 'residential' || locations?.dropoff?.addressType === 'residential') {
       additionalFees += 150; // Residential delivery fee
     }
 
     // Scheduling-based fees
-    const pickupDate = scheduling.pickup.specificDate;
-    const deliveryDate = scheduling.delivery.specificDate;
-    const daysBetween = Math.ceil((deliveryDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24));
+    const pickupDate = scheduling?.pickup?.specificDate;
+    const deliveryDate = scheduling?.delivery?.specificDate;
+    const daysBetween = pickupDate && deliveryDate ? 
+      Math.ceil((deliveryDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24)) : 1;
     
     if (daysBetween < 3) {
       additionalFees += 400; // Rush delivery fee
@@ -162,15 +190,15 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     }
 
     // Additional info based fees
-    if (additionalInfo.rampsNeeded) {
+    if (additionalInfo?.rampsNeeded) {
       additionalFees += 150; // Ramp fee
     }
 
-    if (additionalInfo.loadingMethods.includes('FORKLIFT') || additionalInfo.unloadingMethods.includes('FORKLIFT')) {
+    if (additionalInfo?.loadingMethods?.includes('FORKLIFT') || additionalInfo?.unloadingMethods?.includes('FORKLIFT')) {
       additionalFees += 200; // Forklift fee
     }
 
-    if (additionalInfo.loadingMethods.includes('OTHER') || additionalInfo.unloadingMethods.includes('OTHER')) {
+    if (additionalInfo?.loadingMethods?.includes('OTHER') || additionalInfo?.unloadingMethods?.includes('OTHER')) {
       additionalFees += 100; // Special handling fee
     }
 

@@ -39,7 +39,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const handleStep0Next = (category: CategoryType) => {
     setFormData(prev => ({
-      ...prev,
+      ...(prev || {}),
       category,
       equipment: {} as any,
       locations: {} as any,
@@ -50,7 +50,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const handleStep1Next = (step1Data: any) => {
     setFormData(prev => ({
-      ...prev,
+      ...(prev || {}),
       ...(step1Data.type === 'freight' ? { freight: step1Data } : { equipment: step1Data }),
       locations: {} as any,
       characteristics: {} as any
@@ -60,7 +60,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const handleStep2Next = (locationsData: any) => {
     setFormData(prev => ({
-      ...prev,
+      ...(prev || {}),
       ...locationsData
     }));
     setCurrentStep(3);
@@ -68,7 +68,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const handleStep3Next = (schedulingData: any) => {
     setFormData(prev => ({
-      ...prev,
+      ...(prev || {}),
       ...schedulingData
     }));
     setCurrentStep(4);
@@ -76,7 +76,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
   const handleStep4Next = (additionalInfoData: any) => {
     setFormData(prev => ({
-      ...prev,
+      ...(prev || {}),
       ...additionalInfoData
     }));
     // Now we have all the data, calculate the estimate

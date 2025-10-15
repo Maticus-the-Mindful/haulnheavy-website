@@ -141,7 +141,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               value={formData.shippingItem}
               onChange={(e) => handleInputChange('shippingItem', e.target.value)}
               placeholder="Shipping item"
-              className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
             />
           </div>
 
@@ -155,7 +155,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               value={formData.quantity}
               onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 1)}
               min="1"
-              className="w-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className="w-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
             />
           </div>
 
@@ -184,7 +184,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('length', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -194,7 +194,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">in</span>
               </div>
@@ -212,7 +212,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('width', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -222,7 +222,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">in</span>
               </div>
@@ -240,7 +240,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('height', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -250,7 +250,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">in</span>
               </div>
@@ -268,7 +268,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || 0)}
                   placeholder="0"
                   min="0"
-                  className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900"
                 />
                 <span className="text-gray-600">lbs</span>
               </div>

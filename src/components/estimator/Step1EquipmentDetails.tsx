@@ -57,12 +57,24 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   // Load models when manufacturer changes
   useEffect(() => {
     if (formData.make && allModels.length > 0) {
-      const models = getModelsByManufacturer(allModels, formData.make);
+      let models = getModelsByManufacturer(allModels, formData.make);
+      
+      // Filter by year if a year is selected
+      if (formData.year) {
+        const selectedYear = parseInt(formData.year);
+        models = models.filter(model => {
+          if (!model.year_range) return true; // Include models without year range
+          
+          const [startYear, endYear] = model.year_range.split('-').map(y => parseInt(y));
+          return selectedYear >= startYear && selectedYear <= endYear;
+        });
+      }
+      
       setAvailableModels(models);
     } else {
       setAvailableModels([]);
     }
-  }, [formData.make, allModels]);
+  }, [formData.make, formData.year, allModels]);
 
 
   const loadAllEquipmentData = async () => {
@@ -139,6 +151,19 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         model: modelId
       }));
     }
+  };
+
+  // Check if selected year is valid for the selected model
+  const isYearValidForModel = () => {
+    if (!formData.year || !formData.model || formData.model === 'custom') return true;
+    
+    const selectedModel = getModelById(allModels, formData.model);
+    if (!selectedModel || !selectedModel.year_range) return true;
+    
+    const selectedYear = parseInt(formData.year);
+    const [startYear, endYear] = selectedModel.year_range.split('-').map(y => parseInt(y));
+    
+    return selectedYear >= startYear && selectedYear <= endYear;
   };
 
   const handleDimensionChange = (dimension: string, unit: string, value: number) => {
@@ -241,7 +266,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                   className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 >
                   <option value="">Select Year</option>
-                  {Array.from({ length: 127 }, (_, i) => 2026 - i).map(year => (
+                  {Array.from({ length: 36 }, (_, i) => 2025 - i).map(year => (
                     <option key={year} value={year.toString()} className="text-gray-900">{year}</option>
                   ))}
                 </select>
@@ -307,6 +332,16 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                 Freight
               </button>
             </p>
+            
+            {/* Year Validation Warning */}
+            {formData.year && formData.model && formData.model !== 'custom' && !isYearValidForModel() && (
+              <div className="mt-3 p-3 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-md">
+                <p className="text-sm">
+                  <strong>Year Warning:</strong> The selected year ({formData.year}) may not match this model's typical year range. 
+                  Please verify the dimensions and weight are correct for your specific equipment.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Quantity */}

@@ -101,12 +101,12 @@ export async function getAllCategories(): Promise<EquipmentCategory[]> {
 }
 
 /**
- * Get manufacturers for a specific category
+ * Get all manufacturers (no categories needed)
  */
-export async function getManufacturersByCategory(categoryId: string): Promise<EquipmentManufacturer[]> {
+export async function getAllManufacturers(): Promise<EquipmentManufacturer[]> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
-    .rpc('get_manufacturers_by_category', { cat_id: categoryId });
+    .rpc('get_all_manufacturers');
 
   if (error) {
     console.error('Error fetching manufacturers:', error);
@@ -117,18 +117,12 @@ export async function getManufacturersByCategory(categoryId: string): Promise<Eq
 }
 
 /**
- * Get models for a specific manufacturer and category
+ * Get models for a specific manufacturer (no categories needed)
  */
-export async function getModelsByManufacturerAndCategory(
-  manufacturerId: string,
-  categoryId: string
-): Promise<EquipmentModel[]> {
+export async function getModelsByManufacturer(manufacturerId: string): Promise<EquipmentModel[]> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
-    .rpc('get_models_by_manufacturer_and_category', {
-      man_id: manufacturerId,
-      cat_id: categoryId
-    });
+    .rpc('get_models_by_manufacturer', { man_id: manufacturerId });
 
   if (error) {
     console.error('Error fetching models:', error);

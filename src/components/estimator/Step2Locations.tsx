@@ -23,9 +23,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
       isVerified: false
     },
     isLoadDrivable: null as boolean | null,
-    doYouOwnLoad: null as boolean | null,
-    isContactAtPickup: null as boolean | null,
-    isContactAtDropoff: null as boolean | null
+    doYouOwnLoad: null as boolean | null
   });
 
   const handleAddressChange = (location: 'pickup' | 'dropoff', address: string) => {
@@ -78,9 +76,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
       },
       characteristics: {
         isLoadDrivable: formData.isLoadDrivable,
-        doYouOwnLoad: formData.doYouOwnLoad,
-        isContactAtPickup: formData.isContactAtPickup,
-        isContactAtDropoff: formData.isContactAtDropoff
+        doYouOwnLoad: formData.doYouOwnLoad
       }
     };
     onNext(combinedData);
@@ -246,63 +242,6 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               </div>
             </div>
 
-            {/* Are you the point of contact at pickup? */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Are you the point of contact at the pickup location?
-              </label>
-              <div className="flex space-x-6">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isContactAtPickup"
-                    checked={formData.isContactAtPickup === true}
-                    onChange={() => handleRadioChange('isContactAtPickup', true)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isContactAtPickup"
-                    checked={formData.isContactAtPickup === false}
-                    onChange={() => handleRadioChange('isContactAtPickup', false)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">No</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Are you the point of contact at dropoff? */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Are you the point of contact at the drop off location?
-              </label>
-              <div className="flex space-x-6">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isContactAtDropoff"
-                    checked={formData.isContactAtDropoff === true}
-                    onChange={() => handleRadioChange('isContactAtDropoff', true)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isContactAtDropoff"
-                    checked={formData.isContactAtDropoff === false}
-                    onChange={() => handleRadioChange('isContactAtDropoff', false)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">No</span>
-                </label>
-              </div>
-            </div>
           </div>
 
           {/* Navigation Buttons */}

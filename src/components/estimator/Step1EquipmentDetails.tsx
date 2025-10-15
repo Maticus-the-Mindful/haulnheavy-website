@@ -74,7 +74,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
           {children}
         </div>
         {isVisible && (
-          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-sm rounded-lg shadow-lg z-10 max-w-xs">
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-black text-white text-sm rounded-lg shadow-lg z-10 w-80 max-w-none">
             <div className="relative">
               <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
               {content}

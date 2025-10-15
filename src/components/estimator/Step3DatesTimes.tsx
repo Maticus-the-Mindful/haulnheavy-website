@@ -41,6 +41,14 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
         start: '03:00 PM',
         end: '05:00 PM'
       }
+    },
+    contactInfo: {
+      isContactAtPickup: null as boolean | null,
+      pickupContactName: '',
+      pickupContactPhone: '',
+      isContactAtDropoff: null as boolean | null,
+      dropoffContactName: '',
+      dropoffContactPhone: ''
     }
   });
 
@@ -127,6 +135,16 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
     }));
   };
 
+  const handleContactChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      contactInfo: {
+        ...prev.contactInfo,
+        [field]: value
+      }
+    }));
+  };
+
   const handleNext = () => {
     const schedulingData = {
       scheduling: formData
@@ -170,10 +188,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.dateType}
                     onChange={(e) => handleDateTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
-                      <option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value} className="text-gray-900">
                         {option.label}
                       </option>
                     ))}
@@ -190,7 +208,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         setActiveCalendar('pickup');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                       placeholder="Select Date"
                     />
                     {activeCalendar === 'pickup' && activeDateField === 'date' && (
@@ -214,10 +232,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.timeType}
                     onChange={(e) => handleTimeTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
-                      <option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value} className="text-gray-900">
                         {option.label}
                       </option>
                     ))}
@@ -231,19 +249,19 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.pickup.timeRange.start}
                         onChange={(e) => handleTimeChange('pickup', 'start', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         {timeOptions.map(time => (
-                          <option key={time} value={time}>{time}</option>
+                          <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
                       </select>
                       <select
                         value={formData.pickup.timeRange.end}
                         onChange={(e) => handleTimeChange('pickup', 'end', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         {timeOptions.map(time => (
-                          <option key={time} value={time}>{time}</option>
+                          <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
                       </select>
                     </div>
@@ -265,10 +283,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.dateType}
                     onChange={(e) => handleDateTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
-                      <option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value} className="text-gray-900">
                         {option.label}
                       </option>
                     ))}
@@ -285,7 +303,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         setActiveCalendar('delivery');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                       placeholder="Select Date"
                     />
                     {activeCalendar === 'delivery' && activeDateField === 'date' && (
@@ -309,10 +327,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.timeType}
                     onChange={(e) => handleTimeTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
-                      <option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value} className="text-gray-900">
                         {option.label}
                       </option>
                     ))}
@@ -326,21 +344,154 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.delivery.timeRange.start}
                         onChange={(e) => handleTimeChange('delivery', 'start', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         {timeOptions.map(time => (
-                          <option key={time} value={time}>{time}</option>
+                          <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
                       </select>
                       <select
                         value={formData.delivery.timeRange.end}
                         onChange={(e) => handleTimeChange('delivery', 'end', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         {timeOptions.map(time => (
-                          <option key={time} value={time}>{time}</option>
+                          <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
                       </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="space-y-6 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">Contact Information</h3>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Pickup Contact */}
+              <div className="space-y-4">
+                <h4 className="text-md font-semibold text-gray-700">Pickup Contact</h4>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Are you the point of contact at the pickup location?
+                  </label>
+                  <div className="flex space-x-6">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="isContactAtPickup"
+                        checked={formData.contactInfo.isContactAtPickup === true}
+                        onChange={() => handleContactChange('isContactAtPickup', true)}
+                        className="text-yellow-500 focus:ring-yellow-500"
+                      />
+                      <span className="text-sm text-gray-700">Yes</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="isContactAtPickup"
+                        checked={formData.contactInfo.isContactAtPickup === false}
+                        onChange={() => handleContactChange('isContactAtPickup', false)}
+                        className="text-yellow-500 focus:ring-yellow-500"
+                      />
+                      <span className="text-sm text-gray-700">No</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Conditional fields for pickup contact */}
+                {formData.contactInfo.isContactAtPickup === false && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Contact Person Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.contactInfo.pickupContactName}
+                        onChange={(e) => handleContactChange('pickupContactName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Contact Person Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.contactInfo.pickupContactPhone}
+                        onChange={(e) => handleContactChange('pickupContactPhone', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Dropoff Contact */}
+              <div className="space-y-4">
+                <h4 className="text-md font-semibold text-gray-700">Dropoff Contact</h4>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Are you the point of contact at the drop off location?
+                  </label>
+                  <div className="flex space-x-6">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="isContactAtDropoff"
+                        checked={formData.contactInfo.isContactAtDropoff === true}
+                        onChange={() => handleContactChange('isContactAtDropoff', true)}
+                        className="text-yellow-500 focus:ring-yellow-500"
+                      />
+                      <span className="text-sm text-gray-700">Yes</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="isContactAtDropoff"
+                        checked={formData.contactInfo.isContactAtDropoff === false}
+                        onChange={() => handleContactChange('isContactAtDropoff', false)}
+                        className="text-yellow-500 focus:ring-yellow-500"
+                      />
+                      <span className="text-sm text-gray-700">No</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Conditional fields for dropoff contact */}
+                {formData.contactInfo.isContactAtDropoff === false && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Contact Person Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.contactInfo.dropoffContactName}
+                        onChange={(e) => handleContactChange('dropoffContactName', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Contact Person Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.contactInfo.dropoffContactPhone}
+                        onChange={(e) => handleContactChange('dropoffContactPhone', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
+                        placeholder="(555) 123-4567"
+                      />
                     </div>
                   </div>
                 )}

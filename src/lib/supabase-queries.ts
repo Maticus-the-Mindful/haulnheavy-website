@@ -42,11 +42,11 @@ export interface EquipmentModel {
   model_id: string;
   name: string;
   manufacturer_id: string;
-  category_id: string;
   typical_weight_lbs?: number;
   typical_length_ft?: number;
   typical_width_ft?: number;
   typical_height_ft?: number;
+  year_range?: string;
   is_active: boolean;
 }
 

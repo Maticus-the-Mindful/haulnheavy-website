@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import { X, HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 import { 
-  getAllManufacturers,
+  loadEquipmentData,
   getModelsByManufacturer,
-  EquipmentManufacturer,
-  EquipmentModel
-} from '@/lib/supabase-queries';
+  getModelById,
+  validateYear,
+  type ManufacturerData,
+  type ModelData
+} from '@/lib/equipment-data';
 
 interface Step1EquipmentDetailsProps {
   category?: 'equipment' | 'freight';
@@ -39,9 +41,10 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
     images: [] as File[]
   });
 
-  // Supabase data state
-  const [availableManufacturers, setAvailableManufacturers] = useState<EquipmentManufacturer[]>([]);
-  const [availableModels, setAvailableModels] = useState<EquipmentModel[]>([]);
+  // Equipment data state
+  const [availableManufacturers, setAvailableManufacturers] = useState<ManufacturerData[]>([]);
+  const [availableModels, setAvailableModels] = useState<ModelData[]>([]);
+  const [allModels, setAllModels] = useState<ModelData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -127,25 +130,27 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         selectedModel.typical_length_ft !== undefined && 
         selectedModel.typical_width_ft !== undefined && 
         selectedModel.typical_height_ft !== undefined) {
+      // Convert decimal feet to feet and inches
+      const convertToFeetAndInches = (decimalFeet: number) => ({
+        feet: Math.floor(decimalFeet),
+        inches: Math.round((decimalFeet % 1) * 12)
+      });
+      
       setFormData(prev => ({
         ...prev,
         model: modelId,
         dimensions: {
-          length: { 
-            feet: Math.floor(selectedModel.typical_length_ft!), 
-            inches: Math.round((selectedModel.typical_length_ft! % 1) * 12) 
-          },
-          width: { 
-            feet: Math.floor(selectedModel.typical_width_ft!), 
-            inches: Math.round((selectedModel.typical_width_ft! % 1) * 12) 
-          },
-          height: { 
-            feet: Math.floor(selectedModel.typical_height_ft!), 
-            inches: Math.round((selectedModel.typical_height_ft! % 1) * 12) 
-          }
+          length: convertToFeetAndInches(selectedModel.typical_length_ft!),
+          width: convertToFeetAndInches(selectedModel.typical_width_ft!),
+          height: convertToFeetAndInches(selectedModel.typical_height_ft!)
         },
         weight: selectedModel.typical_weight_lbs!
       }));
+      
+      // Show year range info if available
+      if (selectedModel.year_range) {
+        console.log(`Model ${selectedModel.name} year range: ${selectedModel.year_range}`);
+      }
     } else {
       setFormData(prev => ({
         ...prev,

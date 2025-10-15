@@ -17,6 +17,10 @@ DROP VIEW IF EXISTS "public"."manufacturer_with_models";
 DROP FUNCTION IF EXISTS "public"."get_manufacturers_by_category"(cat_id text);
 DROP FUNCTION IF EXISTS "public"."get_models_by_manufacturer_and_category"(man_id text, cat_id text);
 
+-- Drop existing functions that we're replacing
+DROP FUNCTION IF EXISTS "public"."get_all_manufacturers"();
+DROP FUNCTION IF EXISTS "public"."get_models_by_manufacturer"(man_id text);
+
 -- ==============================================
 -- CLEAN UP REMAINING TABLES FIRST
 -- ==============================================
@@ -44,7 +48,7 @@ CREATE OR REPLACE FUNCTION "public"."get_all_manufacturers"()
 RETURNS TABLE (
   id uuid,
   manufacturer_id text,
-  name text,
+  name character varying(50),
   sort_order integer,
   is_active boolean
 )
@@ -70,12 +74,13 @@ CREATE OR REPLACE FUNCTION "public"."get_models_by_manufacturer"(man_id text)
 RETURNS TABLE (
   id uuid,
   model_id text,
-  name text,
+  name character varying(50),
   manufacturer_id text,
   typical_weight_lbs integer,
   typical_length_ft numeric,
   typical_width_ft numeric,
   typical_height_ft numeric,
+  year_range character varying(20),
   is_active boolean
 )
 LANGUAGE plpgsql
@@ -92,6 +97,7 @@ BEGIN
     em.typical_length_ft,
     em.typical_width_ft,
     em.typical_height_ft,
+    em.year_range,
     em.is_active
   FROM equipment_models em
   WHERE em.manufacturer_id = man_id 

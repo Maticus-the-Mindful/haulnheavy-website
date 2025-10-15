@@ -13,19 +13,19 @@ interface Step2LocationsProps {
 export default function Step2Locations({ equipmentData, onNext, onBack, onClose }: Step2LocationsProps) {
   const [formData, setFormData] = useState({
     pickup: {
-      address: '227 Kays Place, Canyon Lake, TX, USA',
-      addressType: 'business' as 'business' | 'residential' | 'port',
-      isVerified: true
-    },
-    dropoff: {
-      address: '870 Hilltop Ridge, New Braunfels, TX, USA',
-      addressType: 'residential' as 'business' | 'residential' | 'port',
+      address: '',
+      addressType: '' as '' | 'business' | 'residential' | 'port',
       isVerified: false
     },
-    isLoadDrivable: true,
-    doYouOwnLoad: true,
-    isContactAtPickup: true,
-    isContactAtDropoff: true
+    dropoff: {
+      address: '',
+      addressType: '' as '' | 'business' | 'residential' | 'port',
+      isVerified: false
+    },
+    isLoadDrivable: null as boolean | null,
+    doYouOwnLoad: null as boolean | null,
+    isContactAtPickup: null as boolean | null,
+    isContactAtDropoff: null as boolean | null
   });
 
   const handleAddressChange = (location: 'pickup' | 'dropoff', address: string) => {
@@ -124,11 +124,12 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.pickup.addressType}
                 onChange={(e) => handleAddressTypeChange('pickup', e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
-                <option value="business">Business</option>
-                <option value="residential">Residential</option>
-                <option value="port">Port</option>
+                <option value="" className="text-gray-500">Select Type</option>
+                <option value="business" className="text-gray-900">Business</option>
+                <option value="residential" className="text-gray-900">Residential</option>
+                <option value="port" className="text-gray-900">Port</option>
               </select>
             </div>
             {formData.pickup.isVerified ? (
@@ -162,11 +163,12 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.dropoff.addressType}
                 onChange={(e) => handleAddressTypeChange('dropoff', e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
-                <option value="business">Business</option>
-                <option value="residential">Residential</option>
-                <option value="port">Port</option>
+                <option value="" className="text-gray-500">Select Type</option>
+                <option value="business" className="text-gray-900">Business</option>
+                <option value="residential" className="text-gray-900">Residential</option>
+                <option value="port" className="text-gray-900">Port</option>
               </select>
             </div>
             {formData.dropoff.isVerified ? (

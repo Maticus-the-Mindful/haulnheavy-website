@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 
 interface Step1EquipmentDetailsProps {
@@ -24,6 +24,8 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
       height: { feet: category === 'equipment' ? 9 : 0, inches: 0 }
     },
     weight: category === 'equipment' ? 4619 : 0,
+    hasHazmatPlacards: null as boolean | null,
+    transportationMethod: null as 'hauled' | 'towed' | 'driven' | null,
     images: [] as File[]
   });
 
@@ -47,8 +49,40 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
     }));
   };
 
+  const handleRadioChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const handleNext = () => {
     onNext(formData);
+  };
+
+  // Tooltip component
+  const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => {
+    const [isVisible, setIsVisible] = useState(false);
+
+    return (
+      <div className="relative inline-block">
+        <div
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+          className="cursor-help"
+        >
+          {children}
+        </div>
+        {isVisible && (
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-sm rounded-lg shadow-lg z-10 max-w-xs">
+            <div className="relative">
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+              {content}
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -248,6 +282,84 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                    <span className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-md">lbs</span>
                  </div>
               </div>
+            </div>
+          </div>
+
+          {/* Hazmat Placards Question */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Does this item have Hazmat Placards?
+              </label>
+              <Tooltip content="Hazmat placards indicate that the load may contain hazardous materials.">
+                <HelpCircle className="w-4 h-4 text-blue-500 cursor-help" />
+              </Tooltip>
+            </div>
+            <div className="flex space-x-6">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="hasHazmatPlacards"
+                  checked={formData.hasHazmatPlacards === true}
+                  onChange={() => handleRadioChange('hasHazmatPlacards', true)}
+                  className="text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">Yes</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="hasHazmatPlacards"
+                  checked={formData.hasHazmatPlacards === false}
+                  onChange={() => handleRadioChange('hasHazmatPlacards', false)}
+                  className="text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">No</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Transportation Method Question */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <label className="block text-sm font-medium text-gray-700">
+                How do you want your item transported?
+              </label>
+              <Tooltip content="Hauled: The load will be put on a trailer and pulled behind a semi. Towed/Power Only: The truck and driver will transport the load by pulling it behind the truck. This is typically used for trailers. Driven Away: A driver will drive the load to its destination. This is typically used for RVs and Trucks.">
+                <HelpCircle className="w-4 h-4 text-blue-500 cursor-help" />
+              </Tooltip>
+            </div>
+            <div className="space-y-3">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="transportationMethod"
+                  checked={formData.transportationMethod === 'hauled'}
+                  onChange={() => handleRadioChange('transportationMethod', 'hauled')}
+                  className="text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">Hauled</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="transportationMethod"
+                  checked={formData.transportationMethod === 'towed'}
+                  onChange={() => handleRadioChange('transportationMethod', 'towed')}
+                  className="text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">Towed/Power Only</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="transportationMethod"
+                  checked={formData.transportationMethod === 'driven'}
+                  onChange={() => handleRadioChange('transportationMethod', 'driven')}
+                  className="text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700">Driven Away</span>
+              </label>
             </div>
           </div>
 

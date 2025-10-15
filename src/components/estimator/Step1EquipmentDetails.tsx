@@ -87,7 +87,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header - Sticky */}
         <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-semibold text-gray-900">
@@ -116,7 +116,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                 <select
                   value={formData.year}
                   onChange={(e) => handleInputChange('year', e.target.value)}
-                  className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 >
                   <option value="">Select Year</option>
                   {Array.from({ length: 127 }, (_, i) => 2026 - i).map(year => (

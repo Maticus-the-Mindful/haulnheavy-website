@@ -179,7 +179,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Pick Up Section */}
             <div className="space-y-6">
-              <h4 className="text-md font-semibold text-gray-700">Pick Up</h4>
               
               {/* Pick Up Date */}
               <div className="space-y-3">
@@ -190,7 +189,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.dateType}
                     onChange={(e) => handleDateTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -274,7 +273,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.timeType}
                     onChange={(e) => handleTimeTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -307,7 +306,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.pickup.timeRange.start}
                         onChange={(e) => handleTimeChange('pickup', 'start', e.target.value)}
-                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
@@ -317,7 +316,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.pickup.timeRange.end}
                         onChange={(e) => handleTimeChange('pickup', 'end', e.target.value)}
-                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
@@ -332,7 +331,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
 
             {/* Delivery Section */}
             <div className="space-y-6">
-              <h4 className="text-md font-semibold text-gray-700">Delivery</h4>
               
               {/* Delivery Date */}
               <div className="space-y-3">
@@ -343,7 +341,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.dateType}
                     onChange={(e) => handleDateTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -427,7 +425,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.timeType}
                     onChange={(e) => handleTimeTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -460,7 +458,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.delivery.timeRange.start}
                         onChange={(e) => handleTimeChange('delivery', 'start', e.target.value)}
-                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
@@ -470,7 +468,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.delivery.timeRange.end}
                         onChange={(e) => handleTimeChange('delivery', 'end', e.target.value)}
-                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
                         <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (

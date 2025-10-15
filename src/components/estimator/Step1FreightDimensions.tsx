@@ -118,7 +118,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header - Sticky */}
         <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Dimensions</h2>
@@ -141,7 +141,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               value={formData.shippingItem}
               onChange={(e) => handleInputChange('shippingItem', e.target.value)}
               placeholder="Shipping item"
-              className="w-full px-4 py-3 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
             />
           </div>
 
@@ -184,7 +184,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('length', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -194,7 +194,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">in</span>
               </div>
@@ -212,7 +212,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('width', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -222,7 +222,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">in</span>
               </div>
@@ -240,7 +240,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   onChange={(e) => handleDimensionChange('height', 'feet', e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">ft</span>
                 <input
@@ -250,7 +250,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
                   placeholder="0"
                   min="0"
                   max="11"
-                  className="w-20 px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  className="w-20 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                 />
                 <span className="text-gray-600">in</span>
               </div>

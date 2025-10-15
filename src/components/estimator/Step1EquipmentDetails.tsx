@@ -111,13 +111,27 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   const handleModelChange = (modelId: string) => {
     if (!formData.make) return;
     
-    const selectedModel = getModelById(allModels, modelId);
+    console.log('handleModelChange called with modelId:', modelId);
+    console.log('Available models:', availableModels.length);
+    console.log('All models:', allModels.length);
+    
+    // First try to find in availableModels (filtered by manufacturer), then fall back to allModels
+    const selectedModel = availableModels.find(model => model.model_id === modelId) || getModelById(allModels, modelId);
+    console.log('Selected model:', selectedModel);
     
     if (selectedModel && 
         selectedModel.typical_weight_lbs !== undefined && 
         selectedModel.typical_length_ft !== undefined && 
         selectedModel.typical_width_ft !== undefined && 
         selectedModel.typical_height_ft !== undefined) {
+      
+      console.log('Model dimensions found:', {
+        weight: selectedModel.typical_weight_lbs,
+        length: selectedModel.typical_length_ft,
+        width: selectedModel.typical_width_ft,
+        height: selectedModel.typical_height_ft
+      });
+      
       // Convert decimal feet to feet and inches
       const convertToFeetAndInches = (decimalFeet: number) => ({
         feet: Math.floor(decimalFeet),
@@ -140,6 +154,8 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         console.log(`Model ${selectedModel.name} year range: ${selectedModel.year_range}`);
       }
     } else {
+      console.log('Model not found or missing dimension data');
+      console.log('Available model IDs:', availableModels.map(m => m.model_id));
       setFormData(prev => ({
         ...prev,
         model: modelId

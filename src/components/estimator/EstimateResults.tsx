@@ -9,9 +9,10 @@ interface EstimateResultsProps {
   estimateData: any; // The full estimate data including form inputs
   onClose: () => void;
   onNewEstimate: () => void;
+  onBack?: () => void;
 }
 
-export default function EstimateResults({ estimate, estimateData, onClose, onNewEstimate }: EstimateResultsProps) {
+export default function EstimateResults({ estimate, estimateData, onClose, onNewEstimate, onBack }: EstimateResultsProps) {
   const [contactInfo, setContactInfo] = useState({
     firstName: '',
     lastName: '',
@@ -316,6 +317,15 @@ export default function EstimateResults({ estimate, estimateData, onClose, onNew
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4">
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="border border-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Back to Edit
+                </button>
+              )}
+              
               <button
                 onClick={onNewEstimate}
                 className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors uppercase tracking-wide"
@@ -325,7 +335,7 @@ export default function EstimateResults({ estimate, estimateData, onClose, onNew
               
               <button
                 onClick={onClose}
-                className="flex-1 border border-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors"
+                className="border border-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Close
               </button>

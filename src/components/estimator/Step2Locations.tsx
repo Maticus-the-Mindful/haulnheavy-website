@@ -179,7 +179,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
             <label className="block text-sm font-semibold text-gray-700">
               Pick Up Location <span className="text-red-500">*</span>
             </label>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={formData.pickup.address}
@@ -190,7 +190,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.pickup.addressType}
                 onChange={(e) => handleAddressTypeChange('pickup', e.target.value as any)}
-                className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="w-full sm:w-32 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>
@@ -244,7 +244,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
             <label className="block text-sm font-semibold text-gray-700">
               Drop Off Location <span className="text-red-500">*</span>
             </label>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={formData.dropoff.address}
@@ -255,7 +255,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.dropoff.addressType}
                 onChange={(e) => handleAddressTypeChange('dropoff', e.target.value as any)}
-                className="px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="w-full sm:w-32 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>
@@ -376,7 +376,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
             </button>
             <button
               onClick={handleNext}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 px-6 rounded-lg transition-colors uppercase tracking-wide"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors uppercase tracking-wide"
             >
               Next Step
             </button>

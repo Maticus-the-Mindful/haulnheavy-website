@@ -625,7 +625,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
             </button>
             <button
               onClick={handleNext}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 px-6 rounded-lg transition-colors uppercase tracking-wide"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors uppercase tracking-wide"
             >
               Next Step
             </button>

@@ -337,7 +337,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
             {formData.year && formData.model && formData.model !== 'custom' && !isYearValidForModel() && (
               <div className="mt-3 p-3 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-md">
                 <p className="text-sm">
-                  <strong>Year Warning:</strong> The selected year ({formData.year}) may not match this model's typical year range. 
+                  <strong>Year Warning:</strong> The selected year ({formData.year}) may not match this model&apos;s typical year range. 
                   Please verify the dimensions and weight are correct for your specific equipment.
                 </p>
               </div>

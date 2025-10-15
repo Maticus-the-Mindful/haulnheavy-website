@@ -20,13 +20,24 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
   const [formData, setFormData] = useState<EstimateData | null>(null);
   const [estimateResult, setEstimateResult] = useState<EstimateResult | null>(null);
 
-  // Reset all form state when modal is opened fresh
+  // Reset all form state when modal is opened fresh and prevent body scroll
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(0);
       setFormData(null);
       setEstimateResult(null);
+      
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable body scroll when modal is closed
+      document.body.style.overflow = 'unset';
     }
+    
+    // Cleanup function to ensure scroll is re-enabled
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   // Reset all form state when modal is closed
@@ -302,6 +313,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
           estimateData={formData}
           onClose={handleClose}
           onNewEstimate={handleNewEstimate}
+          onBack={handleBack}
         />
       )}
     </>

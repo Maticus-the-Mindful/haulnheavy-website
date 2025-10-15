@@ -225,6 +225,26 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     setEstimateResult(null);
   };
 
+  const handleSwitchToFreight = () => {
+    setFormData(prev => ({
+      ...(prev || {}),
+      category: 'freight',
+      equipment: {} as any,
+      freight: undefined,
+      characteristics: {} as any,
+      locations: {
+        pickup: {} as any,
+        dropoff: {} as any
+      },
+      scheduling: {
+        pickup: {} as any,
+        delivery: {} as any
+      },
+      additionalInfo: {} as any
+    } as EstimateData));
+    // Stay on the same step (1) but switch to freight form
+  };
+
   return (
     <>
       {currentStep === 0 && (
@@ -239,6 +259,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
           onNext={handleStep1Next}
           onClose={handleClose}
           onBack={handleBack}
+          onSwitchToFreight={handleSwitchToFreight}
         />
       )}
       {currentStep === 1 && formData?.category === 'freight' && (

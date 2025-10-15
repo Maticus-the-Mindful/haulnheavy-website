@@ -1,39 +1,190 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
+import { 
+  getAllCategories, 
+  getManufacturersByCategory, 
+  getModelsByManufacturerAndCategory,
+  EquipmentCategory,
+  EquipmentManufacturer,
+  EquipmentModel
+} from '@/lib/supabase-queries';
 
 interface Step1EquipmentDetailsProps {
   category?: 'equipment' | 'freight';
   onNext: (data: any) => void;
   onClose: () => void;
   onBack?: () => void;
+  onSwitchToFreight?: () => void;
 }
 
-export default function Step1EquipmentDetails({ category = 'equipment', onNext, onClose, onBack }: Step1EquipmentDetailsProps) {
+export default function Step1EquipmentDetails({ category = 'equipment', onNext, onClose, onBack, onSwitchToFreight }: Step1EquipmentDetailsProps) {
+  
+  // Form data state
   const [formData, setFormData] = useState({
     year: category === 'equipment' ? '2019' : '',
-    make: category === 'equipment' ? 'JOHN DEERE' : '',
-    model: category === 'equipment' ? '310' : '',
+    equipmentCategory: category === 'equipment' ? '' : '',
+    make: category === 'equipment' ? '' : '',
+    model: category === 'equipment' ? '' : '',
+    customModel: '',
     type: category === 'equipment' ? 'Grain Carts' : 'General Freight',
     quantity: 1,
     dimensions: {
-      length: { feet: category === 'equipment' ? 11 : 0, inches: category === 'equipment' ? 8 : 0 },
-      width: { feet: category === 'equipment' ? 10 : 0, inches: category === 'equipment' ? 7 : 0 },
-      height: { feet: category === 'equipment' ? 9 : 0, inches: 0 }
+      length: { feet: category === 'equipment' ? 0 : 0, inches: 0 },
+      width: { feet: category === 'equipment' ? 0 : 0, inches: 0 },
+      height: { feet: category === 'equipment' ? 0 : 0, inches: 0 }
     },
-    weight: category === 'equipment' ? 4619 : 0,
+    weight: category === 'equipment' ? 0 : 0,
     hasHazmatPlacards: null as boolean | null,
     transportationMethod: null as 'hauled' | 'towed' | 'driven' | null,
     images: [] as File[]
   });
+
+  // Supabase data state
+  const [equipmentCategories, setEquipmentCategories] = useState<EquipmentCategory[]>([]);
+  const [availableManufacturers, setAvailableManufacturers] = useState<EquipmentManufacturer[]>([]);
+  const [availableModels, setAvailableModels] = useState<EquipmentModel[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load equipment categories on component mount
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  // Load manufacturers when category changes
+  useEffect(() => {
+    if (formData.equipmentCategory) {
+      loadManufacturers(formData.equipmentCategory);
+    } else {
+      setAvailableManufacturers([]);
+    }
+  }, [formData.equipmentCategory]);
+
+  // Load models when manufacturer changes
+  useEffect(() => {
+    if (formData.equipmentCategory && formData.make) {
+      loadModels(formData.equipmentCategory, formData.make);
+    } else {
+      setAvailableModels([]);
+    }
+  }, [formData.equipmentCategory, formData.make]);
+
+  const loadCategories = async () => {
+    try {
+      setLoading(true);
+      const categories = await getAllCategories();
+      setEquipmentCategories(categories);
+    } catch (err) {
+      setError('Failed to load equipment categories');
+      console.error('Error loading categories:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadManufacturers = async (categoryId: string) => {
+    try {
+      setLoading(true);
+      const manufacturers = await getManufacturersByCategory(categoryId);
+      setAvailableManufacturers(manufacturers);
+    } catch (err) {
+      setError('Failed to load manufacturers');
+      console.error('Error loading manufacturers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadModels = async (categoryId: string, manufacturerId: string) => {
+    try {
+      setLoading(true);
+      const models = await getModelsByManufacturerAndCategory(manufacturerId, categoryId);
+      setAvailableModels(models);
+    } catch (err) {
+      setError('Failed to load models');
+      console.error('Error loading models:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+  };
+
+  // Handle equipment category change - reset make and model
+  const handleCategoryChange = (categoryId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      equipmentCategory: categoryId,
+      make: '',
+      model: '',
+      dimensions: {
+        length: { feet: 0, inches: 0 },
+        width: { feet: 0, inches: 0 },
+        height: { feet: 0, inches: 0 }
+      },
+      weight: 0
+    }));
+  };
+
+  // Handle make change - reset model
+  const handleMakeChange = (makeId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      make: makeId,
+      model: '',
+      dimensions: {
+        length: { feet: 0, inches: 0 },
+        width: { feet: 0, inches: 0 },
+        height: { feet: 0, inches: 0 }
+      },
+      weight: 0
+    }));
+  };
+
+  // Handle model change - auto-populate dimensions and weight
+  const handleModelChange = (modelId: string) => {
+    if (!formData.equipmentCategory || !formData.make) return;
+    
+    const selectedModel = availableModels.find(model => model.model_id === modelId);
+    
+    if (selectedModel && 
+        selectedModel.typical_weight_lbs !== undefined && 
+        selectedModel.typical_length_ft !== undefined && 
+        selectedModel.typical_width_ft !== undefined && 
+        selectedModel.typical_height_ft !== undefined) {
+      setFormData(prev => ({
+        ...prev,
+        model: modelId,
+        dimensions: {
+          length: { 
+            feet: Math.floor(selectedModel.typical_length_ft!), 
+            inches: Math.round((selectedModel.typical_length_ft! % 1) * 12) 
+          },
+          width: { 
+            feet: Math.floor(selectedModel.typical_width_ft!), 
+            inches: Math.round((selectedModel.typical_width_ft! % 1) * 12) 
+          },
+          height: { 
+            feet: Math.floor(selectedModel.typical_height_ft!), 
+            inches: Math.round((selectedModel.typical_height_ft! % 1) * 12) 
+          }
+        },
+        weight: selectedModel.typical_weight_lbs!
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        model: modelId
+      }));
+    }
   };
 
   const handleDimensionChange = (dimension: string, unit: string, value: number) => {
@@ -57,7 +208,16 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   };
 
   const handleNext = () => {
-    onNext(formData);
+    // Use custom model name if custom is selected
+    const finalModel = formData.model === 'custom' ? formData.customModel : formData.model;
+    
+    const dataToSubmit = {
+      ...formData,
+      model: finalModel,
+      type: 'equipment' // Ensure type is set correctly
+    };
+    
+    onNext(dataToSubmit);
   };
 
   // Tooltip component
@@ -89,7 +249,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header - Sticky */}
-        <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
+        <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10 rounded-t-lg" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-semibold text-gray-900">
             {category === 'equipment' ? 'Equipment Details' : 'Freight Details'}
           </h2>
@@ -110,6 +270,13 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                 : 'What are you shipping? Please provide details about your freight:'
               }
             </h3>
+            
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
@@ -124,37 +291,78 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                   ))}
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
-                <input
-                  type="text"
-                  value={formData.make}
-                  onChange={(e) => handleInputChange('make', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
-                <input
-                  type="text"
-                  value={formData.model}
-                  onChange={(e) => handleInputChange('model', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                <input
-                  type="text"
-                  value={formData.type}
-                  onChange={(e) => handleInputChange('type', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Category</label>
+                  <select
+                    value={formData.equipmentCategory}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    disabled={loading}
+                  >
+                    <option value="">Select Category</option>
+                    {equipmentCategories.map(cat => (
+                      <option key={cat.category_id} value={cat.category_id} className="text-gray-900">
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
+                  <select
+                    value={formData.make}
+                    onChange={(e) => handleMakeChange(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    disabled={!formData.equipmentCategory || loading}
+                  >
+                    <option value="">Select Make</option>
+                    {availableManufacturers.map(make => (
+                      <option key={make.manufacturer_id} value={make.manufacturer_id} className="text-gray-900">
+                        {make.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                  <select
+                    value={formData.model}
+                    onChange={(e) => handleModelChange(e.target.value)}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                    disabled={!formData.make || loading}
+                  >
+                    <option value="">Select Model</option>
+                    {availableModels.map(model => (
+                      <option key={model.model_id} value={model.model_id} className="text-gray-900">
+                        {model.name}
+                      </option>
+                    ))}
+                    <option value="custom" className="text-gray-900">Custom Model</option>
+                  </select>
+                </div>
             </div>
+            
+            {/* Custom Model Input - shown when "Custom Model" is selected */}
+            {formData.model === 'custom' && (
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Custom Model Name</label>
+                <input
+                  type="text"
+                  value={formData.customModel}
+                  onChange={(e) => handleInputChange('customModel', e.target.value)}
+                  placeholder="Enter model name"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
             <p className="text-sm text-gray-600 mt-2">
               Can&apos;t find it in the list? Post it under{' '}
-              <a href="#" className="text-blue-600 hover:underline">Freight</a>
+              <button 
+                onClick={onSwitchToFreight}
+                className="text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0"
+              >
+                Freight
+              </button>
             </p>
           </div>
 

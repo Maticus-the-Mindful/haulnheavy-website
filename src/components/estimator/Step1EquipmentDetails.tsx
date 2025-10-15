@@ -74,9 +74,12 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         allManufacturers.push(...manufacturers);
       }
       
-      // Remove duplicates based on manufacturer_id
+      // Remove duplicates based on manufacturer_id and filter out invalid entries
       const uniqueManufacturers = allManufacturers.filter((manufacturer, index, self) => 
-        index === self.findIndex(m => m.manufacturer_id === manufacturer.manufacturer_id)
+        manufacturer && 
+        manufacturer.name && 
+        manufacturer.manufacturer_id &&
+        index === self.findIndex(m => m && m.manufacturer_id === manufacturer.manufacturer_id)
       );
       
       // Sort alphabetically
@@ -103,10 +106,11 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         allModels.push(...models);
       }
       
-      // Sort alphabetically
-      allModels.sort((a, b) => a.name.localeCompare(b.name));
+      // Filter out invalid entries and sort alphabetically
+      const validModels = allModels.filter(model => model && model.name && model.model_id);
+      validModels.sort((a, b) => a.name.localeCompare(b.name));
       
-      setAvailableModels(allModels);
+      setAvailableModels(validModels);
     } catch (err) {
       setError('Failed to load models');
       console.error('Error loading models:', err);

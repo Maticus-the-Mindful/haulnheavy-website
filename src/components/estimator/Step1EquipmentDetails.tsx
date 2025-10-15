@@ -7,7 +7,6 @@ import {
   getAllCategories, 
   getManufacturersByCategory, 
   getModelsByManufacturerAndCategory,
-  EquipmentCategory,
   EquipmentManufacturer,
   EquipmentModel
 } from '@/lib/supabase-queries';
@@ -25,7 +24,6 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   // Form data state
   const [formData, setFormData] = useState({
     year: category === 'equipment' ? '2019' : '',
-    equipmentCategory: category === 'equipment' ? '' : '',
     make: category === 'equipment' ? '' : '',
     model: category === 'equipment' ? '' : '',
     customModel: '',
@@ -43,53 +41,48 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   });
 
   // Supabase data state
-  const [equipmentCategories, setEquipmentCategories] = useState<EquipmentCategory[]>([]);
   const [availableManufacturers, setAvailableManufacturers] = useState<EquipmentManufacturer[]>([]);
   const [availableModels, setAvailableModels] = useState<EquipmentModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load equipment categories on component mount
-  useEffect(() => {
-    loadCategories();
-  }, []);
 
-  // Load manufacturers when category changes
+  // Load all manufacturers on mount
   useEffect(() => {
-    if (formData.equipmentCategory) {
-      loadManufacturers(formData.equipmentCategory);
-    } else {
-      setAvailableManufacturers([]);
-    }
-  }, [formData.equipmentCategory]);
+    loadAllManufacturers();
+  }, []);
 
   // Load models when manufacturer changes
   useEffect(() => {
-    if (formData.equipmentCategory && formData.make) {
-      loadModels(formData.equipmentCategory, formData.make);
+    if (formData.make) {
+      loadModelsByMake(formData.make);
     } else {
       setAvailableModels([]);
     }
-  }, [formData.equipmentCategory, formData.make]);
+  }, [formData.make]);
 
-  const loadCategories = async () => {
+
+  const loadAllManufacturers = async () => {
     try {
       setLoading(true);
+      // Load manufacturers from all categories
+      const allManufacturers = [];
       const categories = await getAllCategories();
-      setEquipmentCategories(categories);
-    } catch (err) {
-      setError('Failed to load equipment categories');
-      console.error('Error loading categories:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadManufacturers = async (categoryId: string) => {
-    try {
-      setLoading(true);
-      const manufacturers = await getManufacturersByCategory(categoryId);
-      setAvailableManufacturers(manufacturers);
+      
+      for (const category of categories) {
+        const manufacturers = await getManufacturersByCategory(category.category_id);
+        allManufacturers.push(...manufacturers);
+      }
+      
+      // Remove duplicates based on manufacturer_id
+      const uniqueManufacturers = allManufacturers.filter((manufacturer, index, self) => 
+        index === self.findIndex(m => m.manufacturer_id === manufacturer.manufacturer_id)
+      );
+      
+      // Sort alphabetically
+      uniqueManufacturers.sort((a, b) => a.name.localeCompare(b.name));
+      
+      setAvailableManufacturers(uniqueManufacturers);
     } catch (err) {
       setError('Failed to load manufacturers');
       console.error('Error loading manufacturers:', err);
@@ -98,11 +91,22 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
     }
   };
 
-  const loadModels = async (categoryId: string, manufacturerId: string) => {
+  const loadModelsByMake = async (manufacturerId: string) => {
     try {
       setLoading(true);
-      const models = await getModelsByManufacturerAndCategory(manufacturerId, categoryId);
-      setAvailableModels(models);
+      // Load models from all categories for this manufacturer
+      const allModels = [];
+      const categories = await getAllCategories();
+      
+      for (const category of categories) {
+        const models = await getModelsByManufacturerAndCategory(manufacturerId, category.category_id);
+        allModels.push(...models);
+      }
+      
+      // Sort alphabetically
+      allModels.sort((a, b) => a.name.localeCompare(b.name));
+      
+      setAvailableModels(allModels);
     } catch (err) {
       setError('Failed to load models');
       console.error('Error loading models:', err);
@@ -118,21 +122,6 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
     }));
   };
 
-  // Handle equipment category change - reset make and model
-  const handleCategoryChange = (categoryId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      equipmentCategory: categoryId,
-      make: '',
-      model: '',
-      dimensions: {
-        length: { feet: 0, inches: 0 },
-        width: { feet: 0, inches: 0 },
-        height: { feet: 0, inches: 0 }
-      },
-      weight: 0
-    }));
-  };
 
   // Handle make change - reset model
   const handleMakeChange = (makeId: string) => {
@@ -151,7 +140,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
 
   // Handle model change - auto-populate dimensions and weight
   const handleModelChange = (modelId: string) => {
-    if (!formData.equipmentCategory || !formData.make) return;
+    if (!formData.make) return;
     
     const selectedModel = availableModels.find(model => model.model_id === modelId);
     
@@ -292,28 +281,12 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Category</label>
-                <select
-                  value={formData.equipmentCategory}
-                  onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                  disabled={loading}
-                >
-                  <option value="">Select Category</option>
-                  {equipmentCategories.map(cat => (
-                    <option key={cat.category_id} value={cat.category_id} className="text-gray-900">
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
                 <select
                   value={formData.make}
                   onChange={(e) => handleMakeChange(e.target.value)}
                   className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                  disabled={!formData.equipmentCategory || loading}
+                  disabled={loading}
                 >
                   <option value="">Select Make</option>
                   {availableManufacturers.map(make => (

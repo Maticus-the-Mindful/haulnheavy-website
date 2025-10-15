@@ -23,7 +23,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   
   // Form data state
   const [formData, setFormData] = useState({
-    year: category === 'equipment' ? '2019' : '',
+    year: '',
     make: category === 'equipment' ? '' : '',
     model: category === 'equipment' ? '' : '',
     customModel: '',
@@ -81,11 +81,16 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
       console.log('Total manufacturers before filtering:', allManufacturers.length);
       
       // Remove duplicates based on manufacturer_id and filter out invalid entries
-      const uniqueManufacturers = allManufacturers.filter((manufacturer, index, self) => 
+      const validManufacturers = allManufacturers.filter(manufacturer => 
         manufacturer && 
         manufacturer.name && 
-        manufacturer.manufacturer_id &&
-        index === self.findIndex(m => m && m.manufacturer_id === manufacturer.manufacturer_id)
+        manufacturer.manufacturer_id
+      );
+      
+      console.log('Valid manufacturers:', validManufacturers.length);
+      
+      const uniqueManufacturers = validManufacturers.filter((manufacturer, index, self) => 
+        index === self.findIndex(m => m.manufacturer_id === manufacturer.manufacturer_id)
       );
       
       console.log('Unique manufacturers after filtering:', uniqueManufacturers.length);

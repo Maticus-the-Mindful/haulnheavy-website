@@ -291,55 +291,55 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                   ))}
                 </select>
               </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Category</label>
-                  <select
-                    value={formData.equipmentCategory}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                    disabled={loading}
-                  >
-                    <option value="">Select Category</option>
-                    {equipmentCategories.map(cat => (
-                      <option key={cat.category_id} value={cat.category_id} className="text-gray-900">
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
-                  <select
-                    value={formData.make}
-                    onChange={(e) => handleMakeChange(e.target.value)}
-                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                    disabled={!formData.equipmentCategory || loading}
-                  >
-                    <option value="">Select Make</option>
-                    {availableManufacturers.map(make => (
-                      <option key={make.manufacturer_id} value={make.manufacturer_id} className="text-gray-900">
-                        {make.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
-                  <select
-                    value={formData.model}
-                    onChange={(e) => handleModelChange(e.target.value)}
-                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                    disabled={!formData.make || loading}
-                  >
-                    <option value="">Select Model</option>
-                    {availableModels.map(model => (
-                      <option key={model.model_id} value={model.model_id} className="text-gray-900">
-                        {model.name}
-                      </option>
-                    ))}
-                    <option value="custom" className="text-gray-900">Custom Model</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Equipment Category</label>
+                <select
+                  value={formData.equipmentCategory}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  disabled={loading}
+                >
+                  <option value="">Select Category</option>
+                  {equipmentCategories.map(cat => (
+                    <option key={cat.category_id} value={cat.category_id} className="text-gray-900">
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
+                <select
+                  value={formData.make}
+                  onChange={(e) => handleMakeChange(e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  disabled={!formData.equipmentCategory || loading}
+                >
+                  <option value="">Select Make</option>
+                  {availableManufacturers.map(make => (
+                    <option key={make.manufacturer_id} value={make.manufacturer_id} className="text-gray-900">
+                      {make.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                <select
+                  value={formData.model}
+                  onChange={(e) => handleModelChange(e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                  disabled={!formData.make || loading}
+                >
+                  <option value="">Select Model</option>
+                  {availableModels.map(model => (
+                    <option key={model.model_id} value={model.model_id} className="text-gray-900">
+                      {model.name}
+                    </option>
+                  ))}
+                  <option value="custom" className="text-gray-900">Custom Model</option>
+                </select>
+              </div>
             </div>
             
             {/* Custom Model Input - shown when "Custom Model" is selected */}

@@ -15,31 +15,31 @@ interface Step3DatesTimesProps {
 export default function Step3DatesTimes({ equipmentData, locationsData, onNext, onBack, onClose }: Step3DatesTimesProps) {
   const [formData, setFormData] = useState({
     pickup: {
-      dateType: 'on' as 'before' | 'between' | 'on' | 'after',
-      specificDate: new Date(2025, 9, 17), // Oct 17, 2025
+      dateType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      specificDate: new Date(),
       dateRange: {
         start: new Date(),
         end: new Date()
       },
-      timeType: 'between' as 'before' | 'between' | 'on' | 'after',
-      specificTime: '02:00 PM',
+      timeType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      specificTime: '',
       timeRange: {
-        start: '02:00 PM',
-        end: '03:00 PM'
+        start: '',
+        end: ''
       }
     },
     delivery: {
-      dateType: 'on' as 'before' | 'between' | 'on' | 'after',
-      specificDate: new Date(2025, 9, 28), // Oct 28, 2025
+      dateType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      specificDate: new Date(),
       dateRange: {
         start: new Date(),
         end: new Date()
       },
-      timeType: 'between' as 'before' | 'between' | 'on' | 'after',
-      specificTime: '03:00 PM',
+      timeType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      specificTime: '',
       timeRange: {
-        start: '03:00 PM',
-        end: '05:00 PM'
+        start: '',
+        end: ''
       }
     },
     contactInfo: {
@@ -56,6 +56,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
   const [activeDateField, setActiveDateField] = useState<'date' | 'range' | null>(null);
 
   const dateTypeOptions = [
+    { value: '', label: 'Select Option' },
     { value: 'before', label: 'Before' },
     { value: 'between', label: 'Between' },
     { value: 'on', label: 'On' },
@@ -63,6 +64,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
   ];
 
   const timeTypeOptions = [
+    { value: '', label: 'Select Option' },
     { value: 'before', label: 'Before' },
     { value: 'between', label: 'Between' },
     { value: 'on', label: 'On' },
@@ -188,7 +190,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.dateType}
                     onChange={(e) => handleDateTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -198,7 +200,8 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   </select>
                 </div>
                 
-                {formData.pickup.dateType === 'on' && (
+                {/* Conditional date fields based on selection */}
+                {(formData.pickup.dateType === 'on' || formData.pickup.dateType === 'before' || formData.pickup.dateType === 'after') && (
                   <div className="relative">
                     <input
                       type="text"
@@ -208,13 +211,52 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         setActiveCalendar('pickup');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
-                      placeholder="Select Date"
+                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                      placeholder="Date"
                     />
                     {activeCalendar === 'pickup' && activeDateField === 'date' && (
                       <CalendarWidget
                         isOpen={true}
                         selectedDate={formData.pickup.specificDate}
+                        onDateSelect={(date) => handleDateSelect('pickup', date)}
+                        onClose={() => setActiveCalendar(null)}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {formData.pickup.dateType === 'between' && (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatDate(formData.pickup.dateRange.start)}
+                        readOnly
+                        onClick={() => {
+                          setActiveCalendar('pickup');
+                          setActiveDateField('range');
+                        }}
+                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        placeholder="From"
+                      />
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatDate(formData.pickup.dateRange.end)}
+                        readOnly
+                        onClick={() => {
+                          setActiveCalendar('pickup');
+                          setActiveDateField('range');
+                        }}
+                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        placeholder="To"
+                      />
+                    </div>
+                    {activeCalendar === 'pickup' && activeDateField === 'range' && (
+                      <CalendarWidget
+                        isOpen={true}
+                        selectedDate={formData.pickup.dateRange.start}
                         onDateSelect={(date) => handleDateSelect('pickup', date)}
                         onClose={() => setActiveCalendar(null)}
                       />
@@ -232,7 +274,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.pickup.timeType}
                     onChange={(e) => handleTimeTypeChange('pickup', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -242,15 +284,32 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   </select>
                 </div>
                 
-                {formData.pickup.timeType === 'between' && (
+                {/* Conditional time fields based on selection */}
+                {(formData.pickup.timeType === 'on' || formData.pickup.timeType === 'before' || formData.pickup.timeType === 'after') && (
                   <div>
+                    <select
+                      value={formData.pickup.specificTime}
+                      onChange={(e) => handleTimeChange('pickup', 'specificTime', e.target.value)}
+                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-500">Select Time</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">{time}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {formData.pickup.timeType === 'between' && (
+                  <div className="space-y-3">
                     <label className="block text-sm text-gray-600 mb-2">Pick Up Between:</label>
                     <div className="flex space-x-2">
                       <select
                         value={formData.pickup.timeRange.start}
                         onChange={(e) => handleTimeChange('pickup', 'start', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
+                        <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
                           <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
@@ -258,8 +317,9 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.pickup.timeRange.end}
                         onChange={(e) => handleTimeChange('pickup', 'end', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
+                        <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
                           <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
@@ -283,7 +343,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.dateType}
                     onChange={(e) => handleDateTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {dateTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -293,7 +353,8 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   </select>
                 </div>
                 
-                {formData.delivery.dateType === 'on' && (
+                {/* Conditional date fields based on selection */}
+                {(formData.delivery.dateType === 'on' || formData.delivery.dateType === 'before' || formData.delivery.dateType === 'after') && (
                   <div className="relative">
                     <input
                       type="text"
@@ -303,13 +364,52 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         setActiveCalendar('delivery');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
-                      placeholder="Select Date"
+                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                      placeholder="Date"
                     />
                     {activeCalendar === 'delivery' && activeDateField === 'date' && (
                       <CalendarWidget
                         isOpen={true}
                         selectedDate={formData.delivery.specificDate}
+                        onDateSelect={(date) => handleDateSelect('delivery', date)}
+                        onClose={() => setActiveCalendar(null)}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {formData.delivery.dateType === 'between' && (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatDate(formData.delivery.dateRange.start)}
+                        readOnly
+                        onClick={() => {
+                          setActiveCalendar('delivery');
+                          setActiveDateField('range');
+                        }}
+                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        placeholder="From"
+                      />
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatDate(formData.delivery.dateRange.end)}
+                        readOnly
+                        onClick={() => {
+                          setActiveCalendar('delivery');
+                          setActiveDateField('range');
+                        }}
+                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        placeholder="To"
+                      />
+                    </div>
+                    {activeCalendar === 'delivery' && activeDateField === 'range' && (
+                      <CalendarWidget
+                        isOpen={true}
+                        selectedDate={formData.delivery.dateRange.start}
                         onDateSelect={(date) => handleDateSelect('delivery', date)}
                         onClose={() => setActiveCalendar(null)}
                       />
@@ -327,7 +427,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   <select
                     value={formData.delivery.timeType}
                     onChange={(e) => handleTimeTypeChange('delivery', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                   >
                     {timeTypeOptions.map(option => (
                       <option key={option.value} value={option.value} className="text-gray-900">
@@ -337,15 +437,32 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                   </select>
                 </div>
                 
-                {formData.delivery.timeType === 'between' && (
+                {/* Conditional time fields based on selection */}
+                {(formData.delivery.timeType === 'on' || formData.delivery.timeType === 'before' || formData.delivery.timeType === 'after') && (
                   <div>
+                    <select
+                      value={formData.delivery.specificTime}
+                      onChange={(e) => handleTimeChange('delivery', 'specificTime', e.target.value)}
+                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-500">Select Time</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">{time}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {formData.delivery.timeType === 'between' && (
+                  <div className="space-y-3">
                     <label className="block text-sm text-gray-600 mb-2">Drop Off Between:</label>
                     <div className="flex space-x-2">
                       <select
                         value={formData.delivery.timeRange.start}
                         onChange={(e) => handleTimeChange('delivery', 'start', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
+                        <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
                           <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}
@@ -353,8 +470,9 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       <select
                         value={formData.delivery.timeRange.end}
                         onChange={(e) => handleTimeChange('delivery', 'end', e.target.value)}
-                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                        className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                       >
+                        <option value="" className="text-gray-500">Select Time</option>
                         {timeOptions.map(time => (
                           <option key={time} value={time} className="text-gray-900">{time}</option>
                         ))}

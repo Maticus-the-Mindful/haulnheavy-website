@@ -120,7 +120,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.pickup.addressType}
                 onChange={(e) => handleAddressTypeChange('pickup', e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>
@@ -159,7 +159,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
               <select
                 value={formData.dropoff.addressType}
                 onChange={(e) => handleAddressTypeChange('dropoff', e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>

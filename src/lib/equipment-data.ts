@@ -12,6 +12,7 @@ export interface EquipmentSpec {
 }
 
 export interface ManufacturerData {
+  id: string;
   manufacturer_id: string;
   name: string;
   sort_order: number;
@@ -19,6 +20,7 @@ export interface ManufacturerData {
 }
 
 export interface ModelData {
+  id: string;
   model_id: string;
   name: string;
   manufacturer_id: string;

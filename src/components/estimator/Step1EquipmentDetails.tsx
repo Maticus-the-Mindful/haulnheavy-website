@@ -51,46 +51,34 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
 
   // Load all manufacturers on mount
   useEffect(() => {
-    loadAllManufacturers();
+    loadAllEquipmentData();
   }, []);
 
   // Load models when manufacturer changes
   useEffect(() => {
-    if (formData.make) {
-      loadModelsByMake(formData.make);
+    if (formData.make && allModels.length > 0) {
+      const models = getModelsByManufacturer(allModels, formData.make);
+      setAvailableModels(models);
     } else {
       setAvailableModels([]);
     }
-  }, [formData.make]);
+  }, [formData.make, allModels]);
 
 
-  const loadAllManufacturers = async () => {
+  const loadAllEquipmentData = async () => {
     try {
       setLoading(true);
-      console.log('Loading manufacturers from Supabase...');
+      console.log('Loading equipment data from CSV...');
       
-      const manufacturers = await getAllManufacturers();
+      const { manufacturers, models } = await loadEquipmentData();
       console.log('Loaded manufacturers:', manufacturers.length);
-      setAvailableManufacturers(manufacturers);
-    } catch (err) {
-      setError('Failed to load manufacturers');
-      console.error('Error loading manufacturers:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadModelsByMake = async (manufacturerId: string) => {
-    try {
-      setLoading(true);
-      console.log('Loading models for:', manufacturerId);
-      
-      const models = await getModelsByManufacturer(manufacturerId);
       console.log('Loaded models:', models.length);
-      setAvailableModels(models);
+      
+      setAvailableManufacturers(manufacturers);
+      setAllModels(models);
     } catch (err) {
-      setError('Failed to load models');
-      console.error('Error loading models:', err);
+      setError('Failed to load equipment data');
+      console.error('Error loading equipment data:', err);
     } finally {
       setLoading(false);
     }
@@ -123,7 +111,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   const handleModelChange = (modelId: string) => {
     if (!formData.make) return;
     
-    const selectedModel = availableModels.find(model => model.model_id === modelId);
+    const selectedModel = getModelById(allModels, modelId);
     
     if (selectedModel && 
         selectedModel.typical_weight_lbs !== undefined && 

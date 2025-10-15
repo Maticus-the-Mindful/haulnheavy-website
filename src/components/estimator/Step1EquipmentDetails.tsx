@@ -65,14 +65,20 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   const loadAllManufacturers = async () => {
     try {
       setLoading(true);
+      console.log('Loading manufacturers...');
+      
       // Load manufacturers from all categories
       const allManufacturers = [];
       const categories = await getAllCategories();
+      console.log('Categories loaded:', categories.length);
       
       for (const category of categories) {
         const manufacturers = await getManufacturersByCategory(category.category_id);
+        console.log(`Category ${category.name}: ${manufacturers.length} manufacturers`);
         allManufacturers.push(...manufacturers);
       }
+      
+      console.log('Total manufacturers before filtering:', allManufacturers.length);
       
       // Remove duplicates based on manufacturer_id and filter out invalid entries
       const uniqueManufacturers = allManufacturers.filter((manufacturer, index, self) => 
@@ -82,9 +88,12 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
         index === self.findIndex(m => m && m.manufacturer_id === manufacturer.manufacturer_id)
       );
       
+      console.log('Unique manufacturers after filtering:', uniqueManufacturers.length);
+      
       // Sort alphabetically
       uniqueManufacturers.sort((a, b) => a.name.localeCompare(b.name));
       
+      console.log('Final manufacturers:', uniqueManufacturers);
       setAvailableManufacturers(uniqueManufacturers);
     } catch (err) {
       setError('Failed to load manufacturers');
@@ -270,6 +279,11 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
               </div>
             )}
             
+            {/* Debug info */}
+            <div className="mb-4 p-2 bg-blue-50 border border-blue-200 text-blue-700 rounded text-sm">
+              Debug: {availableManufacturers.length} manufacturers loaded, Loading: {loading ? 'Yes' : 'No'}
+            </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
@@ -293,11 +307,15 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
                   disabled={loading}
                 >
                   <option value="">Select Make</option>
-                  {availableManufacturers.map(make => (
-                    <option key={make.manufacturer_id} value={make.manufacturer_id} className="text-gray-900">
-                      {make.name}
-                    </option>
-                  ))}
+                  {availableManufacturers.length > 0 ? (
+                    availableManufacturers.map(make => (
+                      <option key={make.manufacturer_id} value={make.manufacturer_id} className="text-gray-900">
+                        {make.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled className="text-gray-500">Loading manufacturers...</option>
+                  )}
                 </select>
               </div>
               <div>

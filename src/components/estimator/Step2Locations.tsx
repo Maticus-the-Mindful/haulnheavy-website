@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, ChevronDown, CheckCircle } from 'lucide-react';
+import { X, ChevronDown, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface Step2LocationsProps {
   equipmentData: any;
@@ -15,12 +15,18 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
     pickup: {
       address: '',
       addressType: '' as '' | 'business' | 'residential' | 'port',
-      isVerified: false
+      isVerified: false,
+      verificationStatus: 'none' as 'none' | 'verifying' | 'verified' | 'error',
+      verifiedAddress: '',
+      error: ''
     },
     dropoff: {
       address: '',
       addressType: '' as '' | 'business' | 'residential' | 'port',
-      isVerified: false
+      isVerified: false,
+      verificationStatus: 'none' as 'none' | 'verifying' | 'verified' | 'error',
+      verifiedAddress: '',
+      error: ''
     },
     isLoadDrivable: null as boolean | null,
     doYouOwnLoad: null as boolean | null
@@ -32,7 +38,10 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
       [location]: {
         ...prev[location],
         address,
-        isVerified: false // Reset verification when address changes
+        isVerified: false,
+        verificationStatus: 'none',
+        verifiedAddress: '',
+        error: ''
       }
     }));
   };
@@ -47,17 +56,78 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
     }));
   };
 
-  const handleVerifyAddress = (location: 'pickup' | 'dropoff') => {
-    // Simulate address verification
-    setTimeout(() => {
+  const handleVerifyAddress = async (location: 'pickup' | 'dropoff') => {
+    const address = formData[location].address.trim();
+    
+    if (!address) {
       setFormData(prev => ({
         ...prev,
         [location]: {
           ...prev[location],
-          isVerified: true
+          verificationStatus: 'error',
+          error: 'Please enter an address to verify'
         }
       }));
-    }, 1000);
+      return;
+    }
+
+    // Set verifying status
+    setFormData(prev => ({
+      ...prev,
+      [location]: {
+        ...prev[location],
+        verificationStatus: 'verifying',
+        error: ''
+      }
+    }));
+
+    try {
+      // Use Nominatim (OpenStreetMap) geocoding API
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=us&addressdetails=1`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Network error');
+      }
+      
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const result = data[0];
+        const verifiedAddress = result.display_name;
+        
+        setFormData(prev => ({
+          ...prev,
+          [location]: {
+            ...prev[location],
+            verificationStatus: 'verified',
+            isVerified: true,
+            verifiedAddress,
+            error: ''
+          }
+        }));
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          [location]: {
+            ...prev[location],
+            verificationStatus: 'error',
+            error: 'Address not found. Please check and try again.'
+          }
+        }));
+      }
+    } catch (error) {
+      console.error('Address verification error:', error);
+      setFormData(prev => ({
+        ...prev,
+        [location]: {
+          ...prev[location],
+          verificationStatus: 'error',
+          error: 'Unable to verify address. Please check your internet connection.'
+        }
+      }));
+    }
   };
 
   const handleRadioChange = (field: string, value: boolean) => {
@@ -128,10 +198,36 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
                 <option value="port" className="text-gray-900">Port</option>
               </select>
             </div>
-            {formData.pickup.isVerified ? (
-              <div className="flex items-center space-x-2 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm">Address Verified</span>
+            {formData.pickup.verificationStatus === 'verifying' ? (
+              <div className="flex items-center space-x-2 text-blue-600">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Verifying address...</span>
+              </div>
+            ) : formData.pickup.verificationStatus === 'verified' ? (
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 text-green-600">
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="text-sm">Address Verified</span>
+                </div>
+                <div className="text-xs text-gray-600 bg-green-50 p-2 rounded">
+                  {formData.pickup.verifiedAddress}
+                </div>
+              </div>
+            ) : formData.pickup.verificationStatus === 'error' ? (
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 text-red-600">
+                  <AlertCircle className="w-4 h-4" />
+                  <span className="text-sm">Verification Failed</span>
+                </div>
+                <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                  {formData.pickup.error}
+                </div>
+                <button
+                  onClick={() => handleVerifyAddress('pickup')}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm transition-colors"
+                >
+                  TRY AGAIN
+                </button>
               </div>
             ) : (
               <button
@@ -167,10 +263,36 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
                 <option value="port" className="text-gray-900">Port</option>
               </select>
             </div>
-            {formData.dropoff.isVerified ? (
-              <div className="flex items-center space-x-2 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm">Address Verified</span>
+            {formData.dropoff.verificationStatus === 'verifying' ? (
+              <div className="flex items-center space-x-2 text-blue-600">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Verifying address...</span>
+              </div>
+            ) : formData.dropoff.verificationStatus === 'verified' ? (
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 text-green-600">
+                  <CheckCircle className="w-4 h-4" />
+                  <span className="text-sm">Address Verified</span>
+                </div>
+                <div className="text-xs text-gray-600 bg-green-50 p-2 rounded">
+                  {formData.dropoff.verifiedAddress}
+                </div>
+              </div>
+            ) : formData.dropoff.verificationStatus === 'error' ? (
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2 text-red-600">
+                  <AlertCircle className="w-4 h-4" />
+                  <span className="text-sm">Verification Failed</span>
+                </div>
+                <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                  {formData.dropoff.error}
+                </div>
+                <button
+                  onClick={() => handleVerifyAddress('dropoff')}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm transition-colors"
+                >
+                  TRY AGAIN
+                </button>
               </div>
             ) : (
               <button

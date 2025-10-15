@@ -87,9 +87,9 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
+        {/* Header - Sticky */}
+        <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-semibold text-gray-900">
             {category === 'equipment' ? 'Equipment Details' : 'Freight Details'}
           </h2>
@@ -101,7 +101,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Equipment/Freight Identification */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">

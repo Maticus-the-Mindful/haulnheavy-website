@@ -118,9 +118,9 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
+        {/* Header - Sticky */}
+        <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Dimensions</h2>
           <button
             onClick={onClose}
@@ -130,7 +130,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* What are you shipping? */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

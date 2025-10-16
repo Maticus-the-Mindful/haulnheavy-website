@@ -21,7 +21,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
         start: new Date(),
         end: new Date()
       },
-      timeType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      timeType: '' as '' | 'before' | 'between' | 'at' | 'after',
       specificTime: '',
       timeRange: {
         start: '',
@@ -35,7 +35,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
         start: new Date(),
         end: new Date()
       },
-      timeType: '' as '' | 'before' | 'between' | 'on' | 'after',
+      timeType: '' as '' | 'before' | 'between' | 'at' | 'after',
       specificTime: '',
       timeRange: {
         start: '',
@@ -64,10 +64,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
   ];
 
   const timeTypeOptions = [
-    { value: '', label: 'Select Option' },
+    { value: '', label: 'Select Time' },
     { value: 'before', label: 'Before' },
     { value: 'between', label: 'Between' },
-    { value: 'on', label: 'On' },
+    { value: 'at', label: 'At' },
     { value: 'after', label: 'After' }
   ];
 
@@ -178,45 +178,23 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
 
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Pick Up Section */}
-            <div className="space-y-4">
-              
-              {/* Pick Up Date & Time */}
+            <div className="space-y-6">
+              {/* Pick Up Date */}
               <div className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Pick Up Date:
-                    </label>
-                    <select
-                      value={formData.pickup.dateType}
-                      onChange={(e) => handleDateTypeChange('pickup', e.target.value)}
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
-                    >
-                      {dateTypeOptions.map(option => (
-                        <option key={option.value} value={option.value} className="text-gray-900">
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Pick Up Time:
-                    </label>
-                    <select
-                      value={formData.pickup.timeType}
-                      onChange={(e) => handleTimeTypeChange('pickup', e.target.value)}
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
-                    >
-                      {timeTypeOptions.map(option => (
-                        <option key={option.value} value={option.value} className="text-gray-900">
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Pick Up Date:
+                </label>
+                <select
+                  value={formData.pickup.dateType}
+                  onChange={(e) => handleDateTypeChange('pickup', e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                >
+                  {dateTypeOptions.map(option => (
+                    <option key={option.value} value={option.value} className="text-gray-900">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 
                 {/* Conditional date fields based on selection */}
                 {(formData.pickup.dateType === 'on' || formData.pickup.dateType === 'before' || formData.pickup.dateType === 'after') && (
@@ -283,48 +261,90 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                 )}
               </div>
 
+              {/* Pick Up Time */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Pick Up Time:
+                </label>
+                <select
+                  value={formData.pickup.timeType}
+                  onChange={(e) => handleTimeTypeChange('pickup', e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                >
+                  {timeTypeOptions.map(option => (
+                    <option key={option.value} value={option.value} className="text-gray-900">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                
+                {/* Conditional time fields based on selection */}
+                {(formData.pickup.timeType === 'at' || formData.pickup.timeType === 'before' || formData.pickup.timeType === 'after') && (
+                  <div>
+                    <select
+                      value={formData.pickup.specificTime}
+                      onChange={(e) => handleTimeChange('pickup', 'specificTime', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">Select Time</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {formData.pickup.timeType === 'between' && (
+                  <div className="space-y-3">
+                    <select
+                      value={formData.pickup.timeRange.start}
+                      onChange={(e) => handleTimeChange('pickup', 'start', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">From</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={formData.pickup.timeRange.end}
+                      onChange={(e) => handleTimeChange('pickup', 'end', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">To</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Delivery Section */}
-            <div className="space-y-4">
-              
-              {/* Delivery Date & Time */}
+            <div className="space-y-6">
+              {/* Delivery Date */}
               <div className="space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Delivery Date:
-                    </label>
-                    <select
-                      value={formData.delivery.dateType}
-                      onChange={(e) => handleDateTypeChange('delivery', e.target.value)}
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
-                    >
-                      {dateTypeOptions.map(option => (
-                        <option key={option.value} value={option.value} className="text-gray-900">
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Delivery Time:
-                    </label>
-                    <select
-                      value={formData.delivery.timeType}
-                      onChange={(e) => handleTimeTypeChange('delivery', e.target.value)}
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
-                    >
-                      {timeTypeOptions.map(option => (
-                        <option key={option.value} value={option.value} className="text-gray-900">
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Delivery Date:
+                </label>
+                <select
+                  value={formData.delivery.dateType}
+                  onChange={(e) => handleDateTypeChange('delivery', e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                >
+                  {dateTypeOptions.map(option => (
+                    <option key={option.value} value={option.value} className="text-gray-900">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 
                 {/* Conditional date fields based on selection */}
                 {(formData.delivery.dateType === 'on' || formData.delivery.dateType === 'before' || formData.delivery.dateType === 'after') && (
@@ -391,6 +411,70 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                 )}
               </div>
 
+              {/* Delivery Time */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Delivery Time:
+                </label>
+                <select
+                  value={formData.delivery.timeType}
+                  onChange={(e) => handleTimeTypeChange('delivery', e.target.value)}
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                >
+                  {timeTypeOptions.map(option => (
+                    <option key={option.value} value={option.value} className="text-gray-900">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                
+                {/* Conditional time fields based on selection */}
+                {(formData.delivery.timeType === 'at' || formData.delivery.timeType === 'before' || formData.delivery.timeType === 'after') && (
+                  <div>
+                    <select
+                      value={formData.delivery.specificTime}
+                      onChange={(e) => handleTimeChange('delivery', 'specificTime', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">Select Time</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {formData.delivery.timeType === 'between' && (
+                  <div className="space-y-3">
+                    <select
+                      value={formData.delivery.timeRange.start}
+                      onChange={(e) => handleTimeChange('delivery', 'start', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">From</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={formData.delivery.timeRange.end}
+                      onChange={(e) => handleTimeChange('delivery', 'end', e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                    >
+                      <option value="" className="text-gray-900">To</option>
+                      {timeOptions.map(time => (
+                        <option key={time} value={time} className="text-gray-900">
+                          {time}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

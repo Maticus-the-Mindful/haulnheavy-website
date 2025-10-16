@@ -71,11 +71,13 @@ export async function POST(request: NextRequest) {
       console.log('Validation failed - missing email fields');
       return NextResponse.json(
         { 
-          error: 'Missing email fields',
+          error: 'Missing email fields - Enhanced Debug Version',
           debug: {
             recipientEmail: !!recipientEmail,
             senderEmail: !!senderEmail,
-            estimateData: !!estimateData
+            estimateData: !!estimateData,
+            hasResendKey: !!process.env.RESEND_API_KEY,
+            hasClientEmail: !!process.env.CLIENT_EMAIL
           }
         },
         { status: 400 }

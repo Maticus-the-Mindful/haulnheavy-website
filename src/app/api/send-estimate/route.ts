@@ -3,6 +3,13 @@ import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('=== API CALLED ===');
+    console.log('Environment check:');
+    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+    console.log('CLIENT_EMAIL exists:', !!process.env.CLIENT_EMAIL);
+    console.log('RESEND_API_KEY value:', process.env.RESEND_API_KEY ? 'SET' : 'NOT SET');
+    console.log('CLIENT_EMAIL value:', process.env.CLIENT_EMAIL);
+    
     const body = await request.json();
     
     // Log everything we receive
@@ -77,7 +84,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Initialize Resend
+    console.log('=== INITIALIZING RESEND ===');
+    console.log('RESEND_API_KEY length:', process.env.RESEND_API_KEY?.length || 0);
+    
+    if (!process.env.RESEND_API_KEY) {
+      console.log('ERROR: RESEND_API_KEY is not set!');
+      return NextResponse.json(
+        { error: 'Email service not configured - missing API key' },
+        { status: 500 }
+      );
+    }
+    
     const resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('Resend initialized successfully');
 
     // Generate estimate summary
     const estimateSummary = generateEstimateSummary(estimateData);
@@ -122,8 +141,22 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error sending estimate:', error);
+    
+    // Return detailed error information for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
+
     return NextResponse.json(
-      { error: 'Failed to send estimate' },
+      { 
+        error: 'Failed to send estimate',
+        details: errorMessage,
+        stack: errorStack,
+        debug: {
+          hasResendKey: !!process.env.RESEND_API_KEY,
+          hasClientEmail: !!process.env.CLIENT_EMAIL,
+          resendKeyLength: process.env.RESEND_API_KEY?.length || 0
+        }
+      },
       { status: 500 }
     );
   }

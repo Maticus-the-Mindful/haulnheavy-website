@@ -3,14 +3,24 @@ import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
-    // First, let's just return success to test if the endpoint is working
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Test endpoint working',
-      received: true
-    });
-
     const body = await request.json();
+    
+    // Log everything we receive
+    console.log('=== FULL REQUEST DEBUG ===');
+    console.log('Request body type:', typeof body);
+    console.log('Request body keys:', Object.keys(body || {}));
+    console.log('Full body:', JSON.stringify(body, null, 2));
+    console.log('========================');
+    
+    // Extract all fields
+    const { 
+      estimateData, 
+      recipientEmail, 
+      senderName, 
+      senderEmail, 
+      message,
+      shareType 
+    } = body || {};
     console.log('=== RAW REQUEST BODY ===');
     console.log('Full body:', JSON.stringify(body, null, 2));
     console.log('========================');
@@ -45,22 +55,42 @@ export async function POST(request: NextRequest) {
     }
     console.log('=======================');
     
-    if (!recipientEmail || !senderEmail || !estimateData) {
-      console.log('Validation failed - missing required fields');
+    // More lenient validation - just check if we have the basic structure
+    if (!body || typeof body !== 'object') {
+      console.log('Validation failed - no request body');
+      return NextResponse.json(
+        { error: 'No request body received' },
+        { status: 400 }
+      );
+    }
+
+    // Check if we have the minimum required fields
+    if (!recipientEmail || !senderEmail) {
+      console.log('Validation failed - missing email fields');
       return NextResponse.json(
         { 
-          error: 'Missing required fields',
+          error: 'Missing email fields',
           debug: {
             recipientEmail: !!recipientEmail,
             senderEmail: !!senderEmail,
-            estimateData: !!estimateData,
-            recipientEmailValue: recipientEmail,
-            senderEmailValue: senderEmail
+            estimateData: !!estimateData
           }
         },
         { status: 400 }
       );
     }
+
+    // For now, just return success to test
+    console.log('=== VALIDATION PASSED ===');
+    return NextResponse.json({
+      success: true,
+      message: 'Validation passed - email would be sent',
+      debug: {
+        recipientEmail,
+        senderEmail,
+        hasEstimateData: !!estimateData
+      }
+    });
 
     // Ensure estimateData has an estimateId
     if (!estimateData.estimateId) {
@@ -176,9 +206,9 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
           </div>
 
         ${message ? `<h4>Message</h4><p>${message}</p>` : ''}
-        
+
         <p><em>This is an estimate only. Final pricing may vary based on actual conditions.</em></p>
-        
+
         <p>Thank you for choosing Hauln' Heavy for your equipment transportation needs!</p>
         </div>
       </div>

@@ -3,6 +3,10 @@ import { Resend } from 'resend';
 
 // FORCE DEPLOYMENT - VERSION 4.0 - CACHE BUST
 
+export async function GET() {
+  return NextResponse.json({ message: 'API route is working - VERSION 4.0' });
+}
+
 export async function POST(request: NextRequest) {
   try {
     console.log('=== API CALLED - VERSION 4.0 - CACHE BUST ===');

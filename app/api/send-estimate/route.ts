@@ -349,8 +349,39 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         <p><strong>Date:</strong> ${new Date(estimateData.timestamp).toLocaleDateString()}</p>
         <p><strong>Category:</strong> ${estimateData.category}</p>
         
-        <h3>Quick Summary</h3>
-        <p><strong>Total Estimate:</strong> $${estimateData.estimateResult.totalEstimate.toFixed(2)}</p>
+        <h4>Item Information</h4>
+        <p><strong>Type:</strong> ${estimateData.equipment ? 'Equipment' : 'Freight'}</p>
+        ${estimateData.equipment?.make ? `<p><strong>Make:</strong> ${estimateData.equipment.make}</p>` : ''}
+        ${estimateData.equipment?.model ? `<p><strong>Model:</strong> ${estimateData.equipment.model}</p>` : ''}
+        ${estimateData.equipment?.year ? `<p><strong>Year:</strong> ${estimateData.equipment.year}</p>` : ''}
+        ${estimateData.freight?.shippingItem ? `<p><strong>Item:</strong> ${estimateData.freight.shippingItem}</p>` : ''}
+        
+        <h4>Dimensions & Weight</h4>
+        <p><strong>Length:</strong> ${(estimateData.equipment?.dimensions?.length?.feet || estimateData.freight?.dimensions?.length?.feet || 0)}' ${(estimateData.equipment?.dimensions?.length?.inches || estimateData.freight?.dimensions?.length?.inches || 0)}"</p>
+        <p><strong>Width:</strong> ${(estimateData.equipment?.dimensions?.width?.feet || estimateData.freight?.dimensions?.width?.feet || 0)}' ${(estimateData.equipment?.dimensions?.width?.inches || estimateData.freight?.dimensions?.width?.inches || 0)}"</p>
+        <p><strong>Height:</strong> ${(estimateData.equipment?.dimensions?.height?.feet || estimateData.freight?.dimensions?.height?.feet || 0)}' ${(estimateData.equipment?.dimensions?.height?.inches || estimateData.freight?.dimensions?.height?.inches || 0)}"</p>
+        <p><strong>Weight:</strong> ${estimateData.equipment?.weight || estimateData.freight?.weight || 0} lbs</p>
+        
+        <h4>Locations</h4>
+        <p><strong>Pickup:</strong> ${estimateData.locations?.pickup?.address || 'Not specified'}</p>
+        <p><strong>Delivery:</strong> ${estimateData.locations?.dropoff?.address || 'Not specified'}</p>
+        
+        <h4>Additional Information</h4>
+        ${estimateData.additionalInfo?.loadingMethod ? `<p><strong>Loading Method:</strong> ${estimateData.additionalInfo.loadingMethod}</p>` : ''}
+        ${estimateData.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${estimateData.additionalInfo.unloadingMethod}</p>` : ''}
+        ${estimateData.additionalInfo?.handlingInstructions ? `<p><strong>Handling Instructions:</strong> ${estimateData.additionalInfo.handlingInstructions}</p>` : ''}
+        ${estimateData.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${estimateData.additionalInfo.targetBudget}</p>` : ''}
+        
+        <h4>Cost Breakdown</h4>
+        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+          <p>Base Transport Cost: $${estimateData.estimateResult.baseCost.toFixed(2)}</p>
+          <p>Fuel Surcharge: $${estimateData.estimateResult.fuelSurcharge.toFixed(2)}</p>
+          <p>Oversize Load Fee: $${estimateData.estimateResult.oversizeFee.toFixed(2)}</p>
+          <p>Hazmat Fee: $${estimateData.estimateResult.hazmatFee.toFixed(2)}</p>
+          <p>Additional Fees: $${estimateData.estimateResult.additionalFees.toFixed(2)}</p>
+          <hr style="margin: 10px 0;">
+          <h3 style="color: #eab308;">Total Estimate: $${estimateData.estimateResult.totalEstimate.toFixed(2)}</h3>
+        </div>
         
         <p><em>This estimate was automatically generated and shared with the customer.</em></p>
         

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,79 +20,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create transporter (you'll need to configure this with your email service)
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail', // or your preferred email service
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // For now, just log the estimate request and return success
+    // This allows the UI to work while we set up email functionality
+    console.log('=== ESTIMATE REQUEST ===');
+    console.log('Estimate ID:', estimateData.estimateId);
+    console.log('Sender:', senderName, '<' + senderEmail + '>');
+    console.log('Recipient:', recipientEmail);
+    console.log('Share Type:', shareType);
+    console.log('Estimate Total:', estimateData.estimateResult?.totalEstimate);
+    console.log('Item Type:', estimateData.equipment ? 'Equipment' : 'Freight');
+    console.log('Images:', estimateData.equipment?.images?.length || estimateData.freight?.images?.length || 0);
+    console.log('========================');
 
-    // Generate estimate summary
+    // Generate estimate summary for logging
     const estimateSummary = generateEstimateSummary(estimateData);
-    
-    // Create email content based on share type
-    let emailSubject = '';
-    let emailContent = '';
-    
-    switch (shareType) {
-      case 'email':
-        emailSubject = `Heavy Equipment Hauling Estimate - ${estimateData.estimateId}`;
-        emailContent = generateEmailContent(estimateData, estimateSummary, message);
-        break;
-      case 'pdf':
-        emailSubject = `PDF Estimate - ${estimateData.estimateId}`;
-        emailContent = generatePDFEmailContent(estimateData, estimateSummary);
-        break;
-      case 'share':
-        emailSubject = `Shared Estimate Link - ${estimateData.estimateId}`;
-        emailContent = generateShareEmailContent(estimateData, estimateSummary);
-        break;
-      default:
-        emailSubject = `Equipment Hauling Estimate - ${estimateData.estimateId}`;
-        emailContent = generateEmailContent(estimateData, estimateSummary, message);
-    }
+    console.log('Full Estimate Data:', JSON.stringify(estimateSummary, null, 2));
 
-    // Email to client (your business email)
-    const clientEmailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.CLIENT_EMAIL || 'your-business@email.com', // Your business email
-      subject: `New Estimate Request - ${shareType.toUpperCase()}`,
-      html: generateClientNotificationEmail(estimateData, senderName, senderEmail, shareType),
-      attachments: estimateData.images ? estimateData.images.map((image: any, index: number) => ({
-        filename: `estimate_image_${index + 1}.jpg`,
-        content: image, // You'll need to handle file conversion
-      })) : []
-    };
-
-    // Email to customer
-    const customerEmailOptions = {
-      from: process.env.EMAIL_USER,
-      to: recipientEmail,
-      subject: emailSubject,
-      html: emailContent,
-      replyTo: senderEmail,
-      attachments: estimateData.images ? estimateData.images.map((image: any, index: number) => ({
-        filename: `estimate_image_${index + 1}.jpg`,
-        content: image,
-      })) : []
-    };
-
-    // Send both emails
-    await transporter.sendMail(clientEmailOptions);
-    await transporter.sendMail(customerEmailOptions);
-
+    // TODO: Implement actual email sending with nodemailer or email service
+    // For now, return success so the UI works
     return NextResponse.json({ 
       success: true, 
-      message: 'Estimate sent successfully',
-      estimateId: estimateData.estimateId 
+      message: 'Estimate request logged successfully',
+      estimateId: estimateData.estimateId,
+      note: 'Email functionality will be implemented in next update'
     });
 
   } catch (error) {
-    console.error('Error sending estimate:', error);
+    console.error('Error processing estimate request:', error);
     return NextResponse.json(
-      { error: 'Failed to send estimate' },
+      { error: 'Failed to process estimate request' },
       { status: 500 }
     );
   }

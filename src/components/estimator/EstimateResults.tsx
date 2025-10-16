@@ -26,6 +26,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
   const [emailError, setEmailError] = useState('');
   const [sharingType, setSharingType] = useState<'email' | 'pdf' | 'share' | null>(null);
   const [showContactForm, setShowContactForm] = useState(false);
+  const [contactInfoSubmitted, setContactInfoSubmitted] = useState(false);
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -35,20 +36,6 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
     }).format(amount);
   };
 
-  const handleDownloadPDF = () => {
-    setSharingType('pdf');
-    setShowContactForm(true);
-  };
-
-  const handleShareEstimate = () => {
-    setSharingType('share');
-    setShowContactForm(true);
-  };
-
-  const handleSendEmail = () => {
-    setSharingType('email');
-    setShowContactForm(true);
-  };
 
   const handleSendEstimate = async () => {
     if (!contactInfo.firstName.trim()) {
@@ -196,160 +183,105 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             <p className="text-sm text-gray-600">{estimate.disclaimer}</p>
           </div>
 
-          {/* Sharing Options */}
+          {/* Contact Information Section */}
           {!emailSent ? (
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900">Share Your Estimate</h3>
-              
-              {!showContactForm ? (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {/* Send Email Button */}
-                  <button
-                    onClick={handleSendEmail}
-                    className="flex flex-col items-center justify-center space-y-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-6 px-4 rounded-lg transition-colors"
-                  >
-                    <Mail className="w-8 h-8" />
-                    <span className="text-sm uppercase tracking-wide">Send Estimate by Email</span>
-                  </button>
-
-                  {/* Download PDF Button */}
-                  <button
-                    onClick={handleDownloadPDF}
-                    className="flex flex-col items-center justify-center space-y-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 px-4 rounded-lg transition-colors"
-                  >
-                    <Download className="w-8 h-8" />
-                    <span className="text-sm uppercase tracking-wide">Download PDF</span>
-                  </button>
-
-                  {/* Share Link Button */}
-                  <button
-                    onClick={handleShareEstimate}
-                    className="flex flex-col items-center justify-center space-y-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-6 px-4 rounded-lg transition-colors"
-                  >
-                    <Share2 className="w-8 h-8" />
-                    <span className="text-sm uppercase tracking-wide">Share Estimate</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-md font-semibold text-gray-900">
-                      {sharingType === 'email' && 'Send Estimate by Email'}
-                      {sharingType === 'pdf' && 'Download PDF Estimate'}
-                      {sharingType === 'share' && 'Share Estimate Link'}
-                    </h4>
-                    <button
-                      onClick={() => setShowContactForm(false)}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+              <h3 className="text-lg font-semibold text-gray-900">Get Your Estimate by Email</h3>
+              <div className="space-y-4">
+                {/* Name Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      First Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={contactInfo.firstName}
+                      onChange={(e) => handleContactInfoChange('firstName', e.target.value)}
+                      placeholder="John"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    />
                   </div>
-
-                  {/* Contact Form */}
-                  <div className="space-y-4">
-                    {/* Name Fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          First Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={contactInfo.firstName}
-                          onChange={(e) => handleContactInfoChange('firstName', e.target.value)}
-                          placeholder="John"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Last Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={contactInfo.lastName}
-                          onChange={(e) => handleContactInfoChange('lastName', e.target.value)}
-                          placeholder="Smith"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Email Field */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        value={contactInfo.email}
-                        onChange={(e) => handleContactInfoChange('email', e.target.value)}
-                        placeholder="your.email@example.com"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                      />
-                    </div>
-
-                    {/* Company and Phone Fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Company Name
-                        </label>
-                        <input
-                          type="text"
-                          value={contactInfo.company}
-                          onChange={(e) => handleContactInfoChange('company', e.target.value)}
-                          placeholder="Your Company"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          value={contactInfo.phone}
-                          onChange={(e) => handleContactInfoChange('phone', e.target.value)}
-                          placeholder="(555) 123-4567"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-
-                    {emailError && (
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <p className="text-red-600 text-sm">{emailError}</p>
-                      </div>
-                    )}
-
-                    <button
-                      onClick={handleSendEstimate}
-                      disabled={isSending}
-                      className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
-                    >
-                      {isSending ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          <span>Sending...</span>
-                        </>
-                      ) : (
-                        <>
-                          {sharingType === 'email' && <Mail className="w-4 h-4" />}
-                          {sharingType === 'pdf' && <Download className="w-4 h-4" />}
-                          {sharingType === 'share' && <Share2 className="w-4 h-4" />}
-                          <span>
-                            {sharingType === 'email' && 'Send Estimate by Email'}
-                            {sharingType === 'pdf' && 'Download PDF Estimate'}
-                            {sharingType === 'share' && 'Share Estimate Link'}
-                          </span>
-                        </>
-                      )}
-                    </button>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={contactInfo.lastName}
+                      onChange={(e) => handleContactInfoChange('lastName', e.target.value)}
+                      placeholder="Smith"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    />
                   </div>
                 </div>
-              )}
+
+                {/* Email Field */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={contactInfo.email}
+                    onChange={(e) => handleContactInfoChange('email', e.target.value)}
+                    placeholder="your.email@example.com"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  />
+                </div>
+
+                {/* Company and Phone Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Name
+                    </label>
+                    <input
+                      type="text"
+                      value={contactInfo.company}
+                      onChange={(e) => handleContactInfoChange('company', e.target.value)}
+                      placeholder="Your Company"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      value={contactInfo.phone}
+                      onChange={(e) => handleContactInfoChange('phone', e.target.value)}
+                      placeholder="(555) 123-4567"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                {emailError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <p className="text-red-600 text-sm">{emailError}</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleSendEstimate}
+                  disabled={isSending}
+                  className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                >
+                  {isSending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      <span>Send Estimate by Email</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="text-center space-y-4">
@@ -366,6 +298,45 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                   <strong>Note:</strong> Email delivery will be implemented in the next update. 
                   Your request has been successfully recorded and our team will contact you directly.
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* Sharing Options */}
+          {!emailSent && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => {
+                    // Check if contact info is complete
+                    if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
+                      setEmailError('Please fill in all required contact information above before downloading PDF');
+                      return;
+                    }
+                    setSharingType('pdf');
+                    handleSendEstimate();
+                  }}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download PDF</span>
+                </button>
+                
+                <button
+                  onClick={() => {
+                    // Check if contact info is complete
+                    if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
+                      setEmailError('Please fill in all required contact information above before sharing');
+                      return;
+                    }
+                    setSharingType('share');
+                    handleSendEstimate();
+                  }}
+                  className="flex-1 flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Share Estimate</span>
+                </button>
               </div>
             </div>
           )}

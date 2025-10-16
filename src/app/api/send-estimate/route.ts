@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,35 +21,72 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, just log the estimate request and return success
-    // This allows the UI to work while we set up email functionality
-    console.log('=== ESTIMATE REQUEST ===');
+    // Initialize Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // Generate estimate summary
+    const estimateSummary = generateEstimateSummary(estimateData);
+    
+    // Create email content based on share type
+    let emailSubject = '';
+    let emailContent = '';
+    
+    switch (shareType) {
+      case 'email':
+        emailSubject = `Heavy Equipment Hauling Estimate - ${estimateData.estimateId}`;
+        emailContent = generateEmailContent(estimateData, estimateSummary, message);
+        break;
+      case 'pdf':
+        emailSubject = `PDF Estimate - ${estimateData.estimateId}`;
+        emailContent = generatePDFEmailContent(estimateData, estimateSummary);
+        break;
+      case 'share':
+        emailSubject = `Shared Estimate Link - ${estimateData.estimateId}`;
+        emailContent = generateShareEmailContent(estimateData, estimateSummary);
+        break;
+      default:
+        emailSubject = `Equipment Hauling Estimate - ${estimateData.estimateId}`;
+        emailContent = generateEmailContent(estimateData, estimateSummary, message);
+    }
+
+    // Email to customer
+    const customerEmail = await resend.emails.send({
+      from: 'Hauln Heavy <noreply@maticusmedia360.com>',
+      to: recipientEmail,
+      subject: emailSubject,
+      html: emailContent,
+      replyTo: senderEmail,
+    });
+
+    // Email to your business (client notification)
+    const clientEmail = await resend.emails.send({
+      from: 'Hauln Heavy <noreply@maticusmedia360.com>',
+      to: process.env.CLIENT_EMAIL || 'mat@maticusmedia360.com',
+      subject: `New Estimate Request - ${shareType.toUpperCase()}`,
+      html: generateClientNotificationEmail(estimateData, senderName, senderEmail, shareType),
+    });
+
+    console.log('=== EMAIL SENT ===');
     console.log('Estimate ID:', estimateData.estimateId);
     console.log('Sender:', senderName, '<' + senderEmail + '>');
     console.log('Recipient:', recipientEmail);
     console.log('Share Type:', shareType);
     console.log('Estimate Total:', estimateData.estimateResult?.totalEstimate);
-    console.log('Item Type:', estimateData.equipment ? 'Equipment' : 'Freight');
-    console.log('Images:', estimateData.equipment?.images?.length || estimateData.freight?.images?.length || 0);
-    console.log('========================');
+    console.log('Customer Email ID:', customerEmail.data?.id);
+    console.log('Client Email ID:', clientEmail.data?.id);
+    console.log('==================');
 
-    // Generate estimate summary for logging
-    const estimateSummary = generateEstimateSummary(estimateData);
-    console.log('Full Estimate Data:', JSON.stringify(estimateSummary, null, 2));
-
-    // TODO: Implement actual email sending with nodemailer or email service
-    // For now, return success so the UI works
     return NextResponse.json({ 
-      success: true, 
-      message: 'Estimate request logged successfully',
+        success: true, 
+      message: 'Estimate sent successfully',
       estimateId: estimateData.estimateId,
-      note: 'Email functionality will be implemented in next update'
+      emailId: customerEmail.data?.id
     });
 
   } catch (error) {
-    console.error('Error processing estimate request:', error);
+    console.error('Error sending estimate:', error);
     return NextResponse.json(
-      { error: 'Failed to process estimate request' },
+      { error: 'Failed to send estimate' },
       { status: 500 }
     );
   }
@@ -57,7 +95,7 @@ export async function POST(request: NextRequest) {
 function generateEstimateSummary(estimateData: any) {
   const item = estimateData.equipment || estimateData.freight;
   const result = estimateData.estimateResult;
-  
+
   return {
     itemType: estimateData.equipment ? 'Equipment' : 'Freight',
     itemDetails: item,
@@ -71,7 +109,7 @@ function generateEstimateSummary(estimateData: any) {
 
 function generateEmailContent(estimateData: any, summary: any, message?: string) {
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #eab308; background: #1f2937; padding: 20px; margin: 0; text-align: center;">
         Heavy Equipment Hauling Estimate
       </h2>
@@ -107,21 +145,21 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
           <p>Additional Fees: $${summary.pricing.additionalFees.toFixed(2)}</p>
           <hr style="margin: 10px 0;">
           <h3 style="color: #eab308;">Total Estimate: $${summary.pricing.totalEstimate.toFixed(2)}</h3>
-        </div>
-        
+          </div>
+
         ${message ? `<h4>Message</h4><p>${message}</p>` : ''}
         
         <p><em>This is an estimate only. Final pricing may vary based on actual conditions.</em></p>
         
         <p>Thank you for choosing Hauln' Heavy for your equipment transportation needs!</p>
+        </div>
       </div>
-    </div>
   `;
 }
 
 function generatePDFEmailContent(estimateData: any, summary: any) {
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #eab308; background: #1f2937; padding: 20px; margin: 0; text-align: center;">
         PDF Estimate Ready
       </h2>
@@ -137,8 +175,8 @@ function generatePDFEmailContent(estimateData: any, summary: any) {
         <p>Please review the attached PDF for complete details and contact us with any questions.</p>
         
         <p>Thank you for choosing Hauln' Heavy!</p>
+        </div>
       </div>
-    </div>
   `;
 }
 

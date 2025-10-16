@@ -286,19 +286,13 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
           ) : (
             <div className="text-center space-y-4">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-              <h3 className="text-lg font-semibold text-gray-900">Estimate Request Received!</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Estimate Sent!</h3>
               <p className="text-gray-600">
-                Your estimate request has been logged with ID: <strong>{completeData?.estimateId || 'N/A'}</strong>
+                Your estimate has been sent to <strong>{contactInfo.email}</strong>
               </p>
               <p className="text-sm text-gray-500">
-                Our team will review your request and contact you shortly at <strong>{contactInfo.email}</strong>
+                We've also sent the details to our team. Someone will contact you shortly.
               </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
-                <p className="text-blue-800 text-sm">
-                  <strong>Note:</strong> Email delivery will be implemented in the next update. 
-                  Your request has been successfully recorded and our team will contact you directly.
-                </p>
-              </div>
             </div>
           )}
 

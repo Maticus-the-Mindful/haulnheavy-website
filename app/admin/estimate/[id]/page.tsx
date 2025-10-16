@@ -102,7 +102,7 @@ export default function AdminEstimatePage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Hauln' Heavy</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Hauln&apos; Heavy</h1>
               <p className="text-gray-600">Admin - Estimate Details</p>
             </div>
             <div className="text-right">
@@ -135,9 +135,9 @@ export default function AdminEstimatePage() {
               <div className="space-y-2">
                 {item?.dimensions && (
                   <>
-                    <p><span className="font-medium">Length:</span> {item.dimensions.length?.feet || 0}' {item.dimensions.length?.inches || 0}"</p>
-                    <p><span className="font-medium">Width:</span> {item.dimensions.width?.feet || 0}' {item.dimensions.width?.inches || 0}"</p>
-                    <p><span className="font-medium">Height:</span> {item.dimensions.height?.feet || 0}' {item.dimensions.height?.inches || 0}"</p>
+                    <p><span className="font-medium">Length:</span> {item.dimensions.length?.feet || 0}&apos; {item.dimensions.length?.inches || 0}&quot;</p>
+                    <p><span className="font-medium">Width:</span> {item.dimensions.width?.feet || 0}&apos; {item.dimensions.width?.inches || 0}&quot;</p>
+                    <p><span className="font-medium">Height:</span> {item.dimensions.height?.feet || 0}&apos; {item.dimensions.height?.inches || 0}&quot;</p>
                   </>
                 )}
                 {item?.weight && <p><span className="font-medium">Weight:</span> {item.weight} lbs</p>}

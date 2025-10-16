@@ -86,6 +86,8 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     } as EstimateData;
     
     console.log('New formData after Step1:', newFormData);
+    console.log('Freight data after Step1:', newFormData.freight);
+    console.log('Equipment data after Step1:', newFormData.equipment);
     setFormData(newFormData);
     setCurrentStep(2);
   };
@@ -110,6 +112,8 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     console.log('EstimatorModal handleStep4Next called');
     console.log('additionalInfoData:', additionalInfoData);
     console.log('current formData:', formData);
+    console.log('current formData.freight:', formData?.freight);
+    console.log('current formData.equipment:', formData?.equipment);
     
     const updatedFormData = {
       ...(formData || {}),
@@ -117,6 +121,10 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     } as EstimateData;
     
     console.log('updatedFormData:', updatedFormData);
+    console.log('updatedFormData.freight:', updatedFormData.freight);
+    console.log('updatedFormData.equipment:', updatedFormData.equipment);
+    console.log('updatedFormData.freight?.dimensions:', updatedFormData.freight?.dimensions);
+    console.log('updatedFormData.equipment?.dimensions:', updatedFormData.equipment?.dimensions);
     
     setFormData(updatedFormData);
     
@@ -154,6 +162,9 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     
     console.log('itemData:', itemData);
     console.log('itemData.dimensions:', itemData.dimensions);
+    console.log('itemData.type:', itemData.type);
+    console.log('equipment exists:', !!equipment);
+    console.log('freight exists:', !!freight);
     
     // Base cost calculation (simplified)
     const baseRate = 2.50; // per mile

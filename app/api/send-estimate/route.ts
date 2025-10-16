@@ -214,7 +214,7 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
       <div style="padding: 20px; background: #f9fafb;">
         <h3>Estimate Details</h3>
         <p><strong>Estimate ID:</strong> ${estimateData.estimateId}</p>
-        <p><strong>Date:</strong> ${estimateData.timestamp.toLocaleDateString()}</p>
+        <p><strong>Date:</strong> ${new Date(estimateData.timestamp).toLocaleDateString()}</p>
         
         <h4>Item Information</h4>
         <p><strong>Type:</strong> ${summary.itemType}</p>
@@ -321,7 +321,7 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         
         <h3>Estimate Details</h3>
         <p><strong>Estimate ID:</strong> ${estimateData.estimateId}</p>
-        <p><strong>Date:</strong> ${estimateData.timestamp.toLocaleDateString()}</p>
+        <p><strong>Date:</strong> ${new Date(estimateData.timestamp).toLocaleDateString()}</p>
         <p><strong>Category:</strong> ${estimateData.category}</p>
         
         <h3>Quick Summary</h3>

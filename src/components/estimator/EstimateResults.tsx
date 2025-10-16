@@ -204,7 +204,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
           </div>
 
           {/* Disclaimer */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6 border-2" style={{ borderColor: '#10b981' }}>
+          <div className="bg-gray-50 rounded-lg p-4 mb-6 border-2" style={{ borderColor: '#fcd001' }}>
             <h4 className="font-semibold text-gray-900 mb-2">Important Disclaimer</h4>
             <p className="text-sm text-gray-600">{estimate.disclaimer}</p>
           </div>

@@ -275,7 +275,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <div className="flex items-center space-x-2">
                 <input
                   type="number"
-                  value={formData.weight}
+                  value={formData.weight || ''}
                   onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || 0)}
                   placeholder="0"
                   min="0"

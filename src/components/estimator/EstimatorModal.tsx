@@ -155,7 +155,12 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     console.log('freight:', freight);
     
     // Determine if we're dealing with equipment or freight
-    const itemData = equipment || freight;
+    // Check if freight has actual data (not just empty object)
+    const hasFreightData = freight && freight.type === 'freight' && (freight.shippingItem || freight.weight > 0);
+    const hasEquipmentData = equipment && equipment.type === 'equipment' && (equipment.make || equipment.model);
+    
+    const itemData = hasFreightData ? freight : hasEquipmentData ? equipment : null;
+    
     if (!itemData) {
       throw new Error('No equipment or freight data provided');
     }

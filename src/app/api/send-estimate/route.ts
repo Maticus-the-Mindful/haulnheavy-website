@@ -21,18 +21,6 @@ export async function POST(request: NextRequest) {
       message,
       shareType 
     } = body || {};
-    console.log('=== RAW REQUEST BODY ===');
-    console.log('Full body:', JSON.stringify(body, null, 2));
-    console.log('========================');
-    
-    const { 
-      estimateData, 
-      recipientEmail, 
-      senderName, 
-      senderEmail, 
-      message,
-      shareType 
-    } = body;
 
     // Debug logging
     console.log('=== API DEBUG ===');

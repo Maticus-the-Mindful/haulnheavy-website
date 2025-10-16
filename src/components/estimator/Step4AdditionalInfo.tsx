@@ -14,28 +14,39 @@ interface Step4AdditionalInfoProps {
 
 export default function Step4AdditionalInfo({ equipmentData, locationsData, schedulingData, onNext, onBack, onClose }: Step4AdditionalInfoProps) {
   const [formData, setFormData] = useState({
-    loadingMethods: ['DRIVE ON'] as string[],
-    unloadingMethods: ['DRIVE OFF'] as string[],
-    rampsNeeded: false,
+    loadingMethod: 'DRIVE ON' as string,
+    unloadingMethod: 'DRIVE OFF' as string,
+    rampsNeeded: null as boolean | null,
     handlingInstructions: '',
     targetBudget: undefined as number | undefined,
     itemValue: undefined as number | undefined
   });
 
-  const loadingOptions = ['DRIVE ON', 'FORKLIFT', 'DOCK', 'OTHER'];
-  const unloadingOptions = ['DRIVE OFF', 'FORKLIFT', 'DOCK', 'OTHER'];
+  const loadingOptions = [
+    { value: 'DRIVE ON', description: 'must be able to drive on trailer ramp under own power' },
+    { value: 'FORKLIFT', description: 'forklift must be rated to carry weight of load' },
+    { value: 'DOCK', description: 'standard height dock available' },
+    { value: 'CRANE', description: 'crane is available at the location for loading' },
+    { value: 'ROLL ON / ROLL OFF', description: 'you must have method to push item on / pull item off trailer' }
+  ];
+  
+  const unloadingOptions = [
+    { value: 'DRIVE OFF', description: 'must be able to drive on trailer ramp under own power' },
+    { value: 'FORKLIFT', description: 'forklift must be rated to carry weight of load' },
+    { value: 'DOCK', description: 'standard height dock available' },
+    { value: 'CRANE', description: 'crane is available at the location for loading' },
+    { value: 'ROLL ON / ROLL OFF', description: 'you must have method to push item on / pull item off trailer' }
+  ];
 
-  const handleCheckboxChange = (type: 'loading' | 'unloading', value: string) => {
-    const field = type === 'loading' ? 'loadingMethods' : 'unloadingMethods';
+  const handleRadioChange = (type: 'loading' | 'unloading', value: string) => {
+    const field = type === 'loading' ? 'loadingMethod' : 'unloadingMethod';
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field].includes(value)
-        ? prev[field].filter(item => item !== value)
-        : [...prev[field], value]
+      [field]: value
     }));
   };
 
-  const handleRadioChange = (value: boolean) => {
+  const handleRampsChange = (value: boolean) => {
     setFormData(prev => ({
       ...prev,
       rampsNeeded: value
@@ -69,6 +80,28 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
     onNext(additionalInfoData);
   };
 
+  // Tooltip component
+  const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => {
+    const [isVisible, setIsVisible] = useState(false);
+
+    return (
+      <div className="relative inline-block">
+        <div
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+        >
+          {children}
+        </div>
+        {isVisible && (
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 max-w-none bg-black text-white text-sm px-4 py-3 rounded-lg shadow-lg z-50">
+            {content}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-black"></div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -93,17 +126,21 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
               <HelpCircle className="w-4 h-4 text-blue-500" />
               <span className="text-red-500">*</span>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="space-y-2">
               {loadingOptions.map(option => (
-                <label key={option} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.loadingMethods.includes(option)}
-                    onChange={() => handleCheckboxChange('loading', option)}
-                    className="w-4 h-4 text-yellow-500 focus:ring-yellow-500 rounded"
-                  />
-                  <span className="text-sm text-gray-700">{option}</span>
-                </label>
+                <Tooltip key={option.value} content={`${option.value} - ${option.description}`}>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="loadingMethod"
+                      value={option.value}
+                      checked={formData.loadingMethod === option.value}
+                      onChange={() => handleRadioChange('loading', option.value)}
+                      className="text-yellow-500 focus:ring-yellow-500"
+                    />
+                    <span className="text-sm text-gray-700">{option.value}</span>
+                  </label>
+                </Tooltip>
               ))}
             </div>
           </div>
@@ -117,17 +154,21 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
               <HelpCircle className="w-4 h-4 text-blue-500" />
               <span className="text-red-500">*</span>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="space-y-2">
               {unloadingOptions.map(option => (
-                <label key={option} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.unloadingMethods.includes(option)}
-                    onChange={() => handleCheckboxChange('unloading', option)}
-                    className="w-4 h-4 text-yellow-500 focus:ring-yellow-500 rounded"
-                  />
-                  <span className="text-sm text-gray-700">{option}</span>
-                </label>
+                <Tooltip key={option.value} content={`${option.value} - ${option.description}`}>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="unloadingMethod"
+                      value={option.value}
+                      checked={formData.unloadingMethod === option.value}
+                      onChange={() => handleRadioChange('unloading', option.value)}
+                      className="text-yellow-500 focus:ring-yellow-500"
+                    />
+                    <span className="text-sm text-gray-700">{option.value}</span>
+                  </label>
+                </Tooltip>
               ))}
             </div>
           </div>
@@ -146,7 +187,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   type="radio"
                   name="rampsNeeded"
                   checked={formData.rampsNeeded === true}
-                  onChange={() => handleRadioChange(true)}
+                  onChange={() => handleRampsChange(true)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
                 <span className="text-sm text-gray-700">Yes</span>
@@ -156,7 +197,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   type="radio"
                   name="rampsNeeded"
                   checked={formData.rampsNeeded === false}
-                  onChange={() => handleRadioChange(false)}
+                  onChange={() => handleRampsChange(false)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
                 <span className="text-sm text-gray-700">No</span>
@@ -182,12 +223,14 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           <div className="space-y-6">
             {/* Target Budget */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-semibold text-gray-700">
-                  Target Budget
-                </label>
-                <HelpCircle className="w-4 h-4 text-blue-500" />
-              </div>
+              <Tooltip content="Please indicate the maximum amount you are willing to spend on shipping your item(s).">
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm font-semibold text-gray-700">
+                    Target Budget
+                  </label>
+                  <HelpCircle className="w-4 h-4 text-blue-500" />
+                </div>
+              </Tooltip>
               <div className="flex items-center">
                 <span className="text-gray-600 mr-2">$</span>
                 <input
@@ -202,12 +245,14 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
 
             {/* Value of Item(s) */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-semibold text-gray-700">
-                  Value of Item(s)
-                </label>
-                <HelpCircle className="w-4 h-4 text-blue-500" />
-              </div>
+              <Tooltip content="This value will be used to help the bidder determine the type of insurance that is needed.">
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm font-semibold text-gray-700">
+                    Value of Item(s)
+                  </label>
+                  <HelpCircle className="w-4 h-4 text-blue-500" />
+                </div>
+              </Tooltip>
               <div className="flex items-center">
                 <span className="text-gray-600 mr-2">$</span>
                 <input

@@ -80,7 +80,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
     onNext(additionalInfoData);
   };
 
-  // Tooltip component
+  // Tooltip component - works on both mobile and desktop
   const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => {
     const [isVisible, setIsVisible] = useState(false);
 
@@ -89,6 +89,8 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
         <div
           onMouseEnter={() => setIsVisible(true)}
           onMouseLeave={() => setIsVisible(false)}
+          onClick={() => setIsVisible(!isVisible)}
+          className="cursor-pointer"
         >
           {children}
         </div>
@@ -116,9 +118,9 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           </button>
         </div>
 
-        <div className="p-6 space-y-8">
+        <div className="p-6 space-y-6">
           {/* Loading Methods */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <label className="text-sm font-semibold text-gray-700">
                 How will your item(s) be loaded at pick up?
@@ -146,7 +148,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           </div>
 
           {/* Unloading Methods */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <label className="text-sm font-semibold text-gray-700">
                 How will your item(s) be unloaded at delivery?
@@ -174,7 +176,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           </div>
 
           {/* Ramps Required */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <label className="text-sm font-semibold text-gray-700">
                 Are ramps needed?
@@ -206,7 +208,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           </div>
 
           {/* Load Details/Handling Instructions */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h3 className="text-lg font-semibold text-gray-900">
               Load Details/Handling Instructions
             </h3>
@@ -220,7 +222,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           </div>
 
           {/* Financial Information */}
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Target Budget */}
             <div className="space-y-2">
               <Tooltip content="Please indicate the maximum amount you are willing to spend on shipping your item(s).">
@@ -231,15 +233,34 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   <HelpCircle className="w-4 h-4 text-blue-500" />
                 </div>
               </Tooltip>
-              <div className="flex items-center">
-                <span className="text-gray-600 mr-2">$</span>
-                <input
-                  type="text"
-                  value={formatCurrency(formData.targetBudget)}
-                  onChange={(e) => handleNumberChange('targetBudget', e.target.value)}
-                  placeholder="0"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
+              <div className="relative">
+                <div className="flex items-center bg-gray-50 rounded-lg border border-gray-300 focus-within:border-yellow-500 focus-within:ring-1 focus-within:ring-yellow-500">
+                  <span className="px-3 py-2 text-gray-600 border-r border-gray-300">$</span>
+                  <input
+                    type="text"
+                    value={formatCurrency(formData.targetBudget)}
+                    onChange={(e) => handleNumberChange('targetBudget', e.target.value)}
+                    placeholder="0"
+                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none"
+                  />
+                  <div className="hidden sm:flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => handleNumberChange('targetBudget', String((formData.targetBudget || 0) + 100))}
+                      className="px-2 py-1 text-gray-400 hover:text-gray-600 border-b border-gray-300"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleNumberChange('targetBudget', String(Math.max(0, (formData.targetBudget || 0) - 100)))}
+                      className="px-2 py-1 text-gray-400 hover:text-gray-600"
+                    >
+                      ▼
+                    </button>
+                  </div>
+                  <span className="px-3 py-2 text-gray-600 border-l border-gray-300">USD</span>
+                </div>
               </div>
             </div>
 
@@ -253,16 +274,34 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   <HelpCircle className="w-4 h-4 text-blue-500" />
                 </div>
               </Tooltip>
-              <div className="flex items-center">
-                <span className="text-gray-600 mr-2">$</span>
-                <input
-                  type="text"
-                  value={formatCurrency(formData.itemValue)}
-                  onChange={(e) => handleNumberChange('itemValue', e.target.value)}
-                  placeholder="0"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-                <span className="text-gray-600 ml-2">USD</span>
+              <div className="relative">
+                <div className="flex items-center bg-gray-50 rounded-lg border border-gray-300 focus-within:border-yellow-500 focus-within:ring-1 focus-within:ring-yellow-500">
+                  <span className="px-3 py-2 text-gray-600 border-r border-gray-300">$</span>
+                  <input
+                    type="text"
+                    value={formatCurrency(formData.itemValue)}
+                    onChange={(e) => handleNumberChange('itemValue', e.target.value)}
+                    placeholder="0"
+                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none"
+                  />
+                  <div className="hidden sm:flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => handleNumberChange('itemValue', String((formData.itemValue || 0) + 1000))}
+                      className="px-2 py-1 text-gray-400 hover:text-gray-600 border-b border-gray-300"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleNumberChange('itemValue', String(Math.max(0, (formData.itemValue || 0) - 1000)))}
+                      className="px-2 py-1 text-gray-400 hover:text-gray-600"
+                    >
+                      ▼
+                    </button>
+                  </div>
+                  <span className="px-3 py-2 text-gray-600 border-l border-gray-300">USD</span>
+                </div>
               </div>
             </div>
           </div>

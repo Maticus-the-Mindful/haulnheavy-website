@@ -289,7 +289,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                 Your estimate has been sent to <strong>{contactInfo.email}</strong>
               </p>
               <p className="text-sm text-gray-500">
-                We've also sent the details to our team. Someone will contact you shortly.
+                We&apos;ve also sent the details to our team. Someone will contact you shortly.
               </p>
             </div>
           )}

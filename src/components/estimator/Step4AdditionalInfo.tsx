@@ -267,7 +267,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                     value={formatCurrency(formData.targetBudget)}
                     onChange={(e) => handleNumberChange('targetBudget', e.target.value)}
                     placeholder="0"
-                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none"
+                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none text-gray-900 placeholder-gray-400"
                   />
                   <div className="hidden sm:flex flex-col">
                     <button
@@ -308,7 +308,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                     value={formatCurrency(formData.itemValue)}
                     onChange={(e) => handleNumberChange('itemValue', e.target.value)}
                     placeholder="0"
-                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none"
+                    className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none text-gray-900 placeholder-gray-400"
                   />
                   <div className="hidden sm:flex flex-col">
                     <button

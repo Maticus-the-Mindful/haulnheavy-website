@@ -366,6 +366,17 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         <p><strong>Pickup:</strong> ${estimateData.locations?.pickup?.address || 'Not specified'}</p>
         <p><strong>Delivery:</strong> ${estimateData.locations?.dropoff?.address || 'Not specified'}</p>
         
+        <h4>Scheduling Information</h4>
+        ${estimateData.scheduling?.pickup?.dateType ? `<p><strong>Pickup Date Type:</strong> ${estimateData.scheduling.pickup.dateType}</p>` : ''}
+        ${estimateData.scheduling?.pickup?.specificDate ? `<p><strong>Pickup Date:</strong> ${new Date(estimateData.scheduling.pickup.specificDate).toLocaleDateString()}</p>` : ''}
+        ${estimateData.scheduling?.pickup?.timeType ? `<p><strong>Pickup Time Type:</strong> ${estimateData.scheduling.pickup.timeType}</p>` : ''}
+        ${estimateData.scheduling?.pickup?.specificTime ? `<p><strong>Pickup Time:</strong> ${estimateData.scheduling.pickup.specificTime}</p>` : ''}
+        
+        ${estimateData.scheduling?.delivery?.dateType ? `<p><strong>Delivery Date Type:</strong> ${estimateData.scheduling.delivery.dateType}</p>` : ''}
+        ${estimateData.scheduling?.delivery?.specificDate ? `<p><strong>Delivery Date:</strong> ${new Date(estimateData.scheduling.delivery.specificDate).toLocaleDateString()}</p>` : ''}
+        ${estimateData.scheduling?.delivery?.timeType ? `<p><strong>Delivery Time Type:</strong> ${estimateData.scheduling.delivery.timeType}</p>` : ''}
+        ${estimateData.scheduling?.delivery?.specificTime ? `<p><strong>Delivery Time:</strong> ${estimateData.scheduling.delivery.specificTime}</p>` : ''}
+        
         <h4>Additional Information</h4>
         ${estimateData.additionalInfo?.loadingMethod ? `<p><strong>Loading Method:</strong> ${estimateData.additionalInfo.loadingMethod}</p>` : ''}
         ${estimateData.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${estimateData.additionalInfo.unloadingMethod}</p>` : ''}

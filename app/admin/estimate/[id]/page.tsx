@@ -153,15 +153,68 @@ export default function AdminEstimatePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Pickup</h3>
-                <p className="text-gray-600">
+                <p className="text-gray-900">
                   {estimateData.locations.pickup?.address || 'Not specified'}
                 </p>
+                {estimateData.locations.pickup?.addressType && (
+                  <p className="text-gray-700 text-sm mt-1">
+                    <strong>Type:</strong> {estimateData.locations.pickup.addressType}
+                  </p>
+                )}
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Delivery</h3>
-                <p className="text-gray-600">
+                <p className="text-gray-900">
                   {estimateData.locations.dropoff?.address || 'Not specified'}
                 </p>
+                {estimateData.locations.dropoff?.addressType && (
+                  <p className="text-gray-700 text-sm mt-1">
+                    <strong>Type:</strong> {estimateData.locations.dropoff.addressType}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Scheduling Information */}
+        {estimateData.scheduling && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Scheduling Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Pickup</h3>
+                <div className="space-y-1">
+                  {estimateData.scheduling.pickup?.dateType && (
+                    <p className="text-gray-900"><strong>Date Type:</strong> {estimateData.scheduling.pickup.dateType}</p>
+                  )}
+                  {estimateData.scheduling.pickup?.specificDate && (
+                    <p className="text-gray-900"><strong>Date:</strong> {new Date(estimateData.scheduling.pickup.specificDate).toLocaleDateString()}</p>
+                  )}
+                  {estimateData.scheduling.pickup?.timeType && (
+                    <p className="text-gray-900"><strong>Time Type:</strong> {estimateData.scheduling.pickup.timeType}</p>
+                  )}
+                  {estimateData.scheduling.pickup?.specificTime && (
+                    <p className="text-gray-900"><strong>Time:</strong> {estimateData.scheduling.pickup.specificTime}</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Delivery</h3>
+                <div className="space-y-1">
+                  {estimateData.scheduling.delivery?.dateType && (
+                    <p className="text-gray-900"><strong>Date Type:</strong> {estimateData.scheduling.delivery.dateType}</p>
+                  )}
+                  {estimateData.scheduling.delivery?.specificDate && (
+                    <p className="text-gray-900"><strong>Date:</strong> {new Date(estimateData.scheduling.delivery.specificDate).toLocaleDateString()}</p>
+                  )}
+                  {estimateData.scheduling.delivery?.timeType && (
+                    <p className="text-gray-900"><strong>Time Type:</strong> {estimateData.scheduling.delivery.timeType}</p>
+                  )}
+                  {estimateData.scheduling.delivery?.specificTime && (
+                    <p className="text-gray-900"><strong>Time:</strong> {estimateData.scheduling.delivery.specificTime}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

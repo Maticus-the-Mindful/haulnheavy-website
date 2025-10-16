@@ -7,12 +7,13 @@ import CalendarWidget from './CalendarWidget';
 interface Step3DatesTimesProps {
   equipmentData: any;
   locationsData: any;
+  existingData?: any; // Existing scheduling data from previous visits
   onNext: (data: any) => void;
   onBack: () => void;
   onClose: () => void;
 }
 
-export default function Step3DatesTimes({ equipmentData, locationsData, onNext, onBack, onClose }: Step3DatesTimesProps) {
+export default function Step3DatesTimes({ equipmentData, locationsData, existingData, onNext, onBack, onClose }: Step3DatesTimesProps) {
   const [formData, setFormData] = useState({
     pickup: {
       dateType: '' as '' | 'before' | 'between' | 'on' | 'after',
@@ -114,13 +115,35 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
   };
 
   const handleDateTypeChange = (location: 'pickup' | 'delivery', type: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [location]: {
-        ...prev[location],
-        dateType: type as any
+    setFormData(prev => {
+      const newFormData = {
+        ...prev,
+        [location]: {
+          ...prev[location],
+          dateType: type as any
+        }
+      };
+
+      // If pickup date type was changed, auto-set delivery date to day after pickup
+      if (location === 'pickup' && type) {
+        const latestPickupDate = getLatestPickupDateFromData(newFormData);
+        if (latestPickupDate) {
+          const nextDay = new Date(latestPickupDate);
+          nextDay.setDate(nextDay.getDate() + 1);
+          
+          newFormData.delivery = {
+            ...newFormData.delivery,
+            specificDate: nextDay,
+            dateRange: {
+              start: nextDay,
+              end: nextDay
+            }
+          };
+        }
       }
-    }));
+
+      return newFormData;
+    });
   };
 
   const handleTimeTypeChange = (location: 'pickup' | 'delivery', type: string) => {

@@ -357,6 +357,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
         <Step3DatesTimes
           equipmentData={formData?.equipment || formData?.freight}
           locationsData={formData.locations}
+          existingData={formData.scheduling}
           onNext={handleStep3Next}
           onBack={handleBack}
           onClose={handleClose}

@@ -69,14 +69,27 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
       
       // Debug logging
       console.log('=== FRONTEND DEBUG ===');
+      console.log('completeData:', completeData);
+      console.log('estimateData:', estimateData);
       console.log('estimateDataToSend:', estimateDataToSend);
       console.log('contactInfo.email:', contactInfo.email);
       console.log('senderName:', `${contactInfo.firstName} ${contactInfo.lastName}`);
       console.log('sharingType:', sharingType);
       console.log('======================');
       
+      // Ensure we have estimate data
+      if (!estimateDataToSend) {
+        throw new Error('No estimate data available. Please go back and complete the estimate first.');
+      }
+      
+      // Ensure we have the complete estimate data with result
+      const finalEstimateData = {
+        ...estimateDataToSend,
+        estimateResult: estimate // Add the estimate result to the data
+      };
+      
       const requestData = {
-        estimateData: estimateDataToSend,
+        estimateData: finalEstimateData,
         recipientEmail: contactInfo.email,
         senderName: `${contactInfo.firstName} ${contactInfo.lastName}`,
         senderEmail: contactInfo.email,

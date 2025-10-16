@@ -38,6 +38,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Ensure estimateData has an estimateId
+    if (!estimateData.estimateId) {
+      estimateData.estimateId = `EST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    }
+
     // Initialize Resend
     const resend = new Resend(process.env.RESEND_API_KEY);
 

@@ -240,7 +240,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         value={formatDate(formData.pickup.dateRange.start)}
                         readOnly
                         onClick={() => {
-                          console.log('Pickup start date clicked');
                           setActiveCalendar('pickup');
                           setActiveDateField('range');
                           setActiveRangeField('start');
@@ -255,7 +254,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         value={formatDate(formData.pickup.dateRange.end)}
                         readOnly
                         onClick={() => {
-                          console.log('Pickup end date clicked');
                           setActiveCalendar('pickup');
                           setActiveDateField('range');
                           setActiveRangeField('end');
@@ -266,7 +264,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                     </div>
                     {activeCalendar === 'pickup' && activeDateField === 'range' && (
                       <div className="relative">
-                        {console.log('Rendering pickup calendar:', { activeCalendar, activeDateField, activeRangeField })}
                         <CalendarWidget
                           isOpen={true}
                           selectedDate={activeRangeField === 'start' ? formData.pickup.dateRange.start : formData.pickup.dateRange.end}
@@ -401,7 +398,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         value={formatDate(formData.delivery.dateRange.start)}
                         readOnly
                         onClick={() => {
-                          console.log('Delivery start date clicked');
                           setActiveCalendar('delivery');
                           setActiveDateField('range');
                           setActiveRangeField('start');
@@ -426,7 +422,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                     </div>
                     {activeCalendar === 'delivery' && activeDateField === 'range' && (
                       <div className="relative">
-                        {console.log('Rendering delivery calendar:', { activeCalendar, activeDateField, activeRangeField })}
                         <CalendarWidget
                           isOpen={true}
                           selectedDate={activeRangeField === 'start' ? formData.delivery.dateRange.start : formData.delivery.dateRange.end}

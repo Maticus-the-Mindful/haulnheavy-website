@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
+// FORCE DEPLOYMENT - VERSION 3.0 - This should appear in logs
+
 export async function POST(request: NextRequest) {
   try {
-    console.log('=== API CALLED - VERSION 2.0 ===');
+    console.log('=== API CALLED - VERSION 3.0 - FORCE DEPLOYMENT ===');
     console.log('Environment check:');
     console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
     console.log('CLIENT_EMAIL exists:', !!process.env.CLIENT_EMAIL);

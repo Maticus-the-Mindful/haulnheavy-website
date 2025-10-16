@@ -80,7 +80,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
     onNext(additionalInfoData);
   };
 
-  // Tooltip component - works on both mobile and desktop
+  // Tooltip component - works on both mobile and desktop with better positioning
   const Tooltip = ({ children, content }: { children: React.ReactNode; content: string }) => {
     const [isVisible, setIsVisible] = useState(false);
 
@@ -95,7 +95,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
           {children}
         </div>
         {isVisible && (
-          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 max-w-none bg-black text-white text-sm px-4 py-3 rounded-lg shadow-lg z-50">
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-72 max-w-[calc(100vw-2rem)] bg-black text-white text-sm px-4 py-3 rounded-lg shadow-lg z-50">
             {content}
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-black"></div>
           </div>
@@ -128,19 +128,32 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
               <HelpCircle className="w-4 h-4 text-blue-500" />
               <span className="text-red-500">*</span>
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-4">
               {loadingOptions.map(option => (
                 <Tooltip key={option.value} content={`${option.value} - ${option.description}`}>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="loadingMethod"
-                      value={option.value}
-                      checked={formData.loadingMethod === option.value}
-                      onChange={() => handleRadioChange('loading', option.value)}
-                      className="text-yellow-500 focus:ring-yellow-500"
-                    />
-                    <span className="text-sm text-gray-700">{option.value}</span>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <div className="relative">
+                      <input
+                        type="radio"
+                        name="loadingMethod"
+                        value={option.value}
+                        checked={formData.loadingMethod === option.value}
+                        onChange={() => handleRadioChange('loading', option.value)}
+                        className="sr-only"
+                      />
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                        formData.loadingMethod === option.value
+                          ? 'bg-yellow-500 border-yellow-500'
+                          : 'bg-white border-gray-300'
+                      }`}>
+                        {formData.loadingMethod === option.value && (
+                          <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-700 font-medium">{option.value}</span>
                   </label>
                 </Tooltip>
               ))}
@@ -156,19 +169,32 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
               <HelpCircle className="w-4 h-4 text-blue-500" />
               <span className="text-red-500">*</span>
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-4">
               {unloadingOptions.map(option => (
                 <Tooltip key={option.value} content={`${option.value} - ${option.description}`}>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="unloadingMethod"
-                      value={option.value}
-                      checked={formData.unloadingMethod === option.value}
-                      onChange={() => handleRadioChange('unloading', option.value)}
-                      className="text-yellow-500 focus:ring-yellow-500"
-                    />
-                    <span className="text-sm text-gray-700">{option.value}</span>
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <div className="relative">
+                      <input
+                        type="radio"
+                        name="unloadingMethod"
+                        value={option.value}
+                        checked={formData.unloadingMethod === option.value}
+                        onChange={() => handleRadioChange('unloading', option.value)}
+                        className="sr-only"
+                      />
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                        formData.unloadingMethod === option.value
+                          ? 'bg-yellow-500 border-yellow-500'
+                          : 'bg-white border-gray-300'
+                      }`}>
+                        {formData.unloadingMethod === option.value && (
+                          <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-700 font-medium">{option.value}</span>
                   </label>
                 </Tooltip>
               ))}

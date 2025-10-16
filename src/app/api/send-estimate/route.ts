@@ -54,7 +54,14 @@ export async function POST(request: NextRequest) {
     if (!body || typeof body !== 'object') {
       console.log('Validation failed - no request body');
       return NextResponse.json(
-        { error: 'No request body received' },
+        { 
+          error: 'No request body received',
+          debug: {
+            hasResendKey: !!process.env.RESEND_API_KEY,
+            hasClientEmail: !!process.env.CLIENT_EMAIL,
+            resendKeyLength: process.env.RESEND_API_KEY?.length || 0
+          }
+        },
         { status: 400 }
       );
     }

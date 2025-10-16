@@ -76,19 +76,31 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
       return;
     }
 
-    onNext({
+    const dataToSubmit = {
       type: 'freight',
       shippingItem: formData.shippingItem,
       quantity: formData.quantity,
       dimensions: {
-        length: formData.length,
-        width: formData.width,
-        height: formData.height
+        length: {
+          feet: parseInt(formData.length.feet) || 0,
+          inches: parseInt(formData.length.inches) || 0
+        },
+        width: {
+          feet: parseInt(formData.width.feet) || 0,
+          inches: parseInt(formData.width.inches) || 0
+        },
+        height: {
+          feet: parseInt(formData.height.feet) || 0,
+          inches: parseInt(formData.height.inches) || 0
+        }
       },
       weight: formData.weight,
       hasHazmat: formData.hasHazmat,
       transportMethod: formData.transportMethod
-    });
+    };
+    
+    console.log('Freight data being submitted:', dataToSubmit);
+    onNext(dataToSubmit);
   };
 
   // Tooltip component

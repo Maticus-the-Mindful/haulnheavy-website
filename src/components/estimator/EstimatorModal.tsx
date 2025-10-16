@@ -69,8 +69,9 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
   };
 
   const handleStep1Next = (step1Data: any) => {
-    setFormData(prev => ({
-      ...(prev || {}),
+    console.log('handleStep1Next called with:', step1Data);
+    const newFormData = {
+      ...(formData || {}),
       ...(step1Data.type === 'freight' ? { freight: step1Data } : { equipment: step1Data }),
       characteristics: {} as any,
       locations: {
@@ -82,7 +83,10 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
         delivery: {} as any
       },
       additionalInfo: {} as any
-    } as EstimateData));
+    } as EstimateData;
+    
+    console.log('New formData after Step1:', newFormData);
+    setFormData(newFormData);
     setCurrentStep(2);
   };
 

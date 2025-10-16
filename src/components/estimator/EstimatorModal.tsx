@@ -103,17 +103,30 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
   };
 
   const handleStep4Next = (additionalInfoData: any) => {
+    console.log('EstimatorModal handleStep4Next called');
+    console.log('additionalInfoData:', additionalInfoData);
+    console.log('current formData:', formData);
+    
     const updatedFormData = {
       ...(formData || {}),
       ...additionalInfoData
     } as EstimateData;
     
+    console.log('updatedFormData:', updatedFormData);
+    
     setFormData(updatedFormData);
     
     // Now we have all the data, calculate the estimate
-    const result = calculateEstimate(updatedFormData);
-    setEstimateResult(result);
-    setCurrentStep(5);
+    try {
+      const result = calculateEstimate(updatedFormData);
+      console.log('estimate result:', result);
+      setEstimateResult(result);
+      setCurrentStep(5);
+      console.log('Step changed to 5');
+    } catch (error) {
+      console.error('Error calculating estimate:', error);
+      alert('Error calculating estimate. Please check the console for details.');
+    }
   };
 
   const handleBack = () => {

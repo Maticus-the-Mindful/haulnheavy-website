@@ -74,9 +74,12 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
   };
 
   const handleNext = () => {
+    console.log('Step4AdditionalInfo handleNext called');
+    console.log('formData:', formData);
     const additionalInfoData = {
       additionalInfo: formData
     };
+    console.log('additionalInfoData:', additionalInfoData);
     onNext(additionalInfoData);
   };
 

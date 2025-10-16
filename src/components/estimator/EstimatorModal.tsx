@@ -223,7 +223,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     let additionalFees = 0;
 
     // Check for hazmat (from either equipment characteristics or freight data)
-    const hasHazmat = characteristics?.hasHazmat || (freight?.hasHazmat) || false;
+    const hasHazmat = characteristics?.hasHazmat || (freight?.hasHazmatPlacards) || false;
     if (hasHazmat) {
       hazmatFee = baseCost * 0.25; // 25% hazmat fee
     }
@@ -237,7 +237,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     }
 
     // Check transport method (from either equipment characteristics or freight data)
-    const transportMethod = characteristics?.transportMethod || freight?.transportMethod;
+    const transportMethod = characteristics?.transportMethod || freight?.transportationMethod;
     if (transportMethod === 'towed') {
       additionalFees += 300;
     } else if (transportMethod === 'driven') {

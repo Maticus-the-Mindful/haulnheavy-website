@@ -54,6 +54,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
 
   const [activeCalendar, setActiveCalendar] = useState<'pickup' | 'delivery' | null>(null);
   const [activeDateField, setActiveDateField] = useState<'date' | 'range' | null>(null);
+  const [activeRangeField, setActiveRangeField] = useState<'start' | 'end' | null>(null);
 
   const dateTypeOptions = [
     { value: '', label: 'Select Option' },
@@ -113,10 +114,20 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
       ...prev,
       [location]: {
         ...prev[location],
-        specificDate: date
+        ...(activeDateField === 'date' 
+          ? { specificDate: date }
+          : {
+              dateRange: {
+                ...prev[location].dateRange,
+                [activeRangeField === 'start' ? 'start' : 'end']: date
+              }
+            }
+        )
       }
     }));
     setActiveCalendar(null);
+    setActiveDateField(null);
+    setActiveRangeField(null);
   };
 
   const handleTimeChange = (location: 'pickup' | 'delivery', field: 'specificTime' | 'start' | 'end', time: string) => {
@@ -231,6 +242,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         onClick={() => {
                           setActiveCalendar('pickup');
                           setActiveDateField('range');
+                          setActiveRangeField('start');
                         }}
                         className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="From"
@@ -244,6 +256,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         onClick={() => {
                           setActiveCalendar('pickup');
                           setActiveDateField('range');
+                          setActiveRangeField('end');
                         }}
                         className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="To"
@@ -252,9 +265,13 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                     {activeCalendar === 'pickup' && activeDateField === 'range' && (
                       <CalendarWidget
                         isOpen={true}
-                        selectedDate={formData.pickup.dateRange.start}
+                        selectedDate={activeRangeField === 'start' ? formData.pickup.dateRange.start : formData.pickup.dateRange.end}
                         onDateSelect={(date) => handleDateSelect('pickup', date)}
-                        onClose={() => setActiveCalendar(null)}
+                        onClose={() => {
+                          setActiveCalendar(null);
+                          setActiveDateField(null);
+                          setActiveRangeField(null);
+                        }}
                       />
                     )}
                   </div>
@@ -381,6 +398,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         onClick={() => {
                           setActiveCalendar('delivery');
                           setActiveDateField('range');
+                          setActiveRangeField('start');
                         }}
                         className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="From"
@@ -394,6 +412,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         onClick={() => {
                           setActiveCalendar('delivery');
                           setActiveDateField('range');
+                          setActiveRangeField('end');
                         }}
                         className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="To"
@@ -402,9 +421,13 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                     {activeCalendar === 'delivery' && activeDateField === 'range' && (
                       <CalendarWidget
                         isOpen={true}
-                        selectedDate={formData.delivery.dateRange.start}
+                        selectedDate={activeRangeField === 'start' ? formData.delivery.dateRange.start : formData.delivery.dateRange.end}
                         onDateSelect={(date) => handleDateSelect('delivery', date)}
-                        onClose={() => setActiveCalendar(null)}
+                        onClose={() => {
+                          setActiveCalendar(null);
+                          setActiveDateField(null);
+                          setActiveRangeField(null);
+                        }}
                       />
                     )}
                   </div>

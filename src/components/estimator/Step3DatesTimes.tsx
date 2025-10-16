@@ -89,6 +89,30 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
     return date.toLocaleDateString('en-US', options);
   };
 
+  // Helper function to get the latest pickup date (for "between" scenarios)
+  const getLatestPickupDate = () => {
+    if (formData.pickup.dateType === 'between') {
+      return new Date(Math.max(
+        formData.pickup.dateRange.start.getTime(),
+        formData.pickup.dateRange.end.getTime()
+      ));
+    } else if (formData.pickup.dateType === 'on' || formData.pickup.dateType === 'before' || formData.pickup.dateType === 'after') {
+      return formData.pickup.specificDate;
+    }
+    return null;
+  };
+
+  // Helper function to calculate minimum delivery date (day after pickup)
+  const getMinDeliveryDate = () => {
+    const latestPickupDate = getLatestPickupDate();
+    if (latestPickupDate) {
+      const minDate = new Date(latestPickupDate);
+      minDate.setDate(minDate.getDate() + 1); // Day after pickup
+      return minDate;
+    }
+    return null;
+  };
+
   const handleDateTypeChange = (location: 'pickup' | 'delivery', type: string) => {
     setFormData(prev => ({
       ...prev,
@@ -385,6 +409,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                         selectedDate={formData.delivery.specificDate}
                         onDateSelect={(date) => handleDateSelect('delivery', date)}
                         onClose={() => setActiveCalendar(null)}
+                        minDate={getMinDeliveryDate() || undefined}
                       />
                     )}
                   </div>
@@ -431,6 +456,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                             setActiveDateField(null);
                             setActiveRangeField(null);
                           }}
+                          minDate={getMinDeliveryDate() || undefined}
                         />
                       </div>
                     )}

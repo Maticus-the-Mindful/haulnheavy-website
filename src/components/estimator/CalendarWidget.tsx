@@ -8,9 +8,11 @@ interface CalendarWidgetProps {
   selectedDate?: Date;
   onDateSelect: (date: Date) => void;
   onClose: () => void;
+  minDate?: Date; // Minimum selectable date
+  maxDate?: Date; // Maximum selectable date
 }
 
-export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onClose }: CalendarWidgetProps) {
+export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onClose, minDate, maxDate }: CalendarWidgetProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   
   if (!isOpen) return null;
@@ -59,10 +61,28 @@ export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onC
     setCurrentDate(new Date());
   };
 
-  const isDateInPast = (date: Date) => {
+  const isDateSelectable = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return date < today;
+    
+    // Check if date is in the past
+    if (date < today) return false;
+    
+    // Check if date is before minDate
+    if (minDate) {
+      const minDateCopy = new Date(minDate);
+      minDateCopy.setHours(0, 0, 0, 0);
+      if (date < minDateCopy) return false;
+    }
+    
+    // Check if date is after maxDate
+    if (maxDate) {
+      const maxDateCopy = new Date(maxDate);
+      maxDateCopy.setHours(0, 0, 0, 0);
+      if (date > maxDateCopy) return false;
+    }
+    
+    return true;
   };
 
   const isDateSelected = (date: Date) => {
@@ -74,7 +94,7 @@ export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onC
 
   const handleDateClick = (day: number) => {
     const date = new Date(year, month, day);
-    if (!isDateInPast(date)) {
+    if (isDateSelectable(date)) {
       onDateSelect(date);
     }
   };
@@ -98,17 +118,17 @@ export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onC
     // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      const isPast = isDateInPast(date);
+      const isSelectable = isDateSelectable(date);
       const isSelected = isDateSelected(date);
       
       days.push(
         <button
           key={day}
           onClick={() => handleDateClick(day)}
-          disabled={isPast}
+          disabled={!isSelectable}
           className={`
             text-center py-2 rounded-full transition-colors
-            ${isPast 
+            ${!isSelectable 
               ? 'text-gray-300 cursor-not-allowed' 
               : isSelected
                 ? 'bg-yellow-500 text-black font-semibold'

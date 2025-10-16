@@ -13,10 +13,27 @@ export async function POST(request: NextRequest) {
       shareType 
     } = body;
 
+    // Debug logging
+    console.log('=== API DEBUG ===');
+    console.log('recipientEmail:', recipientEmail);
+    console.log('senderEmail:', senderEmail);
+    console.log('estimateData exists:', !!estimateData);
+    console.log('estimateData.estimateId:', estimateData?.estimateId);
+    console.log('shareType:', shareType);
+    console.log('================');
+
     // Validate required fields
     if (!recipientEmail || !senderEmail || !estimateData) {
+      console.log('Validation failed - missing required fields');
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { 
+          error: 'Missing required fields',
+          debug: {
+            recipientEmail: !!recipientEmail,
+            senderEmail: !!senderEmail,
+            estimateData: !!estimateData
+          }
+        },
         { status: 400 }
       );
     }

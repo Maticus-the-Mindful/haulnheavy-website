@@ -67,28 +67,43 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
     try {
       const estimateDataToSend = completeData || estimateData;
       
+      // Debug logging
+      console.log('=== FRONTEND DEBUG ===');
+      console.log('estimateDataToSend:', estimateDataToSend);
+      console.log('contactInfo.email:', contactInfo.email);
+      console.log('senderName:', `${contactInfo.firstName} ${contactInfo.lastName}`);
+      console.log('sharingType:', sharingType);
+      console.log('======================');
+      
+      const requestData = {
+        estimateData: estimateDataToSend,
+        recipientEmail: contactInfo.email,
+        senderName: `${contactInfo.firstName} ${contactInfo.lastName}`,
+        senderEmail: contactInfo.email,
+        message: `Company: ${contactInfo.company}\nPhone: ${contactInfo.phone}`,
+        shareType: sharingType || 'email'
+      };
+      
+      console.log('Request data:', requestData);
+      
       const response = await fetch('/api/send-estimate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          estimateData: estimateDataToSend,
-          recipientEmail: contactInfo.email,
-          senderName: `${contactInfo.firstName} ${contactInfo.lastName}`,
-          senderEmail: contactInfo.email,
-          message: `Company: ${contactInfo.company}\nPhone: ${contactInfo.phone}`,
-          shareType: sharingType || 'email'
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (response.ok) {
         setEmailSent(true);
       } else {
-        throw new Error('Failed to send email');
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || 'Failed to send email');
       }
     } catch (error) {
-      setEmailError('Failed to send email. Please try again.');
+      console.error('Email send error:', error);
+      setEmailError(error instanceof Error ? error.message : 'Failed to send email. Please try again.');
     } finally {
       setIsSending(false);
     }

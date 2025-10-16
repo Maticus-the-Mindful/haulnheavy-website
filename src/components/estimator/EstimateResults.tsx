@@ -139,32 +139,32 @@ export default function EstimateResults({ estimate, estimateData, onClose, onNew
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">Base Transport Cost</span>
-                <span className="font-medium">{formatCurrency(estimate.baseCost)}</span>
+                <span className="font-medium text-gray-900">{formatCurrency(estimate.baseCost)}</span>
               </div>
               
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">Fuel Surcharge</span>
-                <span className="font-medium">{formatCurrency(estimate.fuelSurcharge)}</span>
+                <span className="font-medium text-gray-900">{formatCurrency(estimate.fuelSurcharge)}</span>
               </div>
               
               {estimate.oversizeFee > 0 && (
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">Oversize Load Fee</span>
-                  <span className="font-medium">{formatCurrency(estimate.oversizeFee)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimate.oversizeFee)}</span>
                 </div>
               )}
               
               {estimate.hazmatFee > 0 && (
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">Hazmat Fee</span>
-                  <span className="font-medium">{formatCurrency(estimate.hazmatFee)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimate.hazmatFee)}</span>
                 </div>
               )}
               
               {estimate.additionalFees > 0 && (
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">Additional Fees</span>
-                  <span className="font-medium">{formatCurrency(estimate.additionalFees)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimate.additionalFees)}</span>
                 </div>
               )}
               

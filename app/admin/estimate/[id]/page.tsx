@@ -121,11 +121,11 @@ export default function AdminEstimatePage() {
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Item Information</h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Type:</span> {estimateData.equipment ? 'Equipment' : 'Freight'}</p>
-                {item?.make && <p><span className="font-medium">Make:</span> {item.make}</p>}
-                {item?.model && <p><span className="font-medium">Model:</span> {item.model}</p>}
-                {item?.year && <p><span className="font-medium">Year:</span> {item.year}</p>}
-                {item?.shippingItem && <p><span className="font-medium">Item:</span> {item.shippingItem}</p>}
+                <p className="text-gray-900"><span className="font-medium">Type:</span> {estimateData.equipment ? 'Equipment' : 'Freight'}</p>
+                {item?.make && <p className="text-gray-900"><span className="font-medium">Make:</span> {item.make}</p>}
+                {item?.model && <p className="text-gray-900"><span className="font-medium">Model:</span> {item.model}</p>}
+                {item?.year && <p className="text-gray-900"><span className="font-medium">Year:</span> {item.year}</p>}
+                {item?.shippingItem && <p className="text-gray-900"><span className="font-medium">Item:</span> {item.shippingItem}</p>}
               </div>
             </div>
 
@@ -135,12 +135,12 @@ export default function AdminEstimatePage() {
               <div className="space-y-2">
                 {item?.dimensions && (
                   <>
-                    <p><span className="font-medium">Length:</span> {item.dimensions.length?.feet || 0}&apos; {item.dimensions.length?.inches || 0}&quot;</p>
-                    <p><span className="font-medium">Width:</span> {item.dimensions.width?.feet || 0}&apos; {item.dimensions.width?.inches || 0}&quot;</p>
-                    <p><span className="font-medium">Height:</span> {item.dimensions.height?.feet || 0}&apos; {item.dimensions.height?.inches || 0}&quot;</p>
+                    <p className="text-gray-900"><span className="font-medium">Length:</span> {item.dimensions.length?.feet || 0}&apos; {item.dimensions.length?.inches || 0}&quot;</p>
+                    <p className="text-gray-900"><span className="font-medium">Width:</span> {item.dimensions.width?.feet || 0}&apos; {item.dimensions.width?.inches || 0}&quot;</p>
+                    <p className="text-gray-900"><span className="font-medium">Height:</span> {item.dimensions.height?.feet || 0}&apos; {item.dimensions.height?.inches || 0}&quot;</p>
                   </>
                 )}
-                {item?.weight && <p><span className="font-medium">Weight:</span> {item.weight} lbs</p>}
+                {item?.weight && <p className="text-gray-900"><span className="font-medium">Weight:</span> {item.weight} lbs</p>}
               </div>
             </div>
           </div>
@@ -173,29 +173,29 @@ export default function AdminEstimatePage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Cost Breakdown</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span>Base Transport Cost:</span>
-                <span className="font-medium">{formatCurrency(estimateData.estimateResult.baseCost)}</span>
+                <span className="text-gray-900">Base Transport Cost:</span>
+                <span className="font-medium text-gray-900">{formatCurrency(estimateData.estimateResult.baseCost)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Fuel Surcharge:</span>
-                <span className="font-medium">{formatCurrency(estimateData.estimateResult.fuelSurcharge)}</span>
+                <span className="text-gray-900">Fuel Surcharge:</span>
+                <span className="font-medium text-gray-900">{formatCurrency(estimateData.estimateResult.fuelSurcharge)}</span>
               </div>
               {estimateData.estimateResult.oversizeFee > 0 && (
                 <div className="flex justify-between">
-                  <span>Oversize Load Fee:</span>
-                  <span className="font-medium">{formatCurrency(estimateData.estimateResult.oversizeFee)}</span>
+                  <span className="text-gray-900">Oversize Load Fee:</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimateData.estimateResult.oversizeFee)}</span>
                 </div>
               )}
               {estimateData.estimateResult.hazmatFee > 0 && (
                 <div className="flex justify-between">
-                  <span>Hazmat Fee:</span>
-                  <span className="font-medium">{formatCurrency(estimateData.estimateResult.hazmatFee)}</span>
+                  <span className="text-gray-900">Hazmat Fee:</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimateData.estimateResult.hazmatFee)}</span>
                 </div>
               )}
               {estimateData.estimateResult.additionalFees > 0 && (
                 <div className="flex justify-between">
-                  <span>Additional Fees:</span>
-                  <span className="font-medium">{formatCurrency(estimateData.estimateResult.additionalFees)}</span>
+                  <span className="text-gray-900">Additional Fees:</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(estimateData.estimateResult.additionalFees)}</span>
                 </div>
               )}
               <hr className="my-4" />

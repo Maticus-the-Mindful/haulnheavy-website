@@ -222,6 +222,7 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
         ${summary.itemDetails.make ? `<p><strong>Make:</strong> ${summary.itemDetails.make}</p>` : ''}
         ${summary.itemDetails.model ? `<p><strong>Model:</strong> ${summary.itemDetails.model}</p>` : ''}
         ${summary.itemDetails.year ? `<p><strong>Year:</strong> ${summary.itemDetails.year}</p>` : ''}
+        ${summary.itemDetails.quantity ? `<p><strong>Quantity:</strong> ${summary.itemDetails.quantity}</p>` : ''}
         
         <h4>Dimensions & Weight</h4>
         <p><strong>Length:</strong> ${summary.itemDetails.dimensions?.length?.feet || 0}' ${summary.itemDetails.dimensions?.length?.inches || 0}"</p>
@@ -229,9 +230,33 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
         <p><strong>Height:</strong> ${summary.itemDetails.dimensions?.height?.feet || 0}' ${summary.itemDetails.dimensions?.height?.inches || 0}"</p>
         <p><strong>Weight:</strong> ${summary.itemDetails.weight || 0} lbs</p>
         
+        ${summary.itemDetails.hasHazmatPlacards !== null ? `<p><strong>Hazmat Placards:</strong> ${summary.itemDetails.hasHazmatPlacards ? 'Yes' : 'No'}</p>` : ''}
+        ${summary.itemDetails.transportationMethod ? `<p><strong>Transportation Method:</strong> ${summary.itemDetails.transportationMethod}</p>` : ''}
+        
         <h4>Locations</h4>
         <p><strong>Pickup:</strong> ${summary.locations?.pickup?.address || 'Not specified'}</p>
+        ${summary.locations?.pickup?.addressType ? `<p><strong>Pickup Type:</strong> ${summary.locations.pickup.addressType}</p>` : ''}
         <p><strong>Delivery:</strong> ${summary.locations?.dropoff?.address || 'Not specified'}</p>
+        ${summary.locations?.dropoff?.addressType ? `<p><strong>Delivery Type:</strong> ${summary.locations.dropoff.addressType}</p>` : ''}
+        
+        <h4>Scheduling Information</h4>
+        ${summary.scheduling?.pickup?.dateType ? `<p><strong>Pickup Date Type:</strong> ${summary.scheduling.pickup.dateType}</p>` : ''}
+        ${summary.scheduling?.pickup?.specificDate ? `<p><strong>Pickup Date:</strong> ${new Date(summary.scheduling.pickup.specificDate).toLocaleDateString()}</p>` : ''}
+        ${summary.scheduling?.pickup?.timeType ? `<p><strong>Pickup Time Type:</strong> ${summary.scheduling.pickup.timeType}</p>` : ''}
+        ${summary.scheduling?.pickup?.specificTime ? `<p><strong>Pickup Time:</strong> ${summary.scheduling.pickup.specificTime}</p>` : ''}
+        
+        ${summary.scheduling?.delivery?.dateType ? `<p><strong>Delivery Date Type:</strong> ${summary.scheduling.delivery.dateType}</p>` : ''}
+        ${summary.scheduling?.delivery?.specificDate ? `<p><strong>Delivery Date:</strong> ${new Date(summary.scheduling.delivery.specificDate).toLocaleDateString()}</p>` : ''}
+        ${summary.scheduling?.delivery?.timeType ? `<p><strong>Delivery Time Type:</strong> ${summary.scheduling.delivery.timeType}</p>` : ''}
+        ${summary.scheduling?.delivery?.specificTime ? `<p><strong>Delivery Time:</strong> ${summary.scheduling.delivery.specificTime}</p>` : ''}
+        
+        <h4>Additional Information</h4>
+        ${summary.additionalInfo?.loadingMethod ? `<p><strong>Loading Method:</strong> ${summary.additionalInfo.loadingMethod}</p>` : ''}
+        ${summary.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${summary.additionalInfo.unloadingMethod}</p>` : ''}
+        ${summary.additionalInfo?.rampsNeeded !== null ? `<p><strong>Ramps Needed:</strong> ${summary.additionalInfo.rampsNeeded ? 'Yes' : 'No'}</p>` : ''}
+        ${summary.additionalInfo?.handlingInstructions ? `<p><strong>Handling Instructions:</strong> ${summary.additionalInfo.handlingInstructions}</p>` : ''}
+        ${summary.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${summary.additionalInfo.targetBudget}</p>` : ''}
+        ${summary.additionalInfo?.valueOfItems ? `<p><strong>Value of Items:</strong> $${summary.additionalInfo.valueOfItems}</p>` : ''}
         
         <h4>Cost Breakdown</h4>
         <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
@@ -244,7 +269,7 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
           <h3 style="color: #eab308;">Total Estimate: $${summary.pricing.totalEstimate.toFixed(2)}</h3>
           </div>
 
-        ${message ? `<h4>Message</h4><p>${message}</p>` : ''}
+        ${message ? `<h4>Customer Message</h4><p>${message}</p>` : ''}
 
         <p><em>This is an estimate only. Final pricing may vary based on actual conditions.</em></p>
 

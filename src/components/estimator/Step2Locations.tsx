@@ -185,7 +185,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
                 value={formData.pickup.address}
                 onChange={(e) => handleAddressChange('pickup', e.target.value)}
                 placeholder="Enter City, State or Zip"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 placeholder-gray-400"
               />
               <select
                 value={formData.pickup.addressType}
@@ -250,7 +250,7 @@ export default function Step2Locations({ equipmentData, onNext, onBack, onClose 
                 value={formData.dropoff.address}
                 onChange={(e) => handleAddressChange('dropoff', e.target.value)}
                 placeholder="Enter City, State or Zip"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 placeholder-gray-400"
               />
               <select
                 value={formData.dropoff.addressType}

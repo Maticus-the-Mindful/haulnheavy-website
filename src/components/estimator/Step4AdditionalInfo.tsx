@@ -246,7 +246,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
               onChange={(e) => handleTextChange('handlingInstructions', e.target.value)}
               placeholder='Please enter information about the Load that may be helpful for the carrier to know prior to pick up. Example: "The equipment is at the end of a long driveway, and requires backing in."'
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none text-gray-900 placeholder-gray-400"
             />
           </div>
 

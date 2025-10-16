@@ -134,24 +134,59 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
   };
 
   const handleDateSelect = (location: 'pickup' | 'delivery', date: Date) => {
-    setFormData(prev => ({
-      ...prev,
-      [location]: {
-        ...prev[location],
-        ...(activeDateField === 'date' 
-          ? { specificDate: date }
-          : {
-              dateRange: {
-                ...prev[location].dateRange,
-                [activeRangeField === 'start' ? 'start' : 'end']: date
+    setFormData(prev => {
+      const newFormData = {
+        ...prev,
+        [location]: {
+          ...prev[location],
+          ...(activeDateField === 'date' 
+            ? { specificDate: date }
+            : {
+                dateRange: {
+                  ...prev[location].dateRange,
+                  [activeRangeField === 'start' ? 'start' : 'end']: date
+                }
               }
+          )
+        }
+      };
+
+      // If pickup date was updated, auto-set delivery date to day after pickup
+      if (location === 'pickup') {
+        const latestPickupDate = getLatestPickupDateFromData(newFormData);
+        if (latestPickupDate) {
+          const nextDay = new Date(latestPickupDate);
+          nextDay.setDate(nextDay.getDate() + 1);
+          
+          newFormData.delivery = {
+            ...newFormData.delivery,
+            specificDate: nextDay,
+            dateRange: {
+              start: nextDay,
+              end: nextDay
             }
-        )
+          };
+        }
       }
-    }));
+
+      return newFormData;
+    });
     setActiveCalendar(null);
     setActiveDateField(null);
     setActiveRangeField(null);
+  };
+
+  // Helper function to get latest pickup date from form data
+  const getLatestPickupDateFromData = (data: any) => {
+    if (data.pickup.dateType === 'between') {
+      return new Date(Math.max(
+        data.pickup.dateRange.start.getTime(),
+        data.pickup.dateRange.end.getTime()
+      ));
+    } else if (data.pickup.dateType === 'on' || data.pickup.dateType === 'before' || data.pickup.dateType === 'after') {
+      return data.pickup.specificDate;
+    }
+    return null;
   };
 
   const handleTimeChange = (location: 'pickup' | 'delivery', field: 'specificTime' | 'start' | 'end', time: string) => {

@@ -62,19 +62,12 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
       // Filter by year if a year is selected
       if (formData.year) {
         const selectedYear = parseInt(formData.year);
-        console.log('Filtering models for year:', selectedYear);
-        console.log('Available models before filtering:', models.map(m => ({ name: m.name, year_range: m.year_range })));
-        
         models = models.filter(model => {
           if (!model.year_range) return true; // Include models without year range
           
           const [startYear, endYear] = model.year_range.split('-').map(y => parseInt(y));
-          const isInRange = selectedYear >= startYear && selectedYear <= endYear;
-          console.log(`Model ${model.name} (${model.year_range}): ${selectedYear} >= ${startYear} && ${selectedYear} <= ${endYear} = ${isInRange}`);
-          return isInRange;
+          return selectedYear >= startYear && selectedYear <= endYear;
         });
-        
-        console.log('Filtered models:', models.map(m => ({ name: m.name, year_range: m.year_range })));
       }
       
       setAvailableModels(models);
@@ -127,12 +120,8 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   const handleModelChange = (modelId: string) => {
     if (!formData.make) return;
     
-    console.log('handleModelChange called with modelId:', modelId);
-    console.log('Available models:', availableModels.map(m => ({ id: m.model_id, name: m.name, year_range: m.year_range })));
-    
     // First try to find in availableModels (filtered by manufacturer), then fall back to allModels
     const selectedModel = availableModels.find(model => model.model_id === modelId) || getModelById(allModels, modelId);
-    console.log('Selected model:', selectedModel);
     
     if (selectedModel && 
         selectedModel.typical_weight_lbs !== undefined && 
@@ -168,7 +157,8 @@ export default function Step1EquipmentDetails({ category = 'equipment', onNext, 
   const isYearValidForModel = () => {
     if (!formData.year || !formData.model || formData.model === 'custom') return true;
     
-    const selectedModel = getModelById(allModels, formData.model);
+    // Use the model from availableModels (which are already filtered by year) instead of allModels
+    const selectedModel = availableModels.find(model => model.model_id === formData.model);
     if (!selectedModel || !selectedModel.year_range) return true;
     
     const selectedYear = parseInt(formData.year);

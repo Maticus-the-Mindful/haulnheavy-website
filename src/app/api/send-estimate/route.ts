@@ -3,6 +3,13 @@ import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
+    // First, let's just return success to test if the endpoint is working
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Test endpoint working',
+      received: true
+    });
+
     const body = await request.json();
     console.log('=== RAW REQUEST BODY ===');
     console.log('Full body:', JSON.stringify(body, null, 2));

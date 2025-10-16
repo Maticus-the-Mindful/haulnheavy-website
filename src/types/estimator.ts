@@ -19,6 +19,7 @@ export interface EquipmentDetails {
     };
   };
   weight: number; // in pounds
+  images: File[];
 }
 
 export interface FreightDetails {
@@ -40,8 +41,9 @@ export interface FreightDetails {
     };
   };
   weight: number; // in pounds
-  hasHazmat: boolean;
-  transportMethod: 'hauled' | 'towed' | 'driven';
+  hasHazmatPlacards: boolean;
+  transportationMethod: 'hauled' | 'towed' | 'driven';
+  images: File[];
 }
 
 export interface LocationInfo {
@@ -114,4 +116,18 @@ export interface EstimateResult {
   additionalFees: number;
   totalEstimate: number;
   disclaimer: string;
+}
+
+export interface CompleteEstimateData extends EstimateData {
+  estimateResult: EstimateResult;
+  timestamp: Date;
+  estimateId: string;
+}
+
+export interface EmailEstimateRequest {
+  estimateData: CompleteEstimateData;
+  recipientEmail: string;
+  senderName: string;
+  senderEmail: string;
+  message?: string;
 }

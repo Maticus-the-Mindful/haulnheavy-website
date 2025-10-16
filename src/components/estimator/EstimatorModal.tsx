@@ -19,6 +19,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<EstimateData | null>(null);
   const [estimateResult, setEstimateResult] = useState<EstimateResult | null>(null);
+  const [completeEstimateData, setCompleteEstimateData] = useState<any>(null);
 
   // Reset all form state when modal is opened fresh and prevent body scroll
   useEffect(() => {
@@ -88,6 +89,8 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     console.log('New formData after Step1:', newFormData);
     console.log('Freight data after Step1:', newFormData.freight);
     console.log('Equipment data after Step1:', newFormData.equipment);
+    console.log('Images in freight:', newFormData.freight?.images);
+    console.log('Images in equipment:', newFormData.equipment?.images);
     setFormData(newFormData);
     setCurrentStep(2);
   };
@@ -125,6 +128,8 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     console.log('updatedFormData.equipment:', updatedFormData.equipment);
     console.log('updatedFormData.freight?.dimensions:', updatedFormData.freight?.dimensions);
     console.log('updatedFormData.equipment?.dimensions:', updatedFormData.equipment?.dimensions);
+    console.log('Images in updated freight:', updatedFormData.freight?.images);
+    console.log('Images in updated equipment:', updatedFormData.equipment?.images);
     
     setFormData(updatedFormData);
     
@@ -132,7 +137,17 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
     try {
       const result = calculateEstimate(updatedFormData);
       console.log('estimate result:', result);
+      
+      // Create complete estimate data with images
+      const completeEstimateData = {
+        ...updatedFormData,
+        estimateResult: result,
+        timestamp: new Date(),
+        estimateId: `EST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      };
+      
       setEstimateResult(result);
+      setCompleteEstimateData(completeEstimateData);
       setCurrentStep(5);
       console.log('Step changed to 5');
     } catch (error) {
@@ -357,10 +372,11 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
           onClose={handleClose}
         />
       )}
-      {currentStep === 5 && estimateResult && (
+      {currentStep === 5 && estimateResult && completeEstimateData && (
         <EstimateResults
           estimate={estimateResult}
           estimateData={formData}
+          completeData={completeEstimateData}
           onClose={handleClose}
           onNewEstimate={handleNewEstimate}
           onBack={handleBack}

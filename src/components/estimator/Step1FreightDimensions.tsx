@@ -100,16 +100,15 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
         <div
           onMouseEnter={() => setIsVisible(true)}
           onMouseLeave={() => setIsVisible(false)}
-          className="cursor-help"
+          onClick={() => setIsVisible(!isVisible)}
+          className="cursor-pointer"
         >
           {children}
         </div>
         {isVisible && (
-          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-4 py-3 bg-black text-white text-sm rounded-lg shadow-lg z-10 w-80 max-w-none">
-            <div className="relative">
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
-              {content}
-            </div>
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-72 max-w-[calc(100vw-2rem)] bg-black text-white text-sm px-4 py-3 rounded-lg shadow-lg z-50">
+            {content}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-black"></div>
           </div>
         )}
       </div>
@@ -121,7 +120,7 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
         {/* Header - Sticky */}
         <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10 rounded-t-lg" style={{ backgroundColor: '#fcd001' }}>
-          <h2 className="text-2xl font-bold text-gray-900">Dimensions</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Freight Details</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -277,12 +276,12 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
 
           {/* Hazmat Placards */}
           <div>
-            <div className="flex items-center mb-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="flex items-center space-x-2">
+              <label className="text-sm font-semibold text-gray-700">
                 Does this item have Hazmat Placards?
               </label>
               <Tooltip content="Hazmat placards indicate that the load may contain hazardous materials.">
-                <HelpCircle className="w-4 h-4 text-blue-500 ml-2 cursor-help" />
+                <HelpCircle className="w-4 h-4 text-blue-500" />
               </Tooltip>
             </div>
             <div className="flex space-x-6">
@@ -311,12 +310,12 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
 
           {/* Transport Method */}
           <div>
-            <div className="flex items-center mb-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="flex items-center space-x-2">
+              <label className="text-sm font-semibold text-gray-700">
                 How do you want your item transported?
               </label>
               <Tooltip content="Hauled: The load will be put on a trailer and pulled behind a semi. Towed/Power Only: The truck and driver will transport the load by pulling it behind the truck. This is typically used for trailers. Driven Away: A driver will drive the load to its destination. This is typically used for RVs and Trucks.">
-                <HelpCircle className="w-4 h-4 text-blue-500 ml-2 cursor-help" />
+                <HelpCircle className="w-4 h-4 text-blue-500" />
               </Tooltip>
             </div>
             <div className="space-y-3">

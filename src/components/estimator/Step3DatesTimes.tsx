@@ -381,7 +381,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       onChange={(e) => handleTimeChange('pickup', 'start', e.target.value)}
                       className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                     >
-                      <option value="" className="text-gray-900">From</option>
+                      <option value="" className="text-gray-900">Select Time</option>
                       {timeOptions.map(time => (
                         <option key={time} value={time} className="text-gray-900">
                           {time}
@@ -393,7 +393,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       onChange={(e) => handleTimeChange('pickup', 'end', e.target.value)}
                       className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                     >
-                      <option value="" className="text-gray-900">To</option>
+                      <option value="" className="text-gray-900">Select Time</option>
                       {timeOptions.map(time => (
                         <option key={time} value={time} className="text-gray-900">
                           {time}
@@ -541,7 +541,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       onChange={(e) => handleTimeChange('delivery', 'start', e.target.value)}
                       className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                     >
-                      <option value="" className="text-gray-900">From</option>
+                      <option value="" className="text-gray-900">Select Time</option>
                       {timeOptions.map(time => (
                         <option key={time} value={time} className="text-gray-900">
                           {time}
@@ -553,7 +553,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       onChange={(e) => handleTimeChange('delivery', 'end', e.target.value)}
                       className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
                     >
-                      <option value="" className="text-gray-900">To</option>
+                      <option value="" className="text-gray-900">Select Time</option>
                       {timeOptions.map(time => (
                         <option key={time} value={time} className="text-gray-900">
                           {time}

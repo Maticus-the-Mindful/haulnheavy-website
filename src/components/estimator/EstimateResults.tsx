@@ -197,7 +197,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                       value={contactInfo.firstName}
                       onChange={(e) => handleContactInfoChange('firstName', e.target.value)}
                       placeholder="John"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                     />
                   </div>
                   <div>
@@ -209,7 +209,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                       value={contactInfo.lastName}
                       onChange={(e) => handleContactInfoChange('lastName', e.target.value)}
                       placeholder="Smith"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -224,7 +224,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     value={contactInfo.email}
                     onChange={(e) => handleContactInfoChange('email', e.target.value)}
                     placeholder="your.email@example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   />
                 </div>
 
@@ -239,7 +239,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                       value={contactInfo.company}
                       onChange={(e) => handleContactInfoChange('company', e.target.value)}
                       placeholder="Your Company"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                     />
                   </div>
                   <div>
@@ -251,7 +251,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                       value={contactInfo.phone}
                       onChange={(e) => handleContactInfoChange('phone', e.target.value)}
                       placeholder="(555) 123-4567"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                     />
                   </div>
                 </div>

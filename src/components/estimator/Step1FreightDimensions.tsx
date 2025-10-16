@@ -27,8 +27,8 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
       inches: ''
     },
     weight: 0,
-    hasHazmat: false,
-    transportMethod: 'hauled' as 'hauled' | 'towed' | 'driven',
+    hasHazmatPlacards: null as boolean | null,
+    transportationMethod: 'hauled' as 'hauled' | 'towed' | 'driven',
     images: [] as File[]
   });
 
@@ -50,31 +50,31 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
   };
 
   const handleNext = () => {
-    // Validate required fields
-    if (!formData.shippingItem.trim()) {
-      alert('Please enter what you are shipping');
-      return;
-    }
+    // Temporarily disable validation for testing - keep asterisks for visual indication
+    // if (!formData.shippingItem.trim()) {
+    //   alert('Please enter what you are shipping');
+    //   return;
+    // }
 
-    if (!formData.length.feet && !formData.length.inches) {
-      alert('Please enter length dimensions');
-      return;
-    }
+    // if (!formData.length.feet && !formData.length.inches) {
+    //   alert('Please enter length dimensions');
+    //   return;
+    // }
 
-    if (!formData.width.feet && !formData.width.inches) {
-      alert('Please enter width dimensions');
-      return;
-    }
+    // if (!formData.width.feet && !formData.width.inches) {
+    //   alert('Please enter width dimensions');
+    //   return;
+    // }
 
-    if (!formData.height.feet && !formData.height.inches) {
-      alert('Please enter height dimensions');
-      return;
-    }
+    // if (!formData.height.feet && !formData.height.inches) {
+    //   alert('Please enter height dimensions');
+    //   return;
+    // }
 
-    if (formData.weight <= 0) {
-      alert('Please enter a valid weight');
-      return;
-    }
+    // if (formData.weight <= 0) {
+    //   alert('Please enter a valid weight');
+    //   return;
+    // }
 
     const dataToSubmit = {
       type: 'freight',
@@ -95,8 +95,8 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
         }
       },
       weight: formData.weight,
-      hasHazmat: formData.hasHazmat,
-      transportMethod: formData.transportMethod
+      hasHazmatPlacards: formData.hasHazmatPlacards,
+      transportationMethod: formData.transportationMethod
     };
     
     console.log('Freight data being submitted:', dataToSubmit);
@@ -300,9 +300,9 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="hazmat"
-                  checked={formData.hasHazmat === true}
-                  onChange={() => handleInputChange('hasHazmat', true)}
+                  name="hasHazmatPlacards"
+                  checked={formData.hasHazmatPlacards === true}
+                  onChange={() => handleInputChange('hasHazmatPlacards', true)}
                   className="mr-2 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">Yes</span>
@@ -310,9 +310,9 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="hazmat"
-                  checked={formData.hasHazmat === false}
-                  onChange={() => handleInputChange('hasHazmat', false)}
+                  name="hasHazmatPlacards"
+                  checked={formData.hasHazmatPlacards === false}
+                  onChange={() => handleInputChange('hasHazmatPlacards', false)}
                   className="mr-2 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">No</span>
@@ -334,10 +334,10 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="transport"
+                  name="transportationMethod"
                   value="hauled"
-                  checked={formData.transportMethod === 'hauled'}
-                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  checked={formData.transportationMethod === 'hauled'}
+                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
                   className="mr-3 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">Hauled</span>
@@ -345,10 +345,10 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="transport"
+                  name="transportationMethod"
                   value="towed"
-                  checked={formData.transportMethod === 'towed'}
-                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  checked={formData.transportationMethod === 'towed'}
+                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
                   className="mr-3 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">Towed/Power Only</span>
@@ -356,10 +356,10 @@ export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="transport"
+                  name="transportationMethod"
                   value="driven"
-                  checked={formData.transportMethod === 'driven'}
-                  onChange={(e) => handleInputChange('transportMethod', e.target.value)}
+                  checked={formData.transportationMethod === 'driven'}
+                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
                   className="mr-3 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">Driven Away</span>

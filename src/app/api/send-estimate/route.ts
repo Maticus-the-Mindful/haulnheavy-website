@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('=== API CALLED ===');
+    console.log('=== API CALLED - VERSION 2.0 ===');
     console.log('Environment check:');
     console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
     console.log('CLIENT_EMAIL exists:', !!process.env.CLIENT_EMAIL);
@@ -17,6 +17,8 @@ export async function POST(request: NextRequest) {
     console.log('Request body type:', typeof body);
     console.log('Request body keys:', Object.keys(body || {}));
     console.log('Full body:', JSON.stringify(body, null, 2));
+    console.log('Body is null/undefined:', body === null || body === undefined);
+    console.log('Body is empty object:', JSON.stringify(body) === '{}');
     console.log('========================');
     
     // Extract all fields
@@ -28,6 +30,16 @@ export async function POST(request: NextRequest) {
       message,
       shareType 
     } = body || {};
+    
+    // Log each field individually
+    console.log('=== INDIVIDUAL FIELD DEBUG ===');
+    console.log('estimateData:', estimateData, 'type:', typeof estimateData);
+    console.log('recipientEmail:', recipientEmail, 'type:', typeof recipientEmail);
+    console.log('senderName:', senderName, 'type:', typeof senderName);
+    console.log('senderEmail:', senderEmail, 'type:', typeof senderEmail);
+    console.log('message:', message, 'type:', typeof message);
+    console.log('shareType:', shareType, 'type:', typeof shareType);
+    console.log('==============================');
 
     // Debug logging
     console.log('=== API DEBUG ===');

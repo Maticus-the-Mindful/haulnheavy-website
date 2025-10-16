@@ -329,7 +329,12 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         
         <p><em>This estimate was automatically generated and shared with the customer.</em></p>
         
-        <p><em>Full estimate details have been sent to the customer.</em></p>
+        <div style="background: #eab308; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/admin/estimate/${estimateData.estimateId}" 
+             style="color: white; text-decoration: none; font-weight: bold;">
+            View Full Estimate Details
+          </a>
+        </div>
       </div>
     </div>
   `;

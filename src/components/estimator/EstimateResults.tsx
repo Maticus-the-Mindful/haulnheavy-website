@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Download, Share2, Mail, CheckCircle } from 'lucide-react';
+import { X, Mail, CheckCircle } from 'lucide-react';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -24,9 +24,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
   const [isSending, setIsSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
-  const [sharingType, setSharingType] = useState<'email' | 'pdf' | 'share' | null>(null);
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [contactInfoSubmitted, setContactInfoSubmitted] = useState(false);
+  const [sharingType] = useState<'email'>('email');
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -296,42 +294,6 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             </div>
           )}
 
-          {/* Action Buttons */}
-          {!emailSent && (
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <button
-                onClick={() => {
-                  // Check if contact info is complete
-                  if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
-                    setEmailError('Please fill in all required contact information above before downloading PDF');
-                    return;
-                  }
-                  setSharingType('pdf');
-                  handleSendEstimate();
-                }}
-                className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                <span>Download PDF</span>
-              </button>
-              
-              <button
-                onClick={() => {
-                  // Check if contact info is complete
-                  if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
-                    setEmailError('Please fill in all required contact information above before sharing');
-                    return;
-                  }
-                  setSharingType('share');
-                  handleSendEstimate();
-                }}
-                className="flex-1 flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
-              >
-                <Share2 className="w-4 h-4" />
-                <span>Share Estimate</span>
-              </button>
-            </div>
-          )}
 
 
           <div className="mt-6 pt-6 border-t border-gray-200">

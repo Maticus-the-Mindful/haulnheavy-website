@@ -27,27 +27,9 @@ export async function POST(request: NextRequest) {
     // Generate estimate summary
     const estimateSummary = generateEstimateSummary(estimateData);
     
-    // Create email content based on share type
-    let emailSubject = '';
-    let emailContent = '';
-    
-    switch (shareType) {
-      case 'email':
-        emailSubject = `Heavy Equipment Hauling Estimate - ${estimateData.estimateId}`;
-        emailContent = generateEmailContent(estimateData, estimateSummary, message);
-        break;
-      case 'pdf':
-        emailSubject = `PDF Estimate - ${estimateData.estimateId}`;
-        emailContent = generatePDFEmailContent(estimateData, estimateSummary);
-        break;
-      case 'share':
-        emailSubject = `Shared Estimate Link - ${estimateData.estimateId}`;
-        emailContent = generateShareEmailContent(estimateData, estimateSummary);
-        break;
-      default:
-        emailSubject = `Equipment Hauling Estimate - ${estimateData.estimateId}`;
-        emailContent = generateEmailContent(estimateData, estimateSummary, message);
-    }
+    // Create email content - always use the full estimate email template
+    const emailSubject = `Heavy Equipment Hauling Estimate - ${estimateData.estimateId}`;
+    const emailContent = generateEmailContent(estimateData, estimateSummary, message);
 
     // Email to customer
     const customerEmail = await resend.emails.send({
@@ -62,8 +44,8 @@ export async function POST(request: NextRequest) {
     const clientEmail = await resend.emails.send({
       from: 'Hauln Heavy <noreply@maticusmedia360.com>',
       to: process.env.CLIENT_EMAIL || 'mat@maticusmedia360.com',
-      subject: `New Estimate Request - ${shareType.toUpperCase()}`,
-      html: generateClientNotificationEmail(estimateData, senderName, senderEmail, shareType),
+      subject: `New Estimate Request - Email`,
+      html: generateClientNotificationEmail(estimateData, senderName, senderEmail, 'email'),
     });
 
     console.log('=== EMAIL SENT ===');

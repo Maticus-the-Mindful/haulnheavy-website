@@ -68,17 +68,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, just return success to test
+    // Validation passed - continue with email sending
     console.log('=== VALIDATION PASSED ===');
-    return NextResponse.json({
-      success: true,
-      message: 'Validation passed - email would be sent',
-      debug: {
-        recipientEmail,
-        senderEmail,
-        hasEstimateData: !!estimateData
-      }
-    });
 
     // Ensure estimateData has an estimateId
     if (!estimateData.estimateId) {

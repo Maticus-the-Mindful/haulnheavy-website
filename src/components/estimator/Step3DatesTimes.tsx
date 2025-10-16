@@ -233,7 +233,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                 )}
 
                 {formData.pickup.dateType === 'between' && (
-                  <div className="space-y-3">
+                  <div className="space-y-3 relative">
                     <div className="relative">
                       <input
                         type="text"
@@ -265,7 +265,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       />
                     </div>
                     {activeCalendar === 'pickup' && activeDateField === 'range' && (
-                      <>
+                      <div className="relative">
                         {console.log('Rendering pickup calendar:', { activeCalendar, activeDateField, activeRangeField })}
                         <CalendarWidget
                           isOpen={true}
@@ -277,7 +277,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                             setActiveRangeField(null);
                           }}
                         />
-                      </>
+                      </div>
                     )}
                   </div>
                 )}
@@ -394,7 +394,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                 )}
 
                 {formData.delivery.dateType === 'between' && (
-                  <div className="space-y-3">
+                  <div className="space-y-3 relative">
                     <div className="relative">
                       <input
                         type="text"
@@ -425,7 +425,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                       />
                     </div>
                     {activeCalendar === 'delivery' && activeDateField === 'range' && (
-                      <>
+                      <div className="relative">
                         {console.log('Rendering delivery calendar:', { activeCalendar, activeDateField, activeRangeField })}
                         <CalendarWidget
                           isOpen={true}
@@ -437,7 +437,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, onNext, 
                             setActiveRangeField(null);
                           }}
                         />
-                      </>
+                      </div>
                     )}
                   </div>
                 )}

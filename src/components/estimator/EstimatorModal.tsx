@@ -134,14 +134,22 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
   };
 
   const calculateEstimate = (data: EstimateData): EstimateResult => {
+    console.log('calculateEstimate called with data:', data);
+    
     // Basic calculation logic - this would be more sophisticated in production
     const { equipment, freight, characteristics, locations, scheduling, additionalInfo } = data;
+    
+    console.log('equipment:', equipment);
+    console.log('freight:', freight);
     
     // Determine if we're dealing with equipment or freight
     const itemData = equipment || freight;
     if (!itemData) {
       throw new Error('No equipment or freight data provided');
     }
+    
+    console.log('itemData:', itemData);
+    console.log('itemData.dimensions:', itemData.dimensions);
     
     // Base cost calculation (simplified)
     const baseRate = 2.50; // per mile
@@ -153,10 +161,21 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
       baseCost *= 1.2; // 20% surcharge for heavy loads
     }
 
-    // Oversize adjustments
-    const totalLength = itemData.dimensions.length.feet + (itemData.dimensions.length.inches / 12);
-    const totalWidth = itemData.dimensions.width.feet + (itemData.dimensions.width.inches / 12);
-    const totalHeight = itemData.dimensions.height.feet + (itemData.dimensions.height.inches / 12);
+    // Oversize adjustments - with null checks
+    if (!itemData.dimensions) {
+      throw new Error('No dimensions data provided');
+    }
+    
+    const lengthFeet = itemData.dimensions.length?.feet || 0;
+    const lengthInches = itemData.dimensions.length?.inches || 0;
+    const widthFeet = itemData.dimensions.width?.feet || 0;
+    const widthInches = itemData.dimensions.width?.inches || 0;
+    const heightFeet = itemData.dimensions.height?.feet || 0;
+    const heightInches = itemData.dimensions.height?.inches || 0;
+    
+    const totalLength = lengthFeet + (lengthInches / 12);
+    const totalWidth = widthFeet + (widthInches / 12);
+    const totalHeight = heightFeet + (heightInches / 12);
 
     let oversizeFee = 0;
     if (totalLength > 48 || totalWidth > 8.5 || totalHeight > 13.5) {

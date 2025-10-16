@@ -302,42 +302,40 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             </div>
           )}
 
-          {/* Sharing Options */}
+          {/* Action Buttons */}
           {!emailSent && (
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => {
-                    // Check if contact info is complete
-                    if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
-                      setEmailError('Please fill in all required contact information above before downloading PDF');
-                      return;
-                    }
-                    setSharingType('pdf');
-                    handleSendEstimate();
-                  }}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Download PDF</span>
-                </button>
-                
-                <button
-                  onClick={() => {
-                    // Check if contact info is complete
-                    if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
-                      setEmailError('Please fill in all required contact information above before sharing');
-                      return;
-                    }
-                    setSharingType('share');
-                    handleSendEstimate();
-                  }}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span>Share Estimate</span>
-                </button>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={() => {
+                  // Check if contact info is complete
+                  if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
+                    setEmailError('Please fill in all required contact information above before downloading PDF');
+                    return;
+                  }
+                  setSharingType('pdf');
+                  handleSendEstimate();
+                }}
+                className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download PDF</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  // Check if contact info is complete
+                  if (!contactInfo.firstName.trim() || !contactInfo.lastName.trim() || !contactInfo.email.trim() || !contactInfo.phone.trim()) {
+                    setEmailError('Please fill in all required contact information above before sharing');
+                    return;
+                  }
+                  setSharingType('share');
+                  handleSendEstimate();
+                }}
+                className="flex-1 flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Share Estimate</span>
+              </button>
             </div>
           )}
 

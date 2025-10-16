@@ -4,6 +4,10 @@ import { Resend } from 'resend';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('=== RAW REQUEST BODY ===');
+    console.log('Full body:', JSON.stringify(body, null, 2));
+    console.log('========================');
+    
     const { 
       estimateData, 
       recipientEmail, 
@@ -22,7 +26,18 @@ export async function POST(request: NextRequest) {
     console.log('shareType:', shareType);
     console.log('================');
 
-    // Validate required fields
+    // Validate required fields with detailed logging
+    console.log('=== VALIDATION CHECK ===');
+    console.log('recipientEmail check:', recipientEmail, 'type:', typeof recipientEmail, 'truthy:', !!recipientEmail);
+    console.log('senderEmail check:', senderEmail, 'type:', typeof senderEmail, 'truthy:', !!senderEmail);
+    console.log('estimateData check:', !!estimateData, 'type:', typeof estimateData);
+    if (estimateData) {
+      console.log('estimateData keys:', Object.keys(estimateData));
+      console.log('estimateData.estimateId:', estimateData.estimateId);
+      console.log('estimateData.estimateResult:', !!estimateData.estimateResult);
+    }
+    console.log('=======================');
+    
     if (!recipientEmail || !senderEmail || !estimateData) {
       console.log('Validation failed - missing required fields');
       return NextResponse.json(
@@ -31,7 +46,9 @@ export async function POST(request: NextRequest) {
           debug: {
             recipientEmail: !!recipientEmail,
             senderEmail: !!senderEmail,
-            estimateData: !!estimateData
+            estimateData: !!estimateData,
+            recipientEmailValue: recipientEmail,
+            senderEmailValue: senderEmail
           }
         },
         { status: 400 }

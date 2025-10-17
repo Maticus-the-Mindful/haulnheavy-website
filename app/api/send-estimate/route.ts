@@ -234,7 +234,13 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
     if (dateType === 'between' && dateRange?.start && dateRange?.end) {
       const startDate = formatDate(dateRange.start);
       const endDate = formatDate(dateRange.end);
-      dateStr = `${startDate}-${endDate}`;
+      
+      // If dates are the same, just show one date
+      if (startDate === endDate) {
+        dateStr = startDate;
+      } else {
+        dateStr = `${startDate}-${endDate}`;
+      }
     } else if (specificDate) {
       dateStr = formatDate(specificDate);
     }
@@ -260,6 +266,25 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
   // Build pickup and delivery strings
   const pickupStr = buildScheduleString(estimateData.scheduling?.pickup, 'pickup');
   const deliveryStr = buildScheduleString(estimateData.scheduling?.delivery, 'delivery');
+
+  // Build contact information strings
+  const buildContactString = (contactInfo: any, location: 'pickup' | 'delivery') => {
+    if (!contactInfo) return '';
+    
+    const isContact = location === 'pickup' ? contactInfo.isContactAtPickup : contactInfo.isContactAtDropoff;
+    const contactName = location === 'pickup' ? contactInfo.pickupContactName : contactInfo.dropoffContactName;
+    const contactPhone = location === 'pickup' ? contactInfo.pickupContactPhone : contactInfo.dropoffContactPhone;
+    
+    if (isContact === true) {
+      return 'Customer will be contact';
+    } else if (isContact === false && contactName && contactPhone) {
+      return `${contactName} (${contactPhone})`;
+    }
+    return '';
+  };
+
+  const pickupContact = buildContactString(estimateData.scheduling?.contactInfo, 'pickup');
+  const deliveryContact = buildContactString(estimateData.scheduling?.contactInfo, 'delivery');
 
   // Build dimensions string
   const lengthFt = summary.itemDetails.dimensions?.length?.feet || 0;
@@ -335,8 +360,8 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
         <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
           <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">SCHEDULE</div>
           <div style="font-size: 13px; line-height: 1.6;">
-            <strong>Pickup:</strong> ${pickupStr}<br>
-            <strong>Delivery:</strong> ${deliveryStr}
+            <strong>Pickup:</strong> ${pickupStr}${pickupContact ? `<br><strong>Pickup Contact:</strong> ${pickupContact}` : ''}<br>
+            <strong>Delivery:</strong> ${deliveryStr}${deliveryContact ? `<br><strong>Delivery Contact:</strong> ${deliveryContact}` : ''}
           </div>
         </div>
 
@@ -449,7 +474,13 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
     if (dateType === 'between' && dateRange?.start && dateRange?.end) {
       const startDate = formatDate(dateRange.start);
       const endDate = formatDate(dateRange.end);
-      dateStr = `${startDate}-${endDate}`;
+      
+      // If dates are the same, just show one date
+      if (startDate === endDate) {
+        dateStr = startDate;
+      } else {
+        dateStr = `${startDate}-${endDate}`;
+      }
     } else if (specificDate) {
       dateStr = formatDate(specificDate);
     }
@@ -475,6 +506,25 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
   // Build pickup and delivery strings
   const pickupStr = buildScheduleString(estimateData.scheduling?.pickup, 'pickup');
   const deliveryStr = buildScheduleString(estimateData.scheduling?.delivery, 'delivery');
+
+  // Build contact information strings
+  const buildContactString = (contactInfo: any, location: 'pickup' | 'delivery') => {
+    if (!contactInfo) return '';
+    
+    const isContact = location === 'pickup' ? contactInfo.isContactAtPickup : contactInfo.isContactAtDropoff;
+    const contactName = location === 'pickup' ? contactInfo.pickupContactName : contactInfo.dropoffContactName;
+    const contactPhone = location === 'pickup' ? contactInfo.pickupContactPhone : contactInfo.dropoffContactPhone;
+    
+    if (isContact === true) {
+      return 'Customer will be contact';
+    } else if (isContact === false && contactName && contactPhone) {
+      return `${contactName} (${contactPhone})`;
+    }
+    return '';
+  };
+
+  const pickupContact = buildContactString(estimateData.scheduling?.contactInfo, 'pickup');
+  const deliveryContact = buildContactString(estimateData.scheduling?.contactInfo, 'delivery');
 
   // Get item details
   const item = estimateData.equipment || estimateData.freight;
@@ -551,8 +601,8 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
           <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">SCHEDULE</div>
           <div style="font-size: 13px; line-height: 1.6;">
-            <strong>Pickup:</strong> ${pickupStr}<br>
-            <strong>Delivery:</strong> ${deliveryStr}
+            <strong>Pickup:</strong> ${pickupStr}${pickupContact ? `<br><strong>Pickup Contact:</strong> ${pickupContact}` : ''}<br>
+            <strong>Delivery:</strong> ${deliveryStr}${deliveryContact ? `<br><strong>Delivery Contact:</strong> ${deliveryContact}` : ''}
           </div>
         </div>
 
@@ -580,13 +630,6 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
           </table>
         </div>
 
-        <!-- View Details Button -->
-        <div style="background: #eab308; color: white; padding: 12px; border-radius: 4px; text-align: center;">
-          <a href="${process.env.NEXT_PUBLIC_BASE_URL}/admin/estimate/${estimateData.estimateId}" 
-             style="color: white; text-decoration: none; font-weight: bold; font-size: 14px;">
-            VIEW FULL ESTIMATE DETAILS →
-          </a>
-        </div>
 
         <!-- Footer -->
         <div style="margin-top: 8px; padding: 6px; font-size: 11px; color: #999; text-align: center;">

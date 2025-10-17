@@ -2,16 +2,24 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('=== ADDRESS AUTOCOMPLETE API CALLED ===');
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
     const countryCode = searchParams.get('country') || 'us';
     
+    console.log('Query:', query);
+    console.log('Country:', countryCode);
+    
     if (!query || query.trim().length < 2) {
+      console.log('Query too short, returning empty suggestions');
       return NextResponse.json({ suggestions: [] });
     }
 
     // Get API key from environment variables
     const apiKey = process.env.GEOAPIFY_API_KEY;
+    console.log('API Key exists:', !!apiKey);
+    console.log('API Key length:', apiKey?.length || 0);
+    
     if (!apiKey) {
       console.error('GEOAPIFY_API_KEY not found in environment variables');
       return NextResponse.json(
@@ -38,15 +46,30 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
+      const errorText = await response.text();
       console.error('Geoapify API error:', response.status, response.statusText);
+      console.error('Error response body:', errorText);
       return NextResponse.json(
-        { error: 'Address service unavailable' },
+        { 
+          error: 'Address service unavailable',
+          status: response.status,
+          statusText: response.statusText,
+          response: errorText
+        },
         { status: 500 }
       );
     }
 
     const data = await response.json();
+    console.log('Geoapify API Response:', JSON.stringify(data, null, 2));
+    console.log('Features count:', data.features?.length || 0);
+    console.log('Response type:', typeof data);
+    console.log('Response keys:', Object.keys(data));
     
     // Transform Geoapify response to our format
     const suggestions = data.features?.map((feature: any) => ({

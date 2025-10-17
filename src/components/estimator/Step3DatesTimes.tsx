@@ -44,10 +44,10 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
       }
     },
     contactInfo: {
-      isContactAtPickup: existingData?.contactInfo?.isContactAtPickup || null as boolean | null,
+      isContactAtPickup: existingData?.contactInfo?.isContactAtPickup !== undefined ? existingData.contactInfo.isContactAtPickup : null as boolean | null,
       pickupContactName: existingData?.contactInfo?.pickupContactName || '',
       pickupContactPhone: existingData?.contactInfo?.pickupContactPhone || '',
-      isContactAtDropoff: existingData?.contactInfo?.isContactAtDropoff || null as boolean | null,
+      isContactAtDropoff: existingData?.contactInfo?.isContactAtDropoff !== undefined ? existingData.contactInfo.isContactAtDropoff : null as boolean | null,
       dropoffContactName: existingData?.contactInfo?.dropoffContactName || '',
       dropoffContactPhone: existingData?.contactInfo?.dropoffContactPhone || ''
     }

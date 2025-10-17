@@ -28,8 +28,8 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
       inches: existingData?.height?.inches || ''
     },
     weight: existingData?.weight || 0,
-    hasHazmatPlacards: existingData?.hasHazmatPlacards || null as boolean | null,
-    transportationMethod: (existingData?.transportationMethod || 'hauled') as 'hauled' | 'towed' | 'driven',
+    hasHazmatPlacards: existingData?.hasHazmatPlacards !== undefined ? existingData.hasHazmatPlacards : null as boolean | null,
+    transportationMethod: existingData?.transportationMethod !== undefined ? existingData.transportationMethod : 'hauled' as 'hauled' | 'towed' | 'driven',
     images: existingData?.images || [] as File[]
   });
 

@@ -46,8 +46,8 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
       }
     },
     weight: existingData?.weight || (category === 'equipment' ? 0 : 0),
-    hasHazmatPlacards: existingData?.hasHazmatPlacards || null as boolean | null,
-    transportationMethod: existingData?.transportationMethod || null as 'hauled' | 'towed' | 'driven' | null,
+    hasHazmatPlacards: existingData?.hasHazmatPlacards !== undefined ? existingData.hasHazmatPlacards : null as boolean | null,
+    transportationMethod: existingData?.transportationMethod !== undefined ? existingData.transportationMethod : null as 'hauled' | 'towed' | 'driven' | null,
     images: existingData?.images || [] as File[]
   });
 

@@ -31,8 +31,8 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
       error: existingData?.dropoff?.error || '',
       suggestions: existingData?.dropoff?.suggestions || [] as Array<{display_name: string, place_id: string}>
     },
-    isLoadDrivable: existingData?.isLoadDrivable || null as boolean | null,
-    doYouOwnLoad: existingData?.doYouOwnLoad || null as boolean | null
+    isLoadDrivable: existingData?.isLoadDrivable !== undefined ? existingData.isLoadDrivable : null as boolean | null,
+    doYouOwnLoad: existingData?.doYouOwnLoad !== undefined ? existingData.doYouOwnLoad : null as boolean | null
   });
 
   const handleAddressChange = (location: 'pickup' | 'dropoff', address: string) => {

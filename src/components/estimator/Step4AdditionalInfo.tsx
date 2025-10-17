@@ -17,7 +17,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
   const [formData, setFormData] = useState({
     loadingMethod: (existingData?.loadingMethod || 'DRIVE ON') as string,
     unloadingMethod: (existingData?.unloadingMethod || 'DRIVE OFF') as string,
-    rampsNeeded: existingData?.rampsNeeded || null as boolean | null,
+    rampsNeeded: existingData?.rampsNeeded !== undefined ? existingData.rampsNeeded : null as boolean | null,
     handlingInstructions: existingData?.handlingInstructions || '',
     targetBudget: existingData?.targetBudget || undefined as number | undefined,
     itemValue: existingData?.itemValue || undefined as number | undefined

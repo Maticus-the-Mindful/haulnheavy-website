@@ -70,10 +70,16 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log('Geoapify API Response:', JSON.stringify(data, null, 2));
-    console.log('Features count:', data.features?.length || 0);
-    console.log('Response type:', typeof data);
-    console.log('Response keys:', Object.keys(data));
+    console.log('=== GEOAPIFY RESPONSE DEBUG ===');
+    console.log('Raw response data:', JSON.stringify(data, null, 2));
+    console.log('Data type:', typeof data);
+    console.log('Data keys:', Object.keys(data));
+    console.log('Has features property?', 'features' in data);
+    console.log('Features value:', data.features);
+    console.log('Features type:', typeof data.features);
+    console.log('Features is array?', Array.isArray(data.features));
+    console.log('Features length:', data.features?.length || 0);
+    console.log('==============================');
     
     // Transform Geoapify response to our format
     const suggestions = data.features?.map((feature: any) => {

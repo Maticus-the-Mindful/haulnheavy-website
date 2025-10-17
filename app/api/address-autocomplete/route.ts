@@ -82,22 +82,22 @@ export async function GET(request: NextRequest) {
     console.log('==============================');
     
     // Transform Geoapify response to our format
-    const suggestions = data.features?.map((feature: any) => {
-      const props = feature.properties;
+    // Geoapify returns data in "results" array, not "features"
+    const suggestions = data.results?.map((result: any) => {
       return {
-        id: props.place_id || Math.random().toString(36),
-        address: props.formatted,
-        addressLine1: props.address_line1,
-        addressLine2: props.address_line2,
-        city: props.city,
-        state: props.state,
-        postcode: props.postcode,
-        country: props.country,
-        confidence: props.rank?.confidence || 0,
-        lat: props.lat,
-        lon: props.lon,
-        resultType: props.result_type,
-        raw: props // Keep original for debugging
+        id: result.place_id || Math.random().toString(36),
+        address: result.formatted,
+        addressLine1: result.address_line1,
+        addressLine2: result.address_line2,
+        city: result.city,
+        state: result.state,
+        postcode: result.postcode,
+        country: result.country,
+        confidence: result.rank?.confidence || 0,
+        lat: result.lat,
+        lon: result.lon,
+        resultType: result.result_type,
+        raw: result // Keep original for debugging
       };
     }) || [];
 
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       query: query.trim(),
       country: countryCode,
       debug: {
-        totalFeatures: data.features?.length || 0,
+        totalResults: data.results?.length || 0,
         processedSuggestions: suggestions.length,
         apiUrl: apiUrlString
       }

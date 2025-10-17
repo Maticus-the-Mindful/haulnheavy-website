@@ -303,7 +303,7 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-gray-700">Did you mean:</p>
                     <div className="space-y-1">
-                      {formData.pickup.suggestions.map((suggestion, index) => (
+                      {formData.pickup.suggestions.map((suggestion: {display_name: string, place_id: string}, index: number) => (
                         <button
                           key={index}
                           onClick={() => handleSuggestionSelect('pickup', suggestion)}
@@ -384,7 +384,7 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-gray-700">Did you mean:</p>
                     <div className="space-y-1">
-                      {formData.dropoff.suggestions.map((suggestion, index) => (
+                      {formData.dropoff.suggestions.map((suggestion: {display_name: string, place_id: string}, index: number) => (
                         <button
                           key={index}
                           onClick={() => handleSuggestionSelect('dropoff', suggestion)}

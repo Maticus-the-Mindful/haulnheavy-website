@@ -211,14 +211,45 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+  // Helper function to build pickup/delivery strings with proper logic
+  const buildScheduleString = (scheduleData: any, type: 'pickup' | 'delivery') => {
+    if (!scheduleData) return 'Not specified';
+
+    const { dateType, timeType, specificDate, specificTime, dateRange, timeRange } = scheduleData;
+    
+    let dateStr = '';
+    let timeStr = '';
+
+    // Handle date based on dateType
+    if (dateType === 'between' && dateRange?.start && dateRange?.end) {
+      const startDate = formatDate(dateRange.start);
+      const endDate = formatDate(dateRange.end);
+      dateStr = `${startDate}-${endDate}`;
+    } else if (specificDate) {
+      dateStr = formatDate(specificDate);
+    }
+
+    // Handle time based on timeType
+    if (timeType === 'between' && timeRange?.start && timeRange?.end) {
+      timeStr = ` between ${timeRange.start} - ${timeRange.end}`;
+    } else if (specificTime) {
+      timeStr = ` at ${specificTime}`;
+    }
+
+    // Handle date type modifiers
+    if (dateType === 'before') {
+      return `Before ${dateStr}${timeStr}`;
+    } else if (dateType === 'after') {
+      return `After ${dateStr}${timeStr}`;
+    } else {
+      // 'on' or 'between' or default
+      return `${dateStr}${timeStr}`;
+    }
+  };
+
   // Build pickup and delivery strings
-  const pickupStr = summary.scheduling?.pickup?.specificDate 
-    ? `${formatDate(summary.scheduling.pickup.specificDate)}${summary.scheduling.pickup.specificTime ? ` at ${summary.scheduling.pickup.specificTime}` : ''}`
-    : 'Not specified';
-  
-  const deliveryStr = summary.scheduling?.delivery?.specificDate 
-    ? `${formatDate(summary.scheduling.delivery.specificDate)}${summary.scheduling.delivery.specificTime ? ` at ${summary.scheduling.delivery.specificTime}` : ''}`
-    : 'Not specified';
+  const pickupStr = buildScheduleString(estimateData.scheduling?.pickup, 'pickup');
+  const deliveryStr = buildScheduleString(estimateData.scheduling?.delivery, 'delivery');
 
   // Build dimensions string
   const lengthFt = summary.itemDetails.dimensions?.length?.feet || 0;
@@ -395,14 +426,45 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+  // Helper function to build pickup/delivery strings with proper logic
+  const buildScheduleString = (scheduleData: any, type: 'pickup' | 'delivery') => {
+    if (!scheduleData) return 'Not specified';
+
+    const { dateType, timeType, specificDate, specificTime, dateRange, timeRange } = scheduleData;
+    
+    let dateStr = '';
+    let timeStr = '';
+
+    // Handle date based on dateType
+    if (dateType === 'between' && dateRange?.start && dateRange?.end) {
+      const startDate = formatDate(dateRange.start);
+      const endDate = formatDate(dateRange.end);
+      dateStr = `${startDate}-${endDate}`;
+    } else if (specificDate) {
+      dateStr = formatDate(specificDate);
+    }
+
+    // Handle time based on timeType
+    if (timeType === 'between' && timeRange?.start && timeRange?.end) {
+      timeStr = ` between ${timeRange.start} - ${timeRange.end}`;
+    } else if (specificTime) {
+      timeStr = ` at ${specificTime}`;
+    }
+
+    // Handle date type modifiers
+    if (dateType === 'before') {
+      return `Before ${dateStr}${timeStr}`;
+    } else if (dateType === 'after') {
+      return `After ${dateStr}${timeStr}`;
+    } else {
+      // 'on' or 'between' or default
+      return `${dateStr}${timeStr}`;
+    }
+  };
+
   // Build pickup and delivery strings
-  const pickupStr = estimateData.scheduling?.pickup?.specificDate 
-    ? `${formatDate(estimateData.scheduling.pickup.specificDate)}${estimateData.scheduling.pickup.specificTime ? ` at ${estimateData.scheduling.pickup.specificTime}` : ''}`
-    : 'Not specified';
-  
-  const deliveryStr = estimateData.scheduling?.delivery?.specificDate 
-    ? `${formatDate(estimateData.scheduling.delivery.specificDate)}${estimateData.scheduling.delivery.specificTime ? ` at ${estimateData.scheduling.delivery.specificTime}` : ''}`
-    : 'Not specified';
+  const pickupStr = buildScheduleString(estimateData.scheduling?.pickup, 'pickup');
+  const deliveryStr = buildScheduleString(estimateData.scheduling?.delivery, 'delivery');
 
   // Get item details
   const item = estimateData.equipment || estimateData.freight;

@@ -28,20 +28,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Build Geoapify API URL
-    const apiUrl = new URL('https://api.geoapify.com/v1/geocode/autocomplete');
-    apiUrl.searchParams.set('text', query.trim());
-    // Don't use searchParams.set for filter to avoid encoding the colon
-    const filterParam = `countrycode:${countryCode}`;
-    apiUrl.search += (apiUrl.search ? '&' : '') + `filter=${filterParam}`;
-    apiUrl.searchParams.set('limit', '8'); // Limit to 8 suggestions for better UX
-    apiUrl.searchParams.set('format', 'json');
-    apiUrl.searchParams.set('apiKey', apiKey);
+    // Build Geoapify API URL manually to avoid encoding issues
+    const baseUrl = 'https://api.geoapify.com/v1/geocode/autocomplete';
+    const params = new URLSearchParams();
+    params.set('text', query.trim());
+    params.set('limit', '8');
+    params.set('format', 'json');
+    params.set('apiKey', apiKey);
+    
+    // Build the final URL with filter parameter added manually
+    const apiUrlString = `${baseUrl}?${params.toString()}&filter=countrycode:${countryCode}`;
+    console.log('Final API URL:', apiUrlString);
 
-    console.log('Making request to Geoapify:', apiUrl.toString());
+    console.log('Making request to Geoapify:', apiUrlString);
 
     // Make request to Geoapify
-    const response = await fetch(apiUrl.toString(), {
+    const response = await fetch(apiUrlString, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -103,7 +105,7 @@ export async function GET(request: NextRequest) {
       debug: {
         totalFeatures: data.features?.length || 0,
         processedSuggestions: suggestions.length,
-        apiUrl: apiUrl.toString()
+        apiUrl: apiUrlString
       }
     });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import CalendarWidget from './CalendarWidget';
 
@@ -56,6 +56,27 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
   const [activeCalendar, setActiveCalendar] = useState<'pickup' | 'delivery' | null>(null);
   const [activeDateField, setActiveDateField] = useState<'date' | 'range' | null>(null);
   const [activeRangeField, setActiveRangeField] = useState<'start' | 'end' | null>(null);
+
+  // Click-outside handler to close calendar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if click is outside any calendar-related element
+      const target = event.target as Element;
+      if (activeCalendar && !target.closest('.calendar-widget') && !target.closest('.date-input')) {
+        setActiveCalendar(null);
+        setActiveDateField(null);
+        setActiveRangeField(null);
+      }
+    };
+
+    if (activeCalendar) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeCalendar]);
 
   const dateTypeOptions = [
     { value: '', label: 'Select Option' },
@@ -318,7 +339,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                         setActiveCalendar('pickup');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                      className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                       placeholder="Date"
                     />
                     {activeCalendar === 'pickup' && activeDateField === 'date' && (
@@ -327,6 +348,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                         selectedDate={formData.pickup.specificDate}
                         onDateSelect={(date) => handleDateSelect('pickup', date)}
                         onClose={() => setActiveCalendar(null)}
+                        className="calendar-widget"
                       />
                     )}
                   </div>
@@ -344,7 +366,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                           setActiveDateField('range');
                           setActiveRangeField('start');
                         }}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="From"
                       />
                     </div>
@@ -358,7 +380,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                           setActiveDateField('range');
                           setActiveRangeField('end');
                         }}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="To"
                       />
                     </div>
@@ -373,6 +395,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                             setActiveDateField(null);
                             setActiveRangeField(null);
                           }}
+                          className="calendar-widget"
                         />
                       </div>
                     )}
@@ -476,7 +499,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                         setActiveCalendar('delivery');
                         setActiveDateField('date');
                       }}
-                      className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                      className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                       placeholder="Date"
                     />
                     {activeCalendar === 'delivery' && activeDateField === 'date' && (
@@ -486,6 +509,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                         onDateSelect={(date) => handleDateSelect('delivery', date)}
                         onClose={() => setActiveCalendar(null)}
                         minDate={getMinDeliveryDate() || undefined}
+                        className="calendar-widget"
                       />
                     )}
                   </div>
@@ -503,7 +527,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                           setActiveDateField('range');
                           setActiveRangeField('start');
                         }}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="From"
                       />
                     </div>
@@ -517,7 +541,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                           setActiveDateField('range');
                           setActiveRangeField('end');
                         }}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
+                        className="date-input w-full px-3 py-2 pr-8 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer text-gray-900"
                         placeholder="To"
                       />
                     </div>
@@ -533,6 +557,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
                             setActiveRangeField(null);
                           }}
                           minDate={getMinDeliveryDate() || undefined}
+                          className="calendar-widget"
                         />
                       </div>
                     )}

@@ -10,9 +10,10 @@ interface CalendarWidgetProps {
   onClose: () => void;
   minDate?: Date; // Minimum selectable date
   maxDate?: Date; // Maximum selectable date
+  className?: string; // CSS class for styling
 }
 
-export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onClose, minDate, maxDate }: CalendarWidgetProps) {
+export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onClose, minDate, maxDate, className }: CalendarWidgetProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   
   if (!isOpen) return null;
@@ -155,7 +156,7 @@ export default function CalendarWidget({ isOpen, selectedDate, onDateSelect, onC
   };
 
   return (
-    <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 p-4">
+    <div className={`calendar-widget absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 p-4 ${className || ''}`}>
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">

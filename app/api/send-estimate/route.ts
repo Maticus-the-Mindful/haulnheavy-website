@@ -205,94 +205,134 @@ function generateEstimateSummary(estimateData: any) {
 }
 
 function generateEmailContent(estimateData: any, summary: any, message?: string) {
+  // Helper function to format dates
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  // Build pickup and delivery strings
+  const pickupStr = summary.scheduling?.pickup?.specificDate 
+    ? `${formatDate(summary.scheduling.pickup.specificDate)}${summary.scheduling.pickup.specificTime ? ` at ${summary.scheduling.pickup.specificTime}` : ''}`
+    : 'Not specified';
+  
+  const deliveryStr = summary.scheduling?.delivery?.specificDate 
+    ? `${formatDate(summary.scheduling.delivery.specificDate)}${summary.scheduling.delivery.specificTime ? ` at ${summary.scheduling.delivery.specificTime}` : ''}`
+    : 'Not specified';
+
+  // Build dimensions string
+  const lengthFt = summary.itemDetails.dimensions?.length?.feet || 0;
+  const lengthIn = summary.itemDetails.dimensions?.length?.inches || 0;
+  const widthFt = summary.itemDetails.dimensions?.width?.feet || 0;
+  const widthIn = summary.itemDetails.dimensions?.width?.inches || 0;
+  const heightFt = summary.itemDetails.dimensions?.height?.feet || 0;
+  const heightIn = summary.itemDetails.dimensions?.height?.inches || 0;
+  const weight = summary.itemDetails.weight || 0;
+  
+  const dimensionsStr = `${lengthFt}'${lengthIn}" L × ${widthFt}'${widthIn}" W × ${heightFt}'${heightIn}" H | ${weight.toLocaleString()} lbs`;
+
+  // Build equipment/freight name
+  const itemName = summary.itemDetails.shippingItem 
+    ? summary.itemDetails.shippingItem 
+    : `${summary.itemDetails.make || ''} ${summary.itemDetails.model || ''}`.trim();
+  
+  const itemYear = summary.itemDetails.year ? ` (${summary.itemDetails.year})` : '';
+
+  // Build value and budget string
+  const valueBudgetParts = [];
+  if (summary.additionalInfo?.itemValue) valueBudgetParts.push(`Value: $${summary.additionalInfo.itemValue.toLocaleString()}`);
+  if (summary.additionalInfo?.targetBudget) valueBudgetParts.push(`Budget: $${summary.additionalInfo.targetBudget.toLocaleString()}`);
+  const valueBudgetStr = valueBudgetParts.join(' | ');
+
+  // Build transport details string
+  const transportParts = [];
+  if (summary.additionalInfo?.loadingMethod) transportParts.push(`Loading: ${summary.additionalInfo.loadingMethod}`);
+  if (summary.additionalInfo?.unloadingMethod) transportParts.push(`Unloading: ${summary.additionalInfo.unloadingMethod}`);
+  if (summary.additionalInfo?.handlingInstructions) transportParts.push(`Handling: ${summary.additionalInfo.handlingInstructions}`);
+  const transportStr = transportParts.join(' | ');
+
   return `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #eab308; background: #1f2937; padding: 20px; margin: 0; text-align: center;">
-        Heavy Equipment Hauling Estimate
-      </h2>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+      <!-- Header -->
+      <div style="color: #eab308; background: #1f2937; padding: 12px; text-align: center;">
+        <div style="font-size: 16px; font-weight: bold; letter-spacing: 0.5px;">ESTIMATE #${estimateData.estimateId}</div>
+      </div>
       
-      <div style="padding: 20px; background: #f9fafb;">
-        <h3>Estimate Details</h3>
-        <p><strong>Estimate ID:</strong> ${estimateData.estimateId}</p>
-        <p><strong>Date:</strong> ${new Date(estimateData.timestamp).toLocaleDateString()}</p>
+      <!-- Main Content -->
+      <div style="padding: 12px; background: #f9fafb; font-size: 13px; line-height: 1.4;">
         
-        <h4>Item Information</h4>
-        <p><strong>Type:</strong> ${summary.itemType}</p>
-        ${summary.itemDetails.shippingItem ? `<p><strong>Item:</strong> ${summary.itemDetails.shippingItem}</p>` : ''}
-        ${summary.itemDetails.make ? `<p><strong>Make:</strong> ${summary.itemDetails.make}</p>` : ''}
-        ${summary.itemDetails.model ? `<p><strong>Model:</strong> ${summary.itemDetails.model}</p>` : ''}
-        ${summary.itemDetails.year ? `<p><strong>Year:</strong> ${summary.itemDetails.year}</p>` : ''}
-        ${summary.itemDetails.quantity ? `<p><strong>Quantity:</strong> ${summary.itemDetails.quantity}</p>` : ''}
-        
-        <h4>Dimensions & Weight</h4>
-        <p><strong>Length:</strong> ${summary.itemDetails.dimensions?.length?.feet || 0}' ${summary.itemDetails.dimensions?.length?.inches || 0}"</p>
-        <p><strong>Width:</strong> ${summary.itemDetails.dimensions?.width?.feet || 0}' ${summary.itemDetails.dimensions?.width?.inches || 0}"</p>
-        <p><strong>Height:</strong> ${summary.itemDetails.dimensions?.height?.feet || 0}' ${summary.itemDetails.dimensions?.height?.inches || 0}"</p>
-        <p><strong>Weight:</strong> ${summary.itemDetails.weight || 0} lbs</p>
-        
-        ${summary.itemDetails.hasHazmatPlacards !== null ? `<p><strong>Hazmat Placards:</strong> ${summary.itemDetails.hasHazmatPlacards ? 'Yes' : 'No'}</p>` : ''}
-        ${summary.itemDetails.transportationMethod ? `<p><strong>Transportation Method:</strong> ${summary.itemDetails.transportationMethod}</p>` : ''}
-        
-        <h4>Locations</h4>
-        <p><strong>Pickup:</strong> ${summary.locations?.pickup?.address || 'Not specified'}</p>
-        ${summary.locations?.pickup?.addressType ? `<p><strong>Pickup Type:</strong> ${summary.locations.pickup.addressType}</p>` : ''}
-        <p><strong>Delivery:</strong> ${summary.locations?.dropoff?.address || 'Not specified'}</p>
-        ${summary.locations?.dropoff?.addressType ? `<p><strong>Delivery Type:</strong> ${summary.locations.dropoff.addressType}</p>` : ''}
-        
-        <h4>Scheduling Information</h4>
-        ${summary.scheduling?.pickup?.dateType ? `<p><strong>Pickup Date Type:</strong> ${summary.scheduling.pickup.dateType}</p>` : ''}
-        ${summary.scheduling?.pickup?.specificDate ? `<p><strong>Pickup Date:</strong> ${new Date(summary.scheduling.pickup.specificDate).toLocaleDateString()}</p>` : ''}
-        ${summary.scheduling?.pickup?.timeType ? `<p><strong>Pickup Time Type:</strong> ${summary.scheduling.pickup.timeType}</p>` : ''}
-        ${summary.scheduling?.pickup?.specificTime ? `<p><strong>Pickup Time:</strong> ${summary.scheduling.pickup.specificTime}</p>` : ''}
-        
-        ${summary.scheduling?.delivery?.dateType ? `<p><strong>Delivery Date Type:</strong> ${summary.scheduling.delivery.dateType}</p>` : ''}
-        ${summary.scheduling?.delivery?.specificDate ? `<p><strong>Delivery Date:</strong> ${new Date(summary.scheduling.delivery.specificDate).toLocaleDateString()}</p>` : ''}
-        ${summary.scheduling?.delivery?.timeType ? `<p><strong>Delivery Time Type:</strong> ${summary.scheduling.delivery.timeType}</p>` : ''}
-        ${summary.scheduling?.delivery?.specificTime ? `<p><strong>Delivery Time:</strong> ${summary.scheduling.delivery.specificTime}</p>` : ''}
-        
-        <h4>Additional Information</h4>
-        ${summary.additionalInfo?.loadingMethod ? `<p><strong>Loading Method:</strong> ${summary.additionalInfo.loadingMethod}</p>` : ''}
-        ${summary.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${summary.additionalInfo.unloadingMethod}</p>` : ''}
-        ${summary.additionalInfo?.rampsNeeded !== null ? `<p><strong>Ramps Needed:</strong> ${summary.additionalInfo.rampsNeeded ? 'Yes' : 'No'}</p>` : ''}
-        ${summary.additionalInfo?.handlingInstructions ? `<p><strong>Handling Instructions:</strong> ${summary.additionalInfo.handlingInstructions}</p>` : ''}
-        ${summary.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${summary.additionalInfo.targetBudget}</p>` : ''}
-        ${summary.additionalInfo?.valueOfItems ? `<p><strong>Value of Items:</strong> $${summary.additionalInfo.valueOfItems}</p>` : ''}
-        
-        <h4>Contact Information</h4>
-        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-          <h5 style="margin-top: 0;">Pickup Contact</h5>
-          ${summary.scheduling?.contactInfo?.isContactAtPickup === true ? 
-            '<p><strong>Customer is the contact person at pickup</strong></p>' : 
-            `<p><strong>Contact Person:</strong> ${summary.scheduling?.contactInfo?.pickupContactName || 'Not specified'}</p>
-             <p><strong>Phone:</strong> ${summary.scheduling?.contactInfo?.pickupContactPhone || 'Not specified'}</p>`
-          }
-          
-          <h5>Dropoff Contact</h5>
-          ${summary.scheduling?.contactInfo?.isContactAtDropoff === true ? 
-            '<p><strong>Customer is the contact person at dropoff</strong></p>' : 
-            `<p><strong>Contact Person:</strong> ${summary.scheduling?.contactInfo?.dropoffContactName || 'Not specified'}</p>
-             <p><strong>Phone:</strong> ${summary.scheduling?.contactInfo?.dropoffContactPhone || 'Not specified'}</p>`
-          }
+        <!-- Two Column Layout: Customer & Locations -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+          <tr>
+            <td style="width: 50%; padding: 8px; vertical-align: top; background: #ffffff; border-right: 1px solid #e0e0e0;">
+              <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">CUSTOMER</div>
+              <div style="font-size: 13px; line-height: 1.5;">
+                <div>${message?.split('\\n')[0]?.replace('Company: ', '') || 'N/A'}</div>
+                <div style="color: #666;">${summary.scheduling?.contactInfo?.pickupContactPhone || message?.split('\\n')[1]?.replace('Phone: ', '') || ''}</div>
+                <div style="font-size: 11px; color: #999; margin-top: 4px;">Category: ${estimateData.category}</div>
+              </div>
+            </td>
+            <td style="width: 50%; padding: 8px; vertical-align: top; background: #ffffff;">
+              <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">LOCATIONS</div>
+              <div style="font-size: 12px; line-height: 1.5;">
+                <div><strong>Pickup:</strong> ${summary.locations?.pickup?.address || 'Not specified'}</div>
+                <div style="margin-top: 4px;"><strong>Delivery:</strong> ${summary.locations?.dropoff?.address || 'Not specified'}</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Equipment/Freight Section -->
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">${summary.itemType.toUpperCase()}</div>
+          <div style="font-size: 14px; font-weight: bold; color: #1f2937; margin-bottom: 2px;">${itemName}${itemYear}</div>
+          <div style="font-size: 12px; color: #666; margin-bottom: 4px;">${dimensionsStr}</div>
+          ${valueBudgetStr ? `<div style="font-size: 12px; color: #666;">${valueBudgetStr}</div>` : ''}
+        </div>
+
+        <!-- Schedule Section -->
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">SCHEDULE</div>
+          <div style="font-size: 13px; line-height: 1.6;">
+            <strong>Pickup:</strong> ${pickupStr}<br>
+            <strong>Delivery:</strong> ${deliveryStr}
+          </div>
+        </div>
+
+        <!-- Transport Details Section -->
+        ${transportStr ? `
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">TRANSPORT DETAILS</div>
+          <div style="font-size: 12px; color: #666;">${transportStr}</div>
+        </div>
+        ` : ''}
+
+        <!-- Cost Breakdown -->
+        <div style="background: #ffffff; padding: 10px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 6px;">COST BREAKDOWN</div>
+          <table style="width: 100%; font-size: 12px; line-height: 1.8;">
+            <tr><td>Base Transport:</td><td style="text-align: right;">$${summary.pricing.baseCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>
+            <tr><td>Fuel Surcharge:</td><td style="text-align: right;">$${summary.pricing.fuelSurcharge.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>
+            ${summary.pricing.oversizeFee > 0 ? `<tr><td>Oversize Fee:</td><td style="text-align: right;">$${summary.pricing.oversizeFee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            ${summary.pricing.hazmatFee > 0 ? `<tr><td>Hazmat Fee:</td><td style="text-align: right;">$${summary.pricing.hazmatFee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            ${summary.pricing.additionalFees > 0 ? `<tr><td>Additional:</td><td style="text-align: right;">$${summary.pricing.additionalFees.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            <tr style="border-top: 2px solid #e0e0e0;">
+              <td style="padding-top: 6px; font-size: 14px; font-weight: bold;">TOTAL:</td>
+              <td style="padding-top: 6px; text-align: right; font-size: 16px; font-weight: bold; color: #eab308;">$${summary.pricing.totalEstimate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 12px; padding: 8px; background: #ffffff; border-radius: 4px; font-size: 11px; color: #666; text-align: center;">
+          <em>This is an estimate only. Final pricing may vary based on actual conditions.</em>
         </div>
         
-        <h4>Cost Breakdown</h4>
-        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-          <p>Base Transport Cost: $${summary.pricing.baseCost.toFixed(2)}</p>
-          <p>Fuel Surcharge: $${summary.pricing.fuelSurcharge.toFixed(2)}</p>
-          <p>Oversize Load Fee: $${summary.pricing.oversizeFee.toFixed(2)}</p>
-          <p>Hazmat Fee: $${summary.pricing.hazmatFee.toFixed(2)}</p>
-          <p>Additional Fees: $${summary.pricing.additionalFees.toFixed(2)}</p>
-          <hr style="margin: 10px 0;">
-          <h3 style="color: #eab308;">Total Estimate: $${summary.pricing.totalEstimate.toFixed(2)}</h3>
-          </div>
-
-        ${message ? `<h4>Customer Message</h4><p>${message}</p>` : ''}
-
-        <p><em>This is an estimate only. Final pricing may vary based on actual conditions.</em></p>
-
-        <p>Thank you for choosing Hauln' Heavy for your equipment transportation needs!</p>
+        <div style="margin-top: 8px; font-size: 12px; color: #666; text-align: center;">
+          Thank you for choosing Hauln&apos; Heavy!
         </div>
       </div>
+    </div>
   `;
 }
 
@@ -349,92 +389,136 @@ function generateShareEmailContent(estimateData: any, summary: any) {
 }
 
 function generateClientNotificationEmail(estimateData: any, senderName: string, senderEmail: string, shareType: string) {
+  // Helper function to format dates
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  // Build pickup and delivery strings
+  const pickupStr = estimateData.scheduling?.pickup?.specificDate 
+    ? `${formatDate(estimateData.scheduling.pickup.specificDate)}${estimateData.scheduling.pickup.specificTime ? ` at ${estimateData.scheduling.pickup.specificTime}` : ''}`
+    : 'Not specified';
+  
+  const deliveryStr = estimateData.scheduling?.delivery?.specificDate 
+    ? `${formatDate(estimateData.scheduling.delivery.specificDate)}${estimateData.scheduling.delivery.specificTime ? ` at ${estimateData.scheduling.delivery.specificTime}` : ''}`
+    : 'Not specified';
+
+  // Get item details
+  const item = estimateData.equipment || estimateData.freight;
+  const lengthFt = item?.dimensions?.length?.feet || 0;
+  const lengthIn = item?.dimensions?.length?.inches || 0;
+  const widthFt = item?.dimensions?.width?.feet || 0;
+  const widthIn = item?.dimensions?.width?.inches || 0;
+  const heightFt = item?.dimensions?.height?.feet || 0;
+  const heightIn = item?.dimensions?.height?.inches || 0;
+  const weight = item?.weight || 0;
+  
+  const dimensionsStr = `${lengthFt}'${lengthIn}" L × ${widthFt}'${widthIn}" W × ${heightFt}'${heightIn}" H | ${weight.toLocaleString()} lbs`;
+
+  const itemName = item?.shippingItem 
+    ? item.shippingItem 
+    : `${item?.make || ''} ${item?.model || ''}`.trim();
+  
+  const itemYear = item?.year ? ` (${item.year})` : '';
+
+  // Build value and budget string
+  const valueBudgetParts = [];
+  if (estimateData.additionalInfo?.itemValue) valueBudgetParts.push(`Value: $${estimateData.additionalInfo.itemValue.toLocaleString()}`);
+  if (estimateData.additionalInfo?.targetBudget) valueBudgetParts.push(`Budget: $${estimateData.additionalInfo.targetBudget.toLocaleString()}`);
+  const valueBudgetStr = valueBudgetParts.join(' | ');
+
+  // Build transport details string
+  const transportParts = [];
+  if (estimateData.additionalInfo?.loadingMethod) transportParts.push(`Loading: ${estimateData.additionalInfo.loadingMethod}`);
+  if (estimateData.additionalInfo?.unloadingMethod) transportParts.push(`Unloading: ${estimateData.additionalInfo.unloadingMethod}`);
+  if (estimateData.additionalInfo?.handlingInstructions) transportParts.push(`Handling: ${estimateData.additionalInfo.handlingInstructions}`);
+  const transportStr = transportParts.join(' | ');
+
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #eab308; background: #1f2937; padding: 20px; margin: 0; text-align: center;">
-        New Estimate Request - ${shareType.toUpperCase()}
-      </h2>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+      <!-- Header -->
+      <div style="color: #eab308; background: #1f2937; padding: 12px; text-align: center;">
+        <div style="font-size: 14px; font-weight: bold;">NEW ESTIMATE REQUEST</div>
+        <div style="font-size: 16px; font-weight: bold; letter-spacing: 0.5px; margin-top: 4px;">ESTIMATE #${estimateData.estimateId}</div>
+      </div>
       
-      <div style="padding: 20px; background: #f9fafb;">
-        <h3>Customer Information</h3>
-        <p><strong>Name:</strong> ${senderName}</p>
-        <p><strong>Email:</strong> ${senderEmail}</p>
-        <p><strong>Share Type:</strong> ${shareType}</p>
+      <!-- Main Content -->
+      <div style="padding: 12px; background: #f9fafb; font-size: 13px; line-height: 1.4;">
         
-        <h3>Estimate Details</h3>
-        <p><strong>Estimate ID:</strong> ${estimateData.estimateId}</p>
-        <p><strong>Date:</strong> ${new Date(estimateData.timestamp).toLocaleDateString()}</p>
-        <p><strong>Category:</strong> ${estimateData.category}</p>
-        
-        <h4>Item Information</h4>
-        <p><strong>Type:</strong> ${estimateData.equipment ? 'Equipment' : 'Freight'}</p>
-        ${estimateData.equipment?.make ? `<p><strong>Make:</strong> ${estimateData.equipment.make}</p>` : ''}
-        ${estimateData.equipment?.model ? `<p><strong>Model:</strong> ${estimateData.equipment.model}</p>` : ''}
-        ${estimateData.equipment?.year ? `<p><strong>Year:</strong> ${estimateData.equipment.year}</p>` : ''}
-        ${estimateData.freight?.shippingItem ? `<p><strong>Item:</strong> ${estimateData.freight.shippingItem}</p>` : ''}
-        
-        <h4>Dimensions & Weight</h4>
-        <p><strong>Length:</strong> ${(estimateData.equipment?.dimensions?.length?.feet || estimateData.freight?.dimensions?.length?.feet || 0)}' ${(estimateData.equipment?.dimensions?.length?.inches || estimateData.freight?.dimensions?.length?.inches || 0)}"</p>
-        <p><strong>Width:</strong> ${(estimateData.equipment?.dimensions?.width?.feet || estimateData.freight?.dimensions?.width?.feet || 0)}' ${(estimateData.equipment?.dimensions?.width?.inches || estimateData.freight?.dimensions?.width?.inches || 0)}"</p>
-        <p><strong>Height:</strong> ${(estimateData.equipment?.dimensions?.height?.feet || estimateData.freight?.dimensions?.height?.feet || 0)}' ${(estimateData.equipment?.dimensions?.height?.inches || estimateData.freight?.dimensions?.height?.inches || 0)}"</p>
-        <p><strong>Weight:</strong> ${estimateData.equipment?.weight || estimateData.freight?.weight || 0} lbs</p>
-        
-        <h4>Locations</h4>
-        <p><strong>Pickup:</strong> ${estimateData.locations?.pickup?.address || 'Not specified'}</p>
-        <p><strong>Delivery:</strong> ${estimateData.locations?.dropoff?.address || 'Not specified'}</p>
-        
-        <h4>Scheduling Information</h4>
-        ${estimateData.scheduling?.pickup?.dateType ? `<p><strong>Pickup Date Type:</strong> ${estimateData.scheduling.pickup.dateType}</p>` : ''}
-        ${estimateData.scheduling?.pickup?.specificDate ? `<p><strong>Pickup Date:</strong> ${new Date(estimateData.scheduling.pickup.specificDate).toLocaleDateString()}</p>` : ''}
-        ${estimateData.scheduling?.pickup?.timeType ? `<p><strong>Pickup Time Type:</strong> ${estimateData.scheduling.pickup.timeType}</p>` : ''}
-        ${estimateData.scheduling?.pickup?.specificTime ? `<p><strong>Pickup Time:</strong> ${estimateData.scheduling.pickup.specificTime}</p>` : ''}
-        
-        ${estimateData.scheduling?.delivery?.dateType ? `<p><strong>Delivery Date Type:</strong> ${estimateData.scheduling.delivery.dateType}</p>` : ''}
-        ${estimateData.scheduling?.delivery?.specificDate ? `<p><strong>Delivery Date:</strong> ${new Date(estimateData.scheduling.delivery.specificDate).toLocaleDateString()}</p>` : ''}
-        ${estimateData.scheduling?.delivery?.timeType ? `<p><strong>Delivery Time Type:</strong> ${estimateData.scheduling.delivery.timeType}</p>` : ''}
-        ${estimateData.scheduling?.delivery?.specificTime ? `<p><strong>Delivery Time:</strong> ${estimateData.scheduling.delivery.specificTime}</p>` : ''}
-        
-        <h4>Additional Information</h4>
-        ${estimateData.additionalInfo?.loadingMethod ? `<p><strong>Loading Method:</strong> ${estimateData.additionalInfo.loadingMethod}</p>` : ''}
-        ${estimateData.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${estimateData.additionalInfo.unloadingMethod}</p>` : ''}
-        ${estimateData.additionalInfo?.handlingInstructions ? `<p><strong>Handling Instructions:</strong> ${estimateData.additionalInfo.handlingInstructions}</p>` : ''}
-        ${estimateData.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${estimateData.additionalInfo.targetBudget}</p>` : ''}
-        
-        <h4>Contact Information</h4>
-        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-          <h5 style="margin-top: 0;">Pickup Contact</h5>
-          ${estimateData.scheduling?.contactInfo?.isContactAtPickup === true ? 
-            '<p><strong>Customer is the contact person at pickup</strong></p>' : 
-            `<p><strong>Contact Person:</strong> ${estimateData.scheduling?.contactInfo?.pickupContactName || 'Not specified'}</p>
-             <p><strong>Phone:</strong> ${estimateData.scheduling?.contactInfo?.pickupContactPhone || 'Not specified'}</p>`
-          }
-          
-          <h5>Dropoff Contact</h5>
-          ${estimateData.scheduling?.contactInfo?.isContactAtDropoff === true ? 
-            '<p><strong>Customer is the contact person at dropoff</strong></p>' : 
-            `<p><strong>Contact Person:</strong> ${estimateData.scheduling?.contactInfo?.dropoffContactName || 'Not specified'}</p>
-             <p><strong>Phone:</strong> ${estimateData.scheduling?.contactInfo?.dropoffContactPhone || 'Not specified'}</p>`
-          }
+        <!-- Two Column Layout: Customer & Locations -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+          <tr>
+            <td style="width: 50%; padding: 8px; vertical-align: top; background: #ffffff; border-right: 1px solid #e0e0e0;">
+              <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">CUSTOMER</div>
+              <div style="font-size: 13px; line-height: 1.5;">
+                <div><strong>${senderName}</strong></div>
+                <div style="color: #666;">${senderEmail}</div>
+                <div style="font-size: 11px; color: #999; margin-top: 4px;">Category: ${estimateData.category}</div>
+              </div>
+            </td>
+            <td style="width: 50%; padding: 8px; vertical-align: top; background: #ffffff;">
+              <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">LOCATIONS</div>
+              <div style="font-size: 12px; line-height: 1.5;">
+                <div><strong>Pickup:</strong> ${estimateData.locations?.pickup?.address || 'Not specified'}</div>
+                <div style="margin-top: 4px;"><strong>Delivery:</strong> ${estimateData.locations?.dropoff?.address || 'Not specified'}</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Equipment/Freight Section -->
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">${estimateData.equipment ? 'EQUIPMENT' : 'FREIGHT'}</div>
+          <div style="font-size: 14px; font-weight: bold; color: #1f2937; margin-bottom: 2px;">${itemName}${itemYear}</div>
+          <div style="font-size: 12px; color: #666; margin-bottom: 4px;">${dimensionsStr}</div>
+          ${valueBudgetStr ? `<div style="font-size: 12px; color: #666;">${valueBudgetStr}</div>` : ''}
         </div>
-        
-        <h4>Cost Breakdown</h4>
-        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
-          <p>Base Transport Cost: $${estimateData.estimateResult.baseCost.toFixed(2)}</p>
-          <p>Fuel Surcharge: $${estimateData.estimateResult.fuelSurcharge.toFixed(2)}</p>
-          <p>Oversize Load Fee: $${estimateData.estimateResult.oversizeFee.toFixed(2)}</p>
-          <p>Hazmat Fee: $${estimateData.estimateResult.hazmatFee.toFixed(2)}</p>
-          <p>Additional Fees: $${estimateData.estimateResult.additionalFees.toFixed(2)}</p>
-          <hr style="margin: 10px 0;">
-          <h3 style="color: #eab308;">Total Estimate: $${estimateData.estimateResult.totalEstimate.toFixed(2)}</h3>
+
+        <!-- Schedule Section -->
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">SCHEDULE</div>
+          <div style="font-size: 13px; line-height: 1.6;">
+            <strong>Pickup:</strong> ${pickupStr}<br>
+            <strong>Delivery:</strong> ${deliveryStr}
+          </div>
         </div>
-        
-        <p><em>This estimate was automatically generated and shared with the customer.</em></p>
-        
-        <div style="background: #eab308; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+
+        <!-- Transport Details Section -->
+        ${transportStr ? `
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 4px;">TRANSPORT DETAILS</div>
+          <div style="font-size: 12px; color: #666;">${transportStr}</div>
+        </div>
+        ` : ''}
+
+        <!-- Cost Breakdown -->
+        <div style="background: #ffffff; padding: 10px; margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 12px; font-weight: bold; color: #666; margin-bottom: 6px;">COST BREAKDOWN</div>
+          <table style="width: 100%; font-size: 12px; line-height: 1.8;">
+            <tr><td>Base Transport:</td><td style="text-align: right;">$${estimateData.estimateResult.baseCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>
+            <tr><td>Fuel Surcharge:</td><td style="text-align: right;">$${estimateData.estimateResult.fuelSurcharge.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>
+            ${estimateData.estimateResult.oversizeFee > 0 ? `<tr><td>Oversize Fee:</td><td style="text-align: right;">$${estimateData.estimateResult.oversizeFee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            ${estimateData.estimateResult.hazmatFee > 0 ? `<tr><td>Hazmat Fee:</td><td style="text-align: right;">$${estimateData.estimateResult.hazmatFee.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            ${estimateData.estimateResult.additionalFees > 0 ? `<tr><td>Additional:</td><td style="text-align: right;">$${estimateData.estimateResult.additionalFees.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td></tr>` : ''}
+            <tr style="border-top: 2px solid #e0e0e0;">
+              <td style="padding-top: 6px; font-size: 14px; font-weight: bold;">TOTAL:</td>
+              <td style="padding-top: 6px; text-align: right; font-size: 16px; font-weight: bold; color: #eab308;">$${estimateData.estimateResult.totalEstimate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- View Details Button -->
+        <div style="background: #eab308; color: white; padding: 12px; border-radius: 4px; text-align: center;">
           <a href="${process.env.NEXT_PUBLIC_BASE_URL}/admin/estimate/${estimateData.estimateId}" 
-             style="color: white; text-decoration: none; font-weight: bold;">
-            View Full Estimate Details
+             style="color: white; text-decoration: none; font-weight: bold; font-size: 14px;">
+            VIEW FULL ESTIMATE DETAILS →
           </a>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top: 8px; padding: 6px; font-size: 11px; color: #999; text-align: center;">
+          <em>Estimate sent to customer via email</em>
         </div>
       </div>
     </div>

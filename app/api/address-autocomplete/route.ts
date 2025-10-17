@@ -72,28 +72,37 @@ export async function GET(request: NextRequest) {
     console.log('Response keys:', Object.keys(data));
     
     // Transform Geoapify response to our format
-    const suggestions = data.features?.map((feature: any) => ({
-      id: feature.properties.place_id || Math.random().toString(36),
-      address: feature.properties.formatted,
-      addressLine1: feature.properties.address_line1,
-      addressLine2: feature.properties.address_line2,
-      city: feature.properties.city,
-      state: feature.properties.state,
-      postcode: feature.properties.postcode,
-      country: feature.properties.country,
-      confidence: feature.properties.rank?.confidence || 0,
-      lat: feature.properties.lat,
-      lon: feature.properties.lon,
-      resultType: feature.properties.result_type,
-      raw: feature.properties // Keep original for debugging
-    })) || [];
+    const suggestions = data.features?.map((feature: any) => {
+      const props = feature.properties;
+      return {
+        id: props.place_id || Math.random().toString(36),
+        address: props.formatted,
+        addressLine1: props.address_line1,
+        addressLine2: props.address_line2,
+        city: props.city,
+        state: props.state,
+        postcode: props.postcode,
+        country: props.country,
+        confidence: props.rank?.confidence || 0,
+        lat: props.lat,
+        lon: props.lon,
+        resultType: props.result_type,
+        raw: props // Keep original for debugging
+      };
+    }) || [];
 
     console.log(`Found ${suggestions.length} address suggestions for query: "${query}"`);
+    console.log('Processed suggestions:', suggestions);
 
     return NextResponse.json({ 
       suggestions,
       query: query.trim(),
-      country: countryCode
+      country: countryCode,
+      debug: {
+        totalFeatures: data.features?.length || 0,
+        processedSuggestions: suggestions.length,
+        apiUrl: apiUrl.toString()
+      }
     });
 
   } catch (error) {

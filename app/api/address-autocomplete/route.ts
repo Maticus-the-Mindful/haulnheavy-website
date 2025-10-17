@@ -31,7 +31,9 @@ export async function GET(request: NextRequest) {
     // Build Geoapify API URL
     const apiUrl = new URL('https://api.geoapify.com/v1/geocode/autocomplete');
     apiUrl.searchParams.set('text', query.trim());
-    apiUrl.searchParams.set('filter', `countrycode:${countryCode}`);
+    // Don't use searchParams.set for filter to avoid encoding the colon
+    const filterParam = `countrycode:${countryCode}`;
+    apiUrl.search += (apiUrl.search ? '&' : '') + `filter=${filterParam}`;
     apiUrl.searchParams.set('limit', '8'); // Limit to 8 suggestions for better UX
     apiUrl.searchParams.set('format', 'json');
     apiUrl.searchParams.set('apiKey', apiKey);

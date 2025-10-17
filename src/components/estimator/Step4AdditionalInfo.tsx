@@ -62,11 +62,36 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
   };
 
   const handleNumberChange = (field: string, value: string) => {
-    const numValue = value === '' ? undefined : parseFloat(value.replace(/[^0-9.]/g, ''));
+    // Remove all non-numeric characters except decimal point
+    const cleanValue = value.replace(/[^0-9.]/g, '');
+    
+    // Prevent multiple decimal points
+    const parts = cleanValue.split('.');
+    const formattedValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : cleanValue;
+    
+    const numValue = formattedValue === '' ? undefined : parseFloat(formattedValue);
     setFormData(prev => ({
       ...prev,
       [field]: numValue
     }));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter, decimal point
+    if ([8, 9, 27, 13, 46, 110, 190].indexOf(e.keyCode) !== -1 ||
+        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        (e.keyCode === 65 && e.ctrlKey === true) ||
+        (e.keyCode === 67 && e.ctrlKey === true) ||
+        (e.keyCode === 86 && e.ctrlKey === true) ||
+        (e.keyCode === 88 && e.ctrlKey === true) ||
+        // Allow: home, end, left, right, down, up
+        (e.keyCode >= 35 && e.keyCode <= 40)) {
+      return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault();
+    }
   };
 
   const formatCurrency = (value: number | undefined) => {
@@ -270,6 +295,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                     type="text"
                     value={formatCurrency(formData.targetBudget)}
                     onChange={(e) => handleNumberChange('targetBudget', e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="0"
                     className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none text-gray-900 placeholder-gray-400"
                   />
@@ -311,6 +337,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                     type="text"
                     value={formatCurrency(formData.itemValue)}
                     onChange={(e) => handleNumberChange('itemValue', e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder="0"
                     className="flex-1 px-3 py-2 bg-transparent border-none focus:outline-none text-gray-900 placeholder-gray-400"
                   />

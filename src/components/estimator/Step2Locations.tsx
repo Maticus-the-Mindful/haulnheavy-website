@@ -281,12 +281,12 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 country="us"
                 showVerified={formData.pickup.isVerified}
                 verified={formData.pickup.isVerified}
-                className="flex-1"
+                className="flex-1 min-w-0"
               />
               <select
                 value={formData.pickup.addressType}
                 onChange={(e) => handleAddressTypeChange('pickup', e.target.value as any)}
-                className="w-full sm:w-40 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="w-full sm:w-48 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900 flex-shrink-0"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>
@@ -365,12 +365,12 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 country="us"
                 showVerified={formData.dropoff.isVerified}
                 verified={formData.dropoff.isVerified}
-                className="flex-1"
+                className="flex-1 min-w-0"
               />
               <select
                 value={formData.dropoff.addressType}
                 onChange={(e) => handleAddressTypeChange('dropoff', e.target.value as any)}
-                className="w-full sm:w-40 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900"
+                className="w-full sm:w-48 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900 flex-shrink-0"
               >
                 <option value="" className="text-gray-500">Select Type</option>
                 <option value="business" className="text-gray-900">Business</option>

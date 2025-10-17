@@ -120,7 +120,14 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
         ...prev,
         [location]: {
           ...prev[location],
-          dateType: type as any
+          dateType: type as any,
+          // Initialize dateRange properly when switching to 'between'
+          ...(type === 'between' && {
+            dateRange: {
+              start: prev[location].dateRange?.start || new Date(),
+              end: prev[location].dateRange?.end || new Date()
+            }
+          })
         }
       };
 
@@ -241,6 +248,17 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
   };
 
   const handleNext = () => {
+    // Debug logging to see what data is being sent
+    console.log('=== STEP3 DATES/TIMES DEBUG ===');
+    console.log('formData:', formData);
+    console.log('pickup.dateType:', formData.pickup.dateType);
+    console.log('pickup.dateRange:', formData.pickup.dateRange);
+    console.log('pickup.specificDate:', formData.pickup.specificDate);
+    console.log('delivery.dateType:', formData.delivery.dateType);
+    console.log('delivery.dateRange:', formData.delivery.dateRange);
+    console.log('delivery.specificDate:', formData.delivery.specificDate);
+    console.log('==============================');
+    
     const schedulingData = {
       scheduling: formData
     };

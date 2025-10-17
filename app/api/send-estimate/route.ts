@@ -547,7 +547,7 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
   // Build value and budget string
   const valueBudgetParts = [];
   if (estimateData.additionalInfo?.itemValue) valueBudgetParts.push(`Value: $${estimateData.additionalInfo.itemValue.toLocaleString()}`);
-  if (estimateData.additionalInfo?.targetBudget) valueBudgetParts.push(`Budget: $${estimateData.additionalInfo.targetBudget.toLocaleString()}`);
+  if (estimateData.additionalInfo?.targetBudget) valueBudgetParts.push(`<strong>Budget: $${estimateData.additionalInfo.targetBudget.toLocaleString()}</strong>`);
   const valueBudgetStr = valueBudgetParts.join(' | ');
 
   // Build transport details string

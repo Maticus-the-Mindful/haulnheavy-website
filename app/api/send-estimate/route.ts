@@ -217,6 +217,16 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
 
     const { dateType, timeType, specificDate, specificTime, dateRange, timeRange } = scheduleData;
     
+    // Debug logging for date/time data
+    console.log(`=== ${type.toUpperCase()} SCHEDULE DEBUG ===`);
+    console.log('dateType:', dateType);
+    console.log('timeType:', timeType);
+    console.log('specificDate:', specificDate);
+    console.log('specificTime:', specificTime);
+    console.log('dateRange:', dateRange);
+    console.log('timeRange:', timeRange);
+    console.log('===============================');
+    
     let dateStr = '';
     let timeStr = '';
 

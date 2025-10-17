@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, ChevronDown, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import AddressAutocomplete from './AddressAutocomplete';
 
 interface Step2LocationsProps {
   equipmentData: any;
@@ -69,6 +70,21 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
         isVerified: true,
         verificationStatus: 'verified',
         verifiedAddress: suggestion.display_name,
+        error: '',
+        suggestions: []
+      }
+    }));
+  };
+
+  const handleAddressSelect = (location: 'pickup' | 'dropoff', suggestion: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [location]: {
+        ...prev[location],
+        address: suggestion.address,
+        isVerified: true,
+        verificationStatus: 'verified',
+        verifiedAddress: suggestion.address,
         error: '',
         suggestions: []
       }
@@ -257,12 +273,15 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
               Pick Up Location <span className="text-red-500">*</span>
             </label>
             <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="text"
+              <AddressAutocomplete
                 value={formData.pickup.address}
-                onChange={(e) => handleAddressChange('pickup', e.target.value)}
-                placeholder="Enter City, State or Zip"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 placeholder-gray-400"
+                onChange={(address) => handleAddressChange('pickup', address)}
+                onSelect={(suggestion) => handleAddressSelect('pickup', suggestion)}
+                placeholder="Enter pickup address..."
+                country="us"
+                showVerified={formData.pickup.isVerified}
+                verified={formData.pickup.isVerified}
+                className="flex-1"
               />
               <select
                 value={formData.pickup.addressType}
@@ -338,12 +357,15 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
               Drop Off Location <span className="text-red-500">*</span>
             </label>
             <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="text"
+              <AddressAutocomplete
                 value={formData.dropoff.address}
-                onChange={(e) => handleAddressChange('dropoff', e.target.value)}
-                placeholder="Enter City, State or Zip"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 placeholder-gray-400"
+                onChange={(address) => handleAddressChange('dropoff', address)}
+                onSelect={(suggestion) => handleAddressSelect('dropoff', suggestion)}
+                placeholder="Enter delivery address..."
+                country="us"
+                showVerified={formData.dropoff.isVerified}
+                verified={formData.dropoff.isVerified}
+                className="flex-1"
               />
               <select
                 value={formData.dropoff.addressType}

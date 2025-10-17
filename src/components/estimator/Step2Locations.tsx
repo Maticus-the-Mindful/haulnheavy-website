@@ -5,31 +5,32 @@ import { X, ChevronDown, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
 interface Step2LocationsProps {
   equipmentData: any;
+  existingData?: any; // Existing locations data from previous visits
   onNext: (data: any) => void;
   onBack: () => void;
   onClose: () => void;
 }
 
-export default function Step2Locations({ equipmentData, onNext, onBack, onClose }: Step2LocationsProps) {
+export default function Step2Locations({ equipmentData, existingData, onNext, onBack, onClose }: Step2LocationsProps) {
   const [formData, setFormData] = useState({
     pickup: {
-      address: '',
-      addressType: '' as '' | 'business' | 'residential' | 'port',
-      isVerified: false,
-      verificationStatus: 'none' as 'none' | 'verifying' | 'verified' | 'error',
-      verifiedAddress: '',
-      error: ''
+      address: existingData?.pickup?.address || '',
+      addressType: (existingData?.pickup?.addressType || '') as '' | 'business' | 'residential' | 'port',
+      isVerified: existingData?.pickup?.isVerified || false,
+      verificationStatus: (existingData?.pickup?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
+      verifiedAddress: existingData?.pickup?.verifiedAddress || '',
+      error: existingData?.pickup?.error || ''
     },
     dropoff: {
-      address: '',
-      addressType: '' as '' | 'business' | 'residential' | 'port',
-      isVerified: false,
-      verificationStatus: 'none' as 'none' | 'verifying' | 'verified' | 'error',
-      verifiedAddress: '',
-      error: ''
+      address: existingData?.dropoff?.address || '',
+      addressType: (existingData?.dropoff?.addressType || '') as '' | 'business' | 'residential' | 'port',
+      isVerified: existingData?.dropoff?.isVerified || false,
+      verificationStatus: (existingData?.dropoff?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
+      verifiedAddress: existingData?.dropoff?.verifiedAddress || '',
+      error: existingData?.dropoff?.error || ''
     },
-    isLoadDrivable: null as boolean | null,
-    doYouOwnLoad: null as boolean | null
+    isLoadDrivable: existingData?.isLoadDrivable || null as boolean | null,
+    doYouOwnLoad: existingData?.doYouOwnLoad || null as boolean | null
   });
 
   const handleAddressChange = (location: 'pickup' | 'dropoff', address: string) => {

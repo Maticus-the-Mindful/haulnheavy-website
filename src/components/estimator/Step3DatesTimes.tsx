@@ -16,40 +16,40 @@ interface Step3DatesTimesProps {
 export default function Step3DatesTimes({ equipmentData, locationsData, existingData, onNext, onBack, onClose }: Step3DatesTimesProps) {
   const [formData, setFormData] = useState({
     pickup: {
-      dateType: '' as '' | 'before' | 'between' | 'on' | 'after',
-      specificDate: new Date(),
+      dateType: (existingData?.pickup?.dateType || '') as '' | 'before' | 'between' | 'on' | 'after',
+      specificDate: existingData?.pickup?.specificDate ? new Date(existingData.pickup.specificDate) : new Date(),
       dateRange: {
-        start: new Date(),
-        end: new Date()
+        start: existingData?.pickup?.dateRange?.start ? new Date(existingData.pickup.dateRange.start) : new Date(),
+        end: existingData?.pickup?.dateRange?.end ? new Date(existingData.pickup.dateRange.end) : new Date()
       },
-      timeType: '' as '' | 'before' | 'between' | 'at' | 'after',
-      specificTime: '',
+      timeType: (existingData?.pickup?.timeType || '') as '' | 'before' | 'between' | 'at' | 'after',
+      specificTime: existingData?.pickup?.specificTime || '',
       timeRange: {
-        start: '',
-        end: ''
+        start: existingData?.pickup?.timeRange?.start || '',
+        end: existingData?.pickup?.timeRange?.end || ''
       }
     },
     delivery: {
-      dateType: '' as '' | 'before' | 'between' | 'on' | 'after',
-      specificDate: new Date(),
+      dateType: (existingData?.delivery?.dateType || '') as '' | 'before' | 'between' | 'on' | 'after',
+      specificDate: existingData?.delivery?.specificDate ? new Date(existingData.delivery.specificDate) : new Date(),
       dateRange: {
-        start: new Date(),
-        end: new Date()
+        start: existingData?.delivery?.dateRange?.start ? new Date(existingData.delivery.dateRange.start) : new Date(),
+        end: existingData?.delivery?.dateRange?.end ? new Date(existingData.delivery.dateRange.end) : new Date()
       },
-      timeType: '' as '' | 'before' | 'between' | 'at' | 'after',
-      specificTime: '',
+      timeType: (existingData?.delivery?.timeType || '') as '' | 'before' | 'between' | 'at' | 'after',
+      specificTime: existingData?.delivery?.specificTime || '',
       timeRange: {
-        start: '',
-        end: ''
+        start: existingData?.delivery?.timeRange?.start || '',
+        end: existingData?.delivery?.timeRange?.end || ''
       }
     },
     contactInfo: {
-      isContactAtPickup: null as boolean | null,
-      pickupContactName: '',
-      pickupContactPhone: '',
-      isContactAtDropoff: null as boolean | null,
-      dropoffContactName: '',
-      dropoffContactPhone: ''
+      isContactAtPickup: existingData?.contactInfo?.isContactAtPickup || null as boolean | null,
+      pickupContactName: existingData?.contactInfo?.pickupContactName || '',
+      pickupContactPhone: existingData?.contactInfo?.pickupContactPhone || '',
+      isContactAtDropoff: existingData?.contactInfo?.isContactAtDropoff || null as boolean | null,
+      dropoffContactName: existingData?.contactInfo?.dropoffContactName || '',
+      dropoffContactPhone: existingData?.contactInfo?.dropoffContactPhone || ''
     }
   });
 

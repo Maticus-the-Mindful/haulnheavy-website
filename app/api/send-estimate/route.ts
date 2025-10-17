@@ -258,6 +258,23 @@ function generateEmailContent(estimateData: any, summary: any, message?: string)
         ${summary.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${summary.additionalInfo.targetBudget}</p>` : ''}
         ${summary.additionalInfo?.valueOfItems ? `<p><strong>Value of Items:</strong> $${summary.additionalInfo.valueOfItems}</p>` : ''}
         
+        <h4>Contact Information</h4>
+        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+          <h5 style="margin-top: 0;">Pickup Contact</h5>
+          ${summary.scheduling?.contactInfo?.isContactAtPickup === true ? 
+            '<p><strong>Customer is the contact person at pickup</strong></p>' : 
+            `<p><strong>Contact Person:</strong> ${summary.scheduling?.contactInfo?.pickupContactName || 'Not specified'}</p>
+             <p><strong>Phone:</strong> ${summary.scheduling?.contactInfo?.pickupContactPhone || 'Not specified'}</p>`
+          }
+          
+          <h5>Dropoff Contact</h5>
+          ${summary.scheduling?.contactInfo?.isContactAtDropoff === true ? 
+            '<p><strong>Customer is the contact person at dropoff</strong></p>' : 
+            `<p><strong>Contact Person:</strong> ${summary.scheduling?.contactInfo?.dropoffContactName || 'Not specified'}</p>
+             <p><strong>Phone:</strong> ${summary.scheduling?.contactInfo?.dropoffContactPhone || 'Not specified'}</p>`
+          }
+        </div>
+        
         <h4>Cost Breakdown</h4>
         <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
           <p>Base Transport Cost: $${summary.pricing.baseCost.toFixed(2)}</p>
@@ -382,6 +399,23 @@ function generateClientNotificationEmail(estimateData: any, senderName: string, 
         ${estimateData.additionalInfo?.unloadingMethod ? `<p><strong>Unloading Method:</strong> ${estimateData.additionalInfo.unloadingMethod}</p>` : ''}
         ${estimateData.additionalInfo?.handlingInstructions ? `<p><strong>Handling Instructions:</strong> ${estimateData.additionalInfo.handlingInstructions}</p>` : ''}
         ${estimateData.additionalInfo?.targetBudget ? `<p><strong>Target Budget:</strong> $${estimateData.additionalInfo.targetBudget}</p>` : ''}
+        
+        <h4>Contact Information</h4>
+        <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+          <h5 style="margin-top: 0;">Pickup Contact</h5>
+          ${estimateData.scheduling?.contactInfo?.isContactAtPickup === true ? 
+            '<p><strong>Customer is the contact person at pickup</strong></p>' : 
+            `<p><strong>Contact Person:</strong> ${estimateData.scheduling?.contactInfo?.pickupContactName || 'Not specified'}</p>
+             <p><strong>Phone:</strong> ${estimateData.scheduling?.contactInfo?.pickupContactPhone || 'Not specified'}</p>`
+          }
+          
+          <h5>Dropoff Contact</h5>
+          ${estimateData.scheduling?.contactInfo?.isContactAtDropoff === true ? 
+            '<p><strong>Customer is the contact person at dropoff</strong></p>' : 
+            `<p><strong>Contact Person:</strong> ${estimateData.scheduling?.contactInfo?.dropoffContactName || 'Not specified'}</p>
+             <p><strong>Phone:</strong> ${estimateData.scheduling?.contactInfo?.dropoffContactPhone || 'Not specified'}</p>`
+          }
+        </div>
         
         <h4>Cost Breakdown</h4>
         <div style="background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">

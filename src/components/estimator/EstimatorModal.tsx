@@ -332,6 +332,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
       {currentStep === 1 && formData?.category === 'equipment' && (
         <Step1EquipmentDetails
           category={formData.category}
+          existingData={formData.equipment}
           onNext={handleStep1Next}
           onClose={handleClose}
           onBack={handleBack}
@@ -340,6 +341,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
       )}
       {currentStep === 1 && formData?.category === 'freight' && (
         <Step1FreightDimensions
+          existingData={formData.freight}
           onNext={handleStep1Next}
           onClose={handleClose}
           onBack={handleBack}
@@ -348,6 +350,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
       {currentStep === 2 && (formData?.equipment || formData?.freight) && (
         <Step2Locations
           equipmentData={formData?.equipment || formData?.freight}
+          existingData={formData.locations}
           onNext={handleStep2Next}
           onBack={handleBack}
           onClose={handleClose}
@@ -368,6 +371,7 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
           equipmentData={formData?.equipment || formData?.freight}
           locationsData={formData.locations}
           schedulingData={formData.scheduling}
+          existingData={formData.additionalInfo}
           onNext={handleStep4Next}
           onBack={handleBack}
           onClose={handleClose}

@@ -14,31 +14,41 @@ import {
 
 interface Step1EquipmentDetailsProps {
   category?: 'equipment' | 'freight';
+  existingData?: any; // Existing equipment data from previous visits
   onNext: (data: any) => void;
   onClose: () => void;
   onBack?: () => void;
   onSwitchToFreight?: () => void;
 }
 
-export default function Step1EquipmentDetails({ category = 'equipment', onNext, onClose, onBack, onSwitchToFreight }: Step1EquipmentDetailsProps) {
+export default function Step1EquipmentDetails({ category = 'equipment', existingData, onNext, onClose, onBack, onSwitchToFreight }: Step1EquipmentDetailsProps) {
   
   // Form data state
   const [formData, setFormData] = useState({
-    year: '',
-    make: category === 'equipment' ? '' : '',
-    model: category === 'equipment' ? '' : '',
-    customModel: '',
-    type: category === 'equipment' ? 'Grain Carts' : 'General Freight',
-    quantity: 1,
+    year: existingData?.year || '',
+    make: existingData?.make || (category === 'equipment' ? '' : ''),
+    model: existingData?.model || (category === 'equipment' ? '' : ''),
+    customModel: existingData?.customModel || '',
+    type: existingData?.type || (category === 'equipment' ? 'Grain Carts' : 'General Freight'),
+    quantity: existingData?.quantity || 1,
     dimensions: {
-      length: { feet: category === 'equipment' ? 0 : 0, inches: 0 },
-      width: { feet: category === 'equipment' ? 0 : 0, inches: 0 },
-      height: { feet: category === 'equipment' ? 0 : 0, inches: 0 }
+      length: { 
+        feet: existingData?.dimensions?.length?.feet || (category === 'equipment' ? 0 : 0), 
+        inches: existingData?.dimensions?.length?.inches || 0 
+      },
+      width: { 
+        feet: existingData?.dimensions?.width?.feet || (category === 'equipment' ? 0 : 0), 
+        inches: existingData?.dimensions?.width?.inches || 0 
+      },
+      height: { 
+        feet: existingData?.dimensions?.height?.feet || (category === 'equipment' ? 0 : 0), 
+        inches: existingData?.dimensions?.height?.inches || 0 
+      }
     },
-    weight: category === 'equipment' ? 0 : 0,
-    hasHazmatPlacards: null as boolean | null,
-    transportationMethod: null as 'hauled' | 'towed' | 'driven' | null,
-    images: [] as File[]
+    weight: existingData?.weight || (category === 'equipment' ? 0 : 0),
+    hasHazmatPlacards: existingData?.hasHazmatPlacards || null as boolean | null,
+    transportationMethod: existingData?.transportationMethod || null as 'hauled' | 'towed' | 'driven' | null,
+    images: existingData?.images || [] as File[]
   });
 
   // Equipment data state

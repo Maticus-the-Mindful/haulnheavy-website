@@ -7,19 +7,20 @@ interface Step4AdditionalInfoProps {
   equipmentData: any;
   locationsData: any;
   schedulingData: any;
+  existingData?: any; // Existing additional info data from previous visits
   onNext: (data: any) => void;
   onBack: () => void;
   onClose: () => void;
 }
 
-export default function Step4AdditionalInfo({ equipmentData, locationsData, schedulingData, onNext, onBack, onClose }: Step4AdditionalInfoProps) {
+export default function Step4AdditionalInfo({ equipmentData, locationsData, schedulingData, existingData, onNext, onBack, onClose }: Step4AdditionalInfoProps) {
   const [formData, setFormData] = useState({
-    loadingMethod: 'DRIVE ON' as string,
-    unloadingMethod: 'DRIVE OFF' as string,
-    rampsNeeded: null as boolean | null,
-    handlingInstructions: '',
-    targetBudget: undefined as number | undefined,
-    itemValue: undefined as number | undefined
+    loadingMethod: (existingData?.loadingMethod || 'DRIVE ON') as string,
+    unloadingMethod: (existingData?.unloadingMethod || 'DRIVE OFF') as string,
+    rampsNeeded: existingData?.rampsNeeded || null as boolean | null,
+    handlingInstructions: existingData?.handlingInstructions || '',
+    targetBudget: existingData?.targetBudget || undefined as number | undefined,
+    itemValue: existingData?.itemValue || undefined as number | undefined
   });
 
   const loadingOptions = [

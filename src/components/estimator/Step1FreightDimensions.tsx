@@ -5,31 +5,32 @@ import { X, HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 
 interface Step1FreightDimensionsProps {
+  existingData?: any; // Existing freight data from previous visits
   onNext: (data: any) => void;
   onClose: () => void;
   onBack?: () => void;
 }
 
-export default function Step1FreightDimensions({ onNext, onClose, onBack }: Step1FreightDimensionsProps) {
+export default function Step1FreightDimensions({ existingData, onNext, onClose, onBack }: Step1FreightDimensionsProps) {
   const [formData, setFormData] = useState({
-    shippingItem: '',
-    quantity: 1,
+    shippingItem: existingData?.shippingItem || '',
+    quantity: existingData?.quantity || 1,
     length: {
-      feet: '',
-      inches: ''
+      feet: existingData?.length?.feet || '',
+      inches: existingData?.length?.inches || ''
     },
     width: {
-      feet: '',
-      inches: ''
+      feet: existingData?.width?.feet || '',
+      inches: existingData?.width?.inches || ''
     },
     height: {
-      feet: '',
-      inches: ''
+      feet: existingData?.height?.feet || '',
+      inches: existingData?.height?.inches || ''
     },
-    weight: 0,
-    hasHazmatPlacards: null as boolean | null,
-    transportationMethod: 'hauled' as 'hauled' | 'towed' | 'driven',
-    images: [] as File[]
+    weight: existingData?.weight || 0,
+    hasHazmatPlacards: existingData?.hasHazmatPlacards || null as boolean | null,
+    transportationMethod: (existingData?.transportationMethod || 'hauled') as 'hauled' | 'towed' | 'driven',
+    images: existingData?.images || [] as File[]
   });
 
   const handleInputChange = (field: string, value: any) => {

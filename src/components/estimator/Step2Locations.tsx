@@ -19,7 +19,8 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
       isVerified: existingData?.pickup?.isVerified || false,
       verificationStatus: (existingData?.pickup?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
       verifiedAddress: existingData?.pickup?.verifiedAddress || '',
-      error: existingData?.pickup?.error || ''
+      error: existingData?.pickup?.error || '',
+      suggestions: existingData?.pickup?.suggestions || [] as Array<{display_name: string, place_id: string}>
     },
     dropoff: {
       address: existingData?.dropoff?.address || '',
@@ -27,7 +28,8 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
       isVerified: existingData?.dropoff?.isVerified || false,
       verificationStatus: (existingData?.dropoff?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
       verifiedAddress: existingData?.dropoff?.verifiedAddress || '',
-      error: existingData?.dropoff?.error || ''
+      error: existingData?.dropoff?.error || '',
+      suggestions: existingData?.dropoff?.suggestions || [] as Array<{display_name: string, place_id: string}>
     },
     isLoadDrivable: existingData?.isLoadDrivable || null as boolean | null,
     doYouOwnLoad: existingData?.doYouOwnLoad || null as boolean | null
@@ -42,7 +44,8 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
         isVerified: false,
         verificationStatus: 'none',
         verifiedAddress: '',
-        error: ''
+        error: '',
+        suggestions: []
       }
     }));
   };
@@ -53,6 +56,21 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
       [location]: {
         ...prev[location],
         addressType: type
+      }
+    }));
+  };
+
+  const handleSuggestionSelect = (location: 'pickup' | 'dropoff', suggestion: {display_name: string, place_id: string}) => {
+    setFormData(prev => ({
+      ...prev,
+      [location]: {
+        ...prev[location],
+        address: suggestion.display_name,
+        isVerified: true,
+        verificationStatus: 'verified',
+        verifiedAddress: suggestion.display_name,
+        error: '',
+        suggestions: []
       }
     }));
   };
@@ -83,9 +101,9 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
     }));
 
     try {
-      // Use Nominatim (OpenStreetMap) geocoding API
+      // Use Nominatim (OpenStreetMap) geocoding API - get multiple results for suggestions
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=us&addressdetails=1`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=5&countrycodes=us&addressdetails=1`
       );
       
       if (!response.ok) {
@@ -98,25 +116,83 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
         const result = data[0];
         const verifiedAddress = result.display_name;
         
-        setFormData(prev => ({
-          ...prev,
-          [location]: {
-            ...prev[location],
-            verificationStatus: 'verified',
-            isVerified: true,
-            verifiedAddress,
-            error: ''
-          }
-        }));
+        // If we have multiple results, show suggestions
+        if (data.length > 1) {
+          const suggestions = data.slice(1, 4).map((item: any) => ({
+            display_name: item.display_name,
+            place_id: item.place_id
+          }));
+          
+          setFormData(prev => ({
+            ...prev,
+            [location]: {
+              ...prev[location],
+              verificationStatus: 'verified',
+              isVerified: true,
+              verifiedAddress,
+              error: '',
+              suggestions: suggestions
+            }
+          }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            [location]: {
+              ...prev[location],
+              verificationStatus: 'verified',
+              isVerified: true,
+              verifiedAddress,
+              error: '',
+              suggestions: []
+            }
+          }));
+        }
       } else {
-        setFormData(prev => ({
-          ...prev,
-          [location]: {
-            ...prev[location],
-            verificationStatus: 'error',
-            error: 'Address not found. Please check and try again.'
+        // Try a more flexible search for suggestions
+        const flexibleResponse = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address.split(',')[0])}&limit=3&countrycodes=us&addressdetails=1`
+        );
+        
+        if (flexibleResponse.ok) {
+          const flexibleData = await flexibleResponse.json();
+          
+          if (flexibleData && flexibleData.length > 0) {
+            const suggestions = flexibleData.map((item: any) => ({
+              display_name: item.display_name,
+              place_id: item.place_id
+            }));
+            
+            setFormData(prev => ({
+              ...prev,
+              [location]: {
+                ...prev[location],
+                verificationStatus: 'error',
+                error: 'Address not found exactly, but here are some suggestions:',
+                suggestions: suggestions
+              }
+            }));
+          } else {
+            setFormData(prev => ({
+              ...prev,
+              [location]: {
+                ...prev[location],
+                verificationStatus: 'error',
+                error: 'Address not found. Please check and try again.',
+                suggestions: []
+              }
+            }));
           }
-        }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            [location]: {
+              ...prev[location],
+              verificationStatus: 'error',
+              error: 'Address not found. Please check and try again.',
+              suggestions: []
+            }
+          }));
+        }
       }
     } catch (error) {
       console.error('Address verification error:', error);
@@ -223,6 +299,22 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
                   {formData.pickup.error}
                 </div>
+                {formData.pickup.suggestions && formData.pickup.suggestions.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-700">Did you mean:</p>
+                    <div className="space-y-1">
+                      {formData.pickup.suggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleSuggestionSelect('pickup', suggestion)}
+                          className="block w-full text-left p-2 text-sm text-blue-600 hover:bg-blue-50 border border-blue-200 rounded hover:border-blue-300 transition-colors"
+                        >
+                          {suggestion.display_name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <button
                   onClick={() => handleVerifyAddress('pickup')}
                   className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm transition-colors"
@@ -288,6 +380,22 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
                   {formData.dropoff.error}
                 </div>
+                {formData.dropoff.suggestions && formData.dropoff.suggestions.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-700">Did you mean:</p>
+                    <div className="space-y-1">
+                      {formData.dropoff.suggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleSuggestionSelect('dropoff', suggestion)}
+                          className="block w-full text-left p-2 text-sm text-blue-600 hover:bg-blue-50 border border-blue-200 rounded hover:border-blue-300 transition-colors"
+                        >
+                          {suggestion.display_name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <button
                   onClick={() => handleVerifyAddress('dropoff')}
                   className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-1 px-3 rounded text-sm transition-colors"

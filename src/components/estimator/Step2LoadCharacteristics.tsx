@@ -43,8 +43,8 @@ export default function Step4LoadCharacteristics({ equipmentData, onNext, onBack
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="w-full flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-4xl w-full shadow-lg overflow-y-auto">
         <div className="p-6 space-y-6">
           {/* Weight Section */}
           <div>

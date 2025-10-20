@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Step0CategorySelection from './Step0CategorySelection';
 import Step1EquipmentDetails from './Step1EquipmentDetails';
 import Step1FreightDimensions from './Step1FreightDimensions';
@@ -11,42 +11,24 @@ import EstimateResults from './EstimateResults';
 import { EstimateData, EstimateResult, CategoryType } from '@/types/estimator';
 
 interface EstimatorModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps) {
+export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModalProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<EstimateData | null>(null);
   const [estimateResult, setEstimateResult] = useState<EstimateResult | null>(null);
   const [completeEstimateData, setCompleteEstimateData] = useState<any>(null);
 
-  // Reset all form state when modal is opened fresh and prevent body scroll
-  useEffect(() => {
-    if (isOpen) {
+  // Reset all form state
+  const handleClose = () => {
+    if (onClose) {
       setCurrentStep(0);
       setFormData(null);
       setEstimateResult(null);
-      
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = 'hidden';
-    } else {
-      // Re-enable body scroll when modal is closed
-      document.body.style.overflow = 'unset';
+      onClose();
     }
-    
-    // Cleanup function to ensure scroll is re-enabled
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  // Reset all form state when modal is closed
-  const handleClose = () => {
-    setCurrentStep(0);
-    setFormData(null);
-    setEstimateResult(null);
-    onClose();
   };
 
   const handleStep0Next = (category: CategoryType) => {
@@ -292,8 +274,6 @@ export default function EstimatorModal({ isOpen, onClose }: EstimatorModalProps)
 
     return estimate;
   };
-
-  if (!isOpen) return null;
 
   const handleNewEstimate = () => {
     setCurrentStep(0);

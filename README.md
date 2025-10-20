@@ -1,6 +1,6 @@
 # Hauln' Heavy - Freight Transport Estimator
 
-A professional heavy equipment transport estimator tool built with Next.js, TypeScript, and Tailwind CSS.
+A standalone, embeddable heavy equipment transport estimator tool built with Next.js, TypeScript, and Tailwind CSS. Designed specifically for iframe embedding on external websites.
 
 ## Features
 
@@ -69,22 +69,68 @@ npm run dev
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Embedding in Your Website
+
+This estimator is designed to be embedded as an iframe on your main website. Once deployed, you can embed it using the following code:
+
+```html
+<iframe
+  src="https://your-deployed-url.com"
+  width="100%"
+  height="800px"
+  style="border: none; border-radius: 8px;"
+  title="Heavy Equipment Transport Estimator"
+></iframe>
+```
+
+### Recommended iframe Settings
+
+For optimal user experience:
+- **Minimum height**: 800px (adjust based on your needs)
+- **Width**: 100% of the container
+- **Border**: none for seamless integration
+- **Allow**: You may need to add permissions for form submission and geolocation if used
+
+Example with permissions:
+```html
+<iframe
+  src="https://your-deployed-url.com"
+  width="100%"
+  height="800px"
+  style="border: none;"
+  allow="geolocation"
+  title="Heavy Equipment Transport Estimator"
+></iframe>
+```
+
 ## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── globals.css          # Global styles
-│   ├── layout.tsx           # Root layout
-│   └── page.tsx             # Home page
+│   ├── api/                          # API routes
+│   │   ├── address-autocomplete/    # Address autocomplete
+│   │   └── send-estimate/           # Email estimate
+│   ├── globals.css                  # Global styles
+│   ├── layout.tsx                   # Root layout
+│   └── page.tsx                     # Main estimator page
 ├── components/
 │   └── estimator/
-│       ├── EstimatorModal.tsx        # Main modal container
-│       ├── Step1EquipmentDetails.tsx # Equipment form step
-│       ├── Step2LoadCharacteristics.tsx # Load characteristics step
-│       └── EstimateResults.tsx       # Results display
+│       ├── EstimatorModal.tsx            # Main estimator container
+│       ├── Step0CategorySelection.tsx    # Category selection (Equipment/Freight)
+│       ├── Step1EquipmentDetails.tsx     # Equipment details form
+│       ├── Step1FreightDimensions.tsx    # Freight dimensions form
+│       ├── Step2Locations.tsx            # Pickup/delivery locations
+│       ├── Step3DatesTimes.tsx           # Scheduling information
+│       ├── Step4AdditionalInfo.tsx       # Additional requirements
+│       ├── EstimateResults.tsx           # Results display
+│       ├── AddressAutocomplete.tsx       # Address input component
+│       ├── CalendarWidget.tsx            # Date picker
+│       └── ImageUploadSection.tsx        # Photo uploads
+├── lib/
+│   └── equipment-data.ts                 # Equipment type definitions
 └── types/
-    └── estimator.ts          # TypeScript interfaces
+    └── estimator.ts                      # TypeScript interfaces
 ```
 
 ## Estimation Logic

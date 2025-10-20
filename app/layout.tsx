@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hauln' Heavy - Heavy Equipment Transport Estimator",
-  description: "Professional heavy equipment transport with instant estimates",
+  title: "Heavy Equipment Transport Estimator",
+  description: "Get an instant estimate for your heavy equipment shipping needs",
 };
 
 export default function RootLayout({

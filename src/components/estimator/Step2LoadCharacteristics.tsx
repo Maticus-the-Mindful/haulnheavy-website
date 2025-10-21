@@ -43,8 +43,7 @@ export default function Step4LoadCharacteristics({ equipmentData, onNext, onBack
   };
 
   return (
-    <div className="w-full flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full shadow-lg overflow-y-auto">
+    <div className="bg-white h-full w-full flex flex-col">
         <div className="p-6 space-y-6">
           {/* Weight Section */}
           <div>
@@ -329,7 +328,6 @@ export default function Step4LoadCharacteristics({ equipmentData, onNext, onBack
             </button>
           </div>
         </div>
-      </div>
     </div>
   );
 }

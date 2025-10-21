@@ -287,8 +287,7 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
   };
 
   return (
-    <div className="w-full flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full shadow-lg overflow-y-auto">
+    <div className="bg-white h-full w-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Dates & Times</h2>
@@ -781,7 +780,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
             </button>
           </div>
         </div>
-      </div>
     </div>
   );
 }

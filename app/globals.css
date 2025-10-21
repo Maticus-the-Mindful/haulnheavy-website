@@ -20,6 +20,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Embed mode: transparent backgrounds for iframe usage */
+.embedded,
+.embedded body {
+  background: transparent !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

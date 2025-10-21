@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, HelpCircle } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 import { 
   loadEquipmentData,
@@ -242,12 +242,6 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
           <h2 className="text-2xl font-semibold text-gray-900">
             {category === 'equipment' ? 'Equipment Details' : 'Freight Details'}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
         <div className="p-6 space-y-6 overflow-y-auto flex-1">

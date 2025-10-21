@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import CalendarWidget from './CalendarWidget';
 
 interface Step3DatesTimesProps {
@@ -291,12 +291,6 @@ export default function Step3DatesTimes({ equipmentData, locationsData, existing
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Dates & Times</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
         <div className="p-6 space-y-8">

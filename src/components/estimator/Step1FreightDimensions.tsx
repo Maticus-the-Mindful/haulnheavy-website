@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, HelpCircle } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
 
 interface Step1FreightDimensionsProps {
@@ -133,12 +133,6 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
       {/* Header - Sticky */}
       <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Freight Details</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
         <div className="p-6 space-y-6 overflow-y-auto flex-1">

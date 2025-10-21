@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Mail, CheckCircle } from 'lucide-react';
+import { Mail, CheckCircle } from 'lucide-react';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -137,12 +137,6 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             <h2 className="text-2xl font-bold text-gray-900">Your Estimate</h2>
             <p className="text-gray-600">Hauln&apos; Heavy Transport Services</p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
         <div className="p-6">

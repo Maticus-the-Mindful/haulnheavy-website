@@ -54,12 +54,6 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
         <h2 className="text-2xl font-bold text-gray-900">Category</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          <X className="w-6 h-6" />
-        </button>
       </div>
 
       <div className="flex-1 p-8 overflow-auto flex flex-col justify-center">

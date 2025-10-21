@@ -1,9 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import EstimatorModal from '@/components/estimator/EstimatorModal';
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const isEmbedded = searchParams.get('embed') === '1';
 
@@ -11,5 +12,13 @@ export default function Home() {
     <div className={`min-h-screen ${isEmbedded ? 'embedded' : ''}`}>
       <EstimatorModal />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <HomeContent />
+    </Suspense>
   );
 }

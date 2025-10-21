@@ -56,49 +56,51 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
         <h2 className="text-2xl font-bold text-gray-900">Category</h2>
       </div>
 
-      <div className="flex-1 p-8 overflow-auto flex flex-col justify-center">
-        {/* Category Grid */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
-          {categories.map((category) => (
-            <div
-              key={category.id}
-              onClick={() => handleCategorySelect(category.id)}
+      <div className="flex-1 p-8 overflow-auto">
+        <div className="max-w-3xl mx-auto">
+          {/* Category Grid */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                onClick={() => handleCategorySelect(category.id)}
+                className={`
+                  cursor-pointer transition-all duration-200 border-2 rounded-lg p-6 text-center
+                  ${selectedCategory === category.id
+                    ? 'border-yellow-500 bg-yellow-50 shadow-lg transform scale-105'
+                    : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  }
+                `}
+              >
+                <div className="text-gray-800">
+                  {category.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {category.name}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {category.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Continue Button */}
+          <div className="flex justify-center pb-4">
+            <button
+              onClick={handleNext}
+              disabled={!selectedCategory}
               className={`
-                cursor-pointer transition-all duration-200 border-2 rounded-lg p-6 text-center
-                ${selectedCategory === category.id
-                  ? 'border-yellow-500 bg-yellow-50 shadow-lg transform scale-105'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                px-8 py-3 rounded-lg font-semibold text-lg transition-colors
+                ${selectedCategory
+                  ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }
               `}
             >
-              <div className="text-gray-800">
-                {category.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {category.name}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {category.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Continue Button */}
-        <div className="flex justify-center mt-8">
-          <button
-            onClick={handleNext}
-            disabled={!selectedCategory}
-            className={`
-              px-8 py-3 rounded-lg font-semibold text-lg transition-colors
-              ${selectedCategory
-                ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }
-            `}
-          >
-            Continue
-          </button>
+              Continue
+            </button>
+          </div>
         </div>
       </div>
     </div>

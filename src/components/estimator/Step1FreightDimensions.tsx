@@ -129,9 +129,9 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
   };
 
   return (
-    <div className="bg-white h-full w-full flex flex-col">
+    <div className="bg-white w-full min-h-screen flex flex-col">
       {/* Header - Sticky */}
-      <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
+      <div className="p-6 border-b sticky top-0 z-10" style={{ backgroundColor: '#fcd001' }}>
           <h2 className="text-2xl font-bold text-gray-900">Freight Details</h2>
         </div>
 

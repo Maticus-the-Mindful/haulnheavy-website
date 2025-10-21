@@ -50,13 +50,13 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
   };
 
   return (
-    <div className="bg-white h-full w-full flex flex-col">
+    <div className="bg-white w-full min-h-screen flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
+      <div className="p-6 border-b" style={{ backgroundColor: '#fcd001' }}>
         <h2 className="text-2xl font-bold text-gray-900">Category</h2>
       </div>
 
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="p-8">
         <div className="max-w-3xl mx-auto">
           {/* Category Grid */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">

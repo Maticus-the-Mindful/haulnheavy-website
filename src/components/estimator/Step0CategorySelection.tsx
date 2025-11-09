@@ -20,7 +20,7 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
         <img
           src="/heavy-equipment-icon-02.png"
           alt="Heavy Equipment"
-          className="w-32 h-auto mx-auto mb-4"
+          className="w-48 h-auto mx-auto mb-4"
         />
       ),
       description: 'Dozers, Tractors, Drills, all other wheel or track equipment'
@@ -32,7 +32,7 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
         <img
           src="/oversized-freight-icon-02.png"
           alt="Oversized Freight"
-          className="w-32 h-auto mx-auto mb-4"
+          className="w-48 h-auto mx-auto mb-4"
         />
       ),
       description: 'Tanks, Generators, Prefab, Beams, etc.'

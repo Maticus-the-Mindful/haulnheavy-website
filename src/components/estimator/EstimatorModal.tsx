@@ -52,7 +52,6 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
   };
 
   const handleStep1Next = (step1Data: any) => {
-    console.log('handleStep1Next called with:', step1Data);
     const newFormData = {
       ...(formData || {}),
       ...(step1Data.type === 'freight' ? { freight: step1Data } : { equipment: step1Data }),
@@ -67,12 +66,7 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
       },
       additionalInfo: {} as any
     } as EstimateData;
-    
-    console.log('New formData after Step1:', newFormData);
-    console.log('Freight data after Step1:', newFormData.freight);
-    console.log('Equipment data after Step1:', newFormData.equipment);
-    console.log('Images in freight:', newFormData.freight?.images);
-    console.log('Images in equipment:', newFormData.equipment?.images);
+
     setFormData(newFormData);
     setCurrentStep(2);
   };
@@ -94,32 +88,17 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
   };
 
   const handleStep4Next = (additionalInfoData: any) => {
-    console.log('EstimatorModal handleStep4Next called');
-    console.log('additionalInfoData:', additionalInfoData);
-    console.log('current formData:', formData);
-    console.log('current formData.freight:', formData?.freight);
-    console.log('current formData.equipment:', formData?.equipment);
-    
     const updatedFormData = {
       ...(formData || {}),
       ...additionalInfoData
     } as EstimateData;
-    
-    console.log('updatedFormData:', updatedFormData);
-    console.log('updatedFormData.freight:', updatedFormData.freight);
-    console.log('updatedFormData.equipment:', updatedFormData.equipment);
-    console.log('updatedFormData.freight?.dimensions:', updatedFormData.freight?.dimensions);
-    console.log('updatedFormData.equipment?.dimensions:', updatedFormData.equipment?.dimensions);
-    console.log('Images in updated freight:', updatedFormData.freight?.images);
-    console.log('Images in updated equipment:', updatedFormData.equipment?.images);
-    
+
     setFormData(updatedFormData);
-    
+
     // Now we have all the data, calculate the estimate
     try {
       const result = calculateEstimate(updatedFormData);
-      console.log('estimate result:', result);
-      
+
       // Create complete estimate data with images
       const completeEstimateData = {
         ...updatedFormData,
@@ -127,11 +106,10 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
         timestamp: new Date(),
         estimateId: `EST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       };
-      
+
       setEstimateResult(result);
       setCompleteEstimateData(completeEstimateData);
       setCurrentStep(5);
-      console.log('Step changed to 5');
     } catch (error) {
       console.error('Error calculating estimate:', error);
       alert('Error calculating estimate. Please check the console for details.');
@@ -143,30 +121,19 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
   };
 
   const calculateEstimate = (data: EstimateData): EstimateResult => {
-    console.log('calculateEstimate called with data:', data);
-    
     // Basic calculation logic - this would be more sophisticated in production
     const { equipment, freight, characteristics, locations, scheduling, additionalInfo } = data;
-    
-    console.log('equipment:', equipment);
-    console.log('freight:', freight);
-    
+
     // Determine if we're dealing with equipment or freight
     // Check if freight has actual data (not just empty object)
     const hasFreightData = freight && freight.type === 'freight' && (freight.shippingItem || freight.weight > 0);
     const hasEquipmentData = equipment && equipment.type === 'equipment' && (equipment.make || equipment.model);
-    
+
     const itemData = hasFreightData ? freight : hasEquipmentData ? equipment : null;
-    
+
     if (!itemData) {
       throw new Error('No equipment or freight data provided');
     }
-    
-    console.log('itemData:', itemData);
-    console.log('itemData.dimensions:', itemData.dimensions);
-    console.log('itemData.type:', itemData.type);
-    console.log('equipment exists:', !!equipment);
-    console.log('freight exists:', !!freight);
     
     // Base cost calculation (simplified)
     const baseRate = 2.50; // per mile
@@ -243,7 +210,7 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
     
     if (daysBetween < 3) {
       additionalFees += 400; // Rush delivery fee
-    } else     if (daysBetween > 14) {
+    } else if (daysBetween > 14) {
       additionalFees -= 200; // Long-term booking discount
     }
 

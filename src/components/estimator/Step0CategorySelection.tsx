@@ -15,27 +15,27 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
   const categories = [
     {
       id: 'equipment' as CategoryType,
-      name: 'Equipment & Machinery',
+      name: 'Heavy Equipment',
       icon: (
-        <img 
-          src="/tractor-icon-01.png" 
-          alt="Tractor" 
+        <img
+          src="/tractor-icon-01.png"
+          alt="Tractor"
           className="w-16 h-16 mx-auto mb-4"
         />
       ),
-      description: 'Heavy equipment, tractors, machinery, and construction vehicles'
+      description: 'Dozers, Tractors, Drills, all other wheel or track equipment'
     },
     {
       id: 'freight' as CategoryType,
-      name: 'Freight',
+      name: 'Oversized Freight',
       icon: (
-        <img 
-          src="/truck-icon-01.png" 
-          alt="Truck" 
+        <img
+          src="/truck-icon-01.png"
+          alt="Truck"
           className="w-16 h-16 mx-auto mb-4"
         />
       ),
-      description: 'General cargo, pallets, crates, and packaged goods'
+      description: 'Tanks, Generators, Prefab, Beams, etc.'
     }
   ];
 

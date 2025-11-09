@@ -30,6 +30,7 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
     weight: existingData?.weight || 0,
     hasHazmatPlacards: existingData?.hasHazmatPlacards !== undefined ? existingData.hasHazmatPlacards : null as boolean | null,
     transportationMethod: existingData?.transportationMethod !== undefined ? existingData.transportationMethod : 'hauled' as 'hauled' | 'towed' | 'driven',
+    handlingInstructions: existingData?.handlingInstructions || '',
     images: existingData?.images || [] as File[]
   });
 
@@ -97,7 +98,8 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
       },
       weight: formData.weight,
       hasHazmatPlacards: formData.hasHazmatPlacards,
-      transportationMethod: formData.transportationMethod
+      transportationMethod: formData.transportationMethod,
+      handlingInstructions: formData.handlingInstructions
     };
 
     onNext(dataToSubmit);
@@ -311,6 +313,20 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
                 <span className="text-gray-700">No</span>
               </label>
             </div>
+          </div>
+
+          {/* Load Details/Handling Instructions */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Load Details/Handling Instructions
+            </h3>
+            <textarea
+              value={formData.handlingInstructions}
+              onChange={(e) => handleInputChange('handlingInstructions', e.target.value)}
+              placeholder='Please enter information about the Load that may be helpful for the carrier to know prior to pick up. Example: "The equipment is at the end of a long driveway, and requires backing in."'
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none text-gray-900 placeholder-gray-400"
+            />
           </div>
 
           {/* Image Upload Section */}

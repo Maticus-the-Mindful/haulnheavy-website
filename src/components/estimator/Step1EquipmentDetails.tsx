@@ -48,6 +48,7 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
     weight: existingData?.weight || (category === 'equipment' ? 0 : 0),
     hasHazmatPlacards: existingData?.hasHazmatPlacards !== undefined ? existingData.hasHazmatPlacards : null as boolean | null,
     transportationMethod: existingData?.transportationMethod !== undefined ? existingData.transportationMethod : null as 'hauled' | 'towed' | 'driven' | null,
+    handlingInstructions: existingData?.handlingInstructions || '',
     images: existingData?.images || [] as File[]
   });
 
@@ -507,6 +508,20 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
                 <span className="text-sm text-gray-700">No</span>
               </label>
             </div>
+          </div>
+
+          {/* Load Details/Handling Instructions */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Load Details/Handling Instructions
+            </h3>
+            <textarea
+              value={formData.handlingInstructions}
+              onChange={(e) => handleInputChange('handlingInstructions', e.target.value)}
+              placeholder='Please enter information about the Load that may be helpful for the carrier to know prior to pick up. Example: "The equipment is at the end of a long driveway, and requires backing in."'
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-900 placeholder-gray-400"
+            />
           </div>
 
           {/* Image Upload Section */}

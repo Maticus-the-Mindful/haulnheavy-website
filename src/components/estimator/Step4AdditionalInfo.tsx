@@ -18,7 +18,6 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
     loadingMethod: (existingData?.loadingMethod || 'DRIVE ON') as string,
     unloadingMethod: (existingData?.unloadingMethod || 'DRIVE OFF') as string,
     rampsNeeded: existingData?.rampsNeeded !== undefined ? existingData.rampsNeeded : null as boolean | null,
-    handlingInstructions: existingData?.handlingInstructions || '',
     targetBudget: existingData?.targetBudget || undefined as number | undefined,
     itemValue: existingData?.itemValue || undefined as number | undefined
   });
@@ -100,12 +99,9 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
   };
 
   const handleNext = () => {
-    console.log('Step4AdditionalInfo handleNext called');
-    console.log('formData:', formData);
     const additionalInfoData = {
       additionalInfo: formData
     };
-    console.log('additionalInfoData:', additionalInfoData);
     onNext(additionalInfoData);
   };
 
@@ -253,20 +249,6 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                 <span className="text-sm text-gray-700">No</span>
               </label>
             </div>
-          </div>
-
-          {/* Load Details/Handling Instructions */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Load Details/Handling Instructions
-            </h3>
-            <textarea
-              value={formData.handlingInstructions}
-              onChange={(e) => handleTextChange('handlingInstructions', e.target.value)}
-              placeholder='Please enter information about the Load that may be helpful for the carrier to know prior to pick up. Example: "The equipment is at the end of a long driveway, and requires backing in."'
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none text-gray-900 placeholder-gray-400"
-            />
           </div>
 
           {/* Financial Information */}

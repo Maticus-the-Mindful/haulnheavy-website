@@ -99,8 +99,7 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
       hasHazmatPlacards: formData.hasHazmatPlacards,
       transportationMethod: formData.transportationMethod
     };
-    
-    console.log('Freight data being submitted:', dataToSubmit);
+
     onNext(dataToSubmit);
   };
 
@@ -310,53 +309,6 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
                   className="mr-2 text-yellow-600 focus:ring-yellow-500"
                 />
                 <span className="text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Transport Method */}
-          <div>
-            <div className="flex items-center space-x-2">
-              <label className="text-sm font-semibold text-gray-700">
-                How do you want your item transported?
-              </label>
-              <Tooltip content="Hauled: The load will be put on a trailer and pulled behind a semi. Towed/Power Only: The truck and driver will transport the load by pulling it behind the truck. This is typically used for trailers. Driven Away: A driver will drive the load to its destination. This is typically used for RVs and Trucks.">
-                <HelpCircle className="w-4 h-4 text-blue-500" />
-              </Tooltip>
-            </div>
-            <div className="space-y-3">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  value="hauled"
-                  checked={formData.transportationMethod === 'hauled'}
-                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
-                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
-                />
-                <span className="text-gray-700">Hauled</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  value="towed"
-                  checked={formData.transportationMethod === 'towed'}
-                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
-                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
-                />
-                <span className="text-gray-700">Towed/Power Only</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  value="driven"
-                  checked={formData.transportationMethod === 'driven'}
-                  onChange={(e) => handleInputChange('transportationMethod', e.target.value)}
-                  className="mr-3 text-yellow-600 focus:ring-yellow-500"
-                />
-                <span className="text-gray-700">Driven Away</span>
               </label>
             </div>
           </div>

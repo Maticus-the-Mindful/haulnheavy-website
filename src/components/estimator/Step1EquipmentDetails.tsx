@@ -328,12 +328,12 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
               </div>
             )}
             <p className="text-sm text-gray-600 mt-2">
-              Can&apos;t find it in the list? Post it under{' '}
-              <button 
+              Can&apos;t find it in the list? Describe it on{' '}
+              <button
                 onClick={onSwitchToFreight}
                 className="text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0"
               >
-                Freight
+                Oversized Freight
               </button>
             </p>
             
@@ -505,50 +505,6 @@ export default function Step1EquipmentDetails({ category = 'equipment', existing
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
                 <span className="text-sm text-gray-700">No</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Transportation Method Question */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <label className="block text-sm font-medium text-gray-700">
-                How do you want your item transported?
-              </label>
-              <Tooltip content="Hauled: The load will be put on a trailer and pulled behind a semi. Towed/Power Only: The truck and driver will transport the load by pulling it behind the truck. This is typically used for trailers. Driven Away: A driver will drive the load to its destination. This is typically used for RVs and Trucks.">
-                <HelpCircle className="w-4 h-4 text-blue-500 cursor-help" />
-              </Tooltip>
-            </div>
-            <div className="space-y-3">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  checked={formData.transportationMethod === 'hauled'}
-                  onChange={() => handleRadioChange('transportationMethod', 'hauled')}
-                  className="text-yellow-500 focus:ring-yellow-500"
-                />
-                <span className="text-sm text-gray-700">Hauled</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  checked={formData.transportationMethod === 'towed'}
-                  onChange={() => handleRadioChange('transportationMethod', 'towed')}
-                  className="text-yellow-500 focus:ring-yellow-500"
-                />
-                <span className="text-sm text-gray-700">Towed/Power Only</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="transportationMethod"
-                  checked={formData.transportationMethod === 'driven'}
-                  onChange={() => handleRadioChange('transportationMethod', 'driven')}
-                  className="text-yellow-500 focus:ring-yellow-500"
-                />
-                <span className="text-sm text-gray-700">Driven Away</span>
               </label>
             </div>
           </div>

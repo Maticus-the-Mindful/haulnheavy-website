@@ -18,8 +18,8 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
       name: 'Heavy Equipment',
       icon: (
         <img
-          src="/tractor-icon-01.png"
-          alt="Tractor"
+          src="/heavy-equipment-icon-01.png"
+          alt="Heavy Equipment"
           className="w-16 h-16 mx-auto mb-4"
         />
       ),
@@ -30,8 +30,8 @@ export default function Step0CategorySelection({ onNext, onClose }: Step0Categor
       name: 'Oversized Freight',
       icon: (
         <img
-          src="/truck-icon-01.png"
-          alt="Truck"
+          src="/oversized-freight-icon-01.png"
+          alt="Oversized Freight"
           className="w-16 h-16 mx-auto mb-4"
         />
       ),

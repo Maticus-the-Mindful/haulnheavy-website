@@ -240,7 +240,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   onChange={(e) => handleAssistanceChange('pickup', e.target.checked)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
-                <span className="text-sm text-gray-700">Pick-Up</span>
+                <span className="text-sm text-gray-700 font-medium">PICK-UP</span>
               </label>
               <label className="flex items-center space-x-2">
                 <input
@@ -249,7 +249,7 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                   onChange={(e) => handleAssistanceChange('dropoff', e.target.checked)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
-                <span className="text-sm text-gray-700">Drop-Off</span>
+                <span className="text-sm text-gray-700 font-medium">DROP-OFF</span>
               </label>
             </div>
           </div>

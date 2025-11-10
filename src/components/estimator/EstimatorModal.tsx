@@ -7,6 +7,7 @@ import Step1FreightDimensions from './Step1FreightDimensions';
 import Step2Locations from './Step2Locations';
 import Step3DatesTimes from './Step3DatesTimes';
 import Step4AdditionalInfo from './Step4AdditionalInfo';
+import Step5ContactInfo from './Step5ContactInfo';
 import EstimateResults from './EstimateResults';
 import { EstimateData, EstimateResult, CategoryType } from '@/types/estimator';
 
@@ -94,6 +95,16 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
     } as EstimateData;
 
     setFormData(updatedFormData);
+    setCurrentStep(5);
+  };
+
+  const handleStep5Next = (contactInfoData: any) => {
+    const updatedFormData = {
+      ...(formData || {}),
+      ...contactInfoData
+    } as EstimateData;
+
+    setFormData(updatedFormData);
 
     // Now we have all the data, calculate the estimate
     try {
@@ -109,7 +120,7 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
 
       setEstimateResult(result);
       setCompleteEstimateData(completeEstimateData);
-      setCurrentStep(5);
+      setCurrentStep(6);
     } catch (error) {
       console.error('Error calculating estimate:', error);
       alert('Error calculating estimate. Please check the console for details.');
@@ -324,11 +335,20 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
           onClose={handleClose}
         />
       )}
-      {currentStep === 5 && estimateResult && completeEstimateData && (
+      {currentStep === 5 && (formData?.equipment || formData?.freight) && formData?.locations && formData?.scheduling && formData?.additionalInfo && (
+        <Step5ContactInfo
+          existingData={formData.contactInfo}
+          onNext={handleStep5Next}
+          onBack={handleBack}
+          onClose={handleClose}
+        />
+      )}
+      {currentStep === 6 && estimateResult && completeEstimateData && formData?.contactInfo && (
         <EstimateResults
           estimate={estimateResult}
           estimateData={formData}
           completeData={completeEstimateData}
+          contactInfo={formData.contactInfo}
           onClose={handleClose}
           onNewEstimate={handleNewEstimate}
           onBack={handleBack}

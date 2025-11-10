@@ -8,19 +8,13 @@ interface EstimateResultsProps {
   estimate: EstimateResult;
   estimateData: any; // The full estimate data including form inputs
   completeData?: any; // Complete estimate data with images and metadata
+  contactInfo: any; // Contact information from Step5
   onClose: () => void;
   onNewEstimate: () => void;
   onBack?: () => void;
 }
 
-export default function EstimateResults({ estimate, estimateData, completeData, onClose, onNewEstimate, onBack }: EstimateResultsProps) {
-  const [contactInfo, setContactInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    phone: ''
-  });
+export default function EstimateResults({ estimate, estimateData, completeData, contactInfo, onClose, onNewEstimate, onBack }: EstimateResultsProps) {
   const [isSending, setIsSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState('');
@@ -36,31 +30,6 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
 
 
   const handleSendEstimate = async () => {
-    if (!contactInfo.firstName.trim()) {
-      setEmailError('Please enter your first name');
-      return;
-    }
-
-    if (!contactInfo.lastName.trim()) {
-      setEmailError('Please enter your last name');
-      return;
-    }
-
-    if (!contactInfo.email.trim()) {
-      setEmailError('Please enter your email address');
-      return;
-    }
-
-    if (!contactInfo.email.includes('@')) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
-
-    if (!contactInfo.phone.trim()) {
-      setEmailError('Please enter your phone number');
-      return;
-    }
-
     setIsSending(true);
     setEmailError('');
 
@@ -122,12 +91,6 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
     }
   };
 
-  const handleContactInfoChange = (field: string, value: string) => {
-    setContactInfo(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
 
   return (
     <div className="bg-white w-full min-h-screen flex flex-col">
@@ -202,105 +165,42 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             <p className="text-sm text-gray-600">{estimate.disclaimer}</p>
           </div>
 
-          {/* Contact Information Section */}
+          {/* Send Estimate Section */}
           {!emailSent ? (
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900">Get Your Estimate by Email</h3>
-              <div className="space-y-4">
-                {/* Name Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={contactInfo.firstName}
-                      onChange={(e) => handleContactInfoChange('firstName', e.target.value)}
-                      placeholder="John"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={contactInfo.lastName}
-                      onChange={(e) => handleContactInfoChange('lastName', e.target.value)}
-                      placeholder="Smith"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                    />
-                  </div>
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Contact Information</h3>
+                <div className="space-y-2 text-sm text-gray-700">
+                  <p><strong>Name:</strong> {contactInfo.firstName} {contactInfo.lastName}</p>
+                  {contactInfo.company && <p><strong>Company:</strong> {contactInfo.company}</p>}
+                  <p><strong>Email:</strong> {contactInfo.email}</p>
+                  <p><strong>Phone:</strong> {contactInfo.phone}</p>
                 </div>
-
-                {/* Email Field */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={contactInfo.email}
-                    onChange={(e) => handleContactInfoChange('email', e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                  />
-                </div>
-
-                {/* Company and Phone Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      value={contactInfo.company}
-                      onChange={(e) => handleContactInfoChange('company', e.target.value)}
-                      placeholder="Your Company"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={contactInfo.phone}
-                      onChange={(e) => handleContactInfoChange('phone', e.target.value)}
-                      placeholder="(555) 123-4567"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                    />
-                  </div>
-                </div>
-
-                {emailError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-red-600 text-sm">{emailError}</p>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleSendEstimate}
-                  disabled={isSending}
-                  className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
-                >
-                  {isSending ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="w-4 h-4" />
-                      <span>Send Estimate by Email</span>
-                    </>
-                  )}
-                </button>
               </div>
+
+              {emailError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{emailError}</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleSendEstimate}
+                disabled={isSending}
+                className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+              >
+                {isSending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4" />
+                    <span>Send Estimate by Email</span>
+                  </>
+                )}
+              </button>
             </div>
           ) : (
             <div className="text-center space-y-4">

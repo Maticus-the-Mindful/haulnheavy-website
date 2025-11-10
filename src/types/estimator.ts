@@ -90,6 +90,14 @@ export interface AdditionalInfo {
   itemValue?: number;
 }
 
+export interface ContactInfo {
+  firstName: string;
+  lastName: string;
+  company?: string;
+  email: string;
+  phone: string;
+}
+
 export type CategoryType = 'equipment' | 'freight';
 
 export interface EstimateData {
@@ -106,6 +114,7 @@ export interface EstimateData {
     delivery: DateTimeInfo;
   };
   additionalInfo: AdditionalInfo;
+  contactInfo?: ContactInfo;
 }
 
 export interface EstimateResult {

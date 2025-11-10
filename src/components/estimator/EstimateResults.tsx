@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, CheckCircle } from 'lucide-react';
+import { Mail, CheckCircle, Phone, Calendar } from 'lucide-react';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -120,7 +120,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
             <p className="text-sm text-gray-600">{estimate.disclaimer}</p>
           </div>
 
-          {/* Send Estimate Section */}
+          {/* Contact Information and Action Section */}
           {!emailSent ? (
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
@@ -133,29 +133,57 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                 </div>
               </div>
 
+              {/* Next Steps Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+                  To lock in an exact quote, pick what works best for you below
+                </h3>
+                <div className="space-y-3">
+                  {/* Call Now Button */}
+                  <a
+                    href="tel:7018702144"
+                    className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Call Now</span>
+                  </a>
+
+                  {/* Schedule a Call Button (Placeholder) */}
+                  <button
+                    onClick={() => alert('Calendar booking feature coming soon!')}
+                    className="w-full flex items-center justify-center space-x-2 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide cursor-not-allowed opacity-75"
+                    disabled
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>Schedule a Call with our team</span>
+                  </button>
+
+                  {/* Send Estimate by Email Button */}
+                  <button
+                    onClick={handleSendEstimate}
+                    disabled={isSending}
+                    className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                  >
+                    {isSending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-4 h-4" />
+                        <span>Send Estimate by Email</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
               {emailError && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <p className="text-red-600 text-sm">{emailError}</p>
                 </div>
               )}
-
-              <button
-                onClick={handleSendEstimate}
-                disabled={isSending}
-                className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
-              >
-                {isSending ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Mail className="w-4 h-4" />
-                    <span>Send Estimate by Email</span>
-                  </>
-                )}
-              </button>
             </div>
           ) : (
             <div className="text-center space-y-4">

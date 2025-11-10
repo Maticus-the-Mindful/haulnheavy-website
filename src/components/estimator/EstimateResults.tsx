@@ -106,56 +106,11 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
           {/* Total Estimate Highlight */}
           <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6 mb-6">
             <div className="text-center">
-              <p className="text-lg text-gray-600 mb-2">Total Estimated Cost</p>
+              <p className="text-lg text-gray-600 mb-2">Estimated Cost</p>
               <p className="text-4xl font-bold text-yellow-600">
                 {formatCurrency(estimate.totalEstimate)}
               </p>
-              <p className="text-sm text-gray-500 mt-2">*Estimate valid for 7 days</p>
-            </div>
-          </div>
-
-          {/* Cost Breakdown */}
-          <div className="space-y-4 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Cost Breakdown</h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">Base Transport Cost</span>
-                <span className="font-medium text-gray-900">{formatCurrency(estimate.baseCost)}</span>
-              </div>
-              
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">Fuel Surcharge</span>
-                <span className="font-medium text-gray-900">{formatCurrency(estimate.fuelSurcharge)}</span>
-              </div>
-              
-              {estimate.oversizeFee > 0 && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Oversize Load Fee</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(estimate.oversizeFee)}</span>
-                </div>
-              )}
-              
-              {estimate.hazmatFee > 0 && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Hazmat Fee</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(estimate.hazmatFee)}</span>
-                </div>
-              )}
-              
-              {estimate.additionalFees > 0 && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Additional Fees</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(estimate.additionalFees)}</span>
-                </div>
-              )}
-              
-              <div className="flex justify-between items-center py-3 border-t-2 border-gray-200">
-                <span className="text-lg font-semibold text-gray-900">Total Estimate</span>
-                <span className="text-lg font-bold text-yellow-600">
-                  {formatCurrency(estimate.totalEstimate)}
-                </span>
-              </div>
+              <p className="text-sm text-gray-500 mt-2">*Additional fees may apply</p>
             </div>
           </div>
 

@@ -247,7 +247,7 @@ export default function EstimatorModal({ isOpen = true, onClose }: EstimatorModa
       hazmatFee: Math.round(hazmatFee),
       additionalFees: Math.round(additionalFees),
       totalEstimate: Math.round(totalEstimate),
-      disclaimer: "This is an estimate only. Final pricing may vary based on actual pickup/delivery locations, market conditions, and other factors. All estimates are valid for 7 days."
+      disclaimer: "This estimate gives you a close idea of your haul cost. Actual pricing depends on the final route, permits, and equipment needed."
     };
 
     return estimate;

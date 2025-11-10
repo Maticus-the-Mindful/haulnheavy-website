@@ -319,7 +319,6 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                       ▼
                     </button>
                   </div>
-                  <span className="px-3 py-2 text-gray-600 border-l border-gray-300">USD</span>
                 </div>
               </div>
             </div>
@@ -361,7 +360,6 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                       ▼
                     </button>
                   </div>
-                  <span className="px-3 py-2 text-gray-600 border-l border-gray-300">USD</span>
                 </div>
               </div>
             </div>

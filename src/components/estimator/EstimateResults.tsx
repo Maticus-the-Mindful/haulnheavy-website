@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, CheckCircle, Phone, Calendar } from 'lucide-react';
+import { Mail, CheckCircle, Phone, Calendar, MessageSquare } from 'lucide-react';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -15,9 +15,12 @@ interface EstimateResultsProps {
 }
 
 export default function EstimateResults({ estimate, estimateData, completeData, contactInfo, onClose, onNewEstimate, onBack }: EstimateResultsProps) {
-  const [isSending, setIsSending] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isSendingSMS, setIsSendingSMS] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [smsSent, setSmsSent] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [smsError, setSmsError] = useState('');
   const [sharingType] = useState<'email'>('email');
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -30,7 +33,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
 
 
   const handleSendEstimate = async () => {
-    setIsSending(true);
+    setIsSendingEmail(true);
     setEmailError('');
 
     try {
@@ -87,7 +90,52 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
       console.error('Email send error:', error);
       setEmailError(error instanceof Error ? error.message : 'Failed to send email. Please try again.');
     } finally {
-      setIsSending(false);
+      setIsSendingEmail(false);
+    }
+  };
+
+  const handleSendSMS = async () => {
+    setIsSendingSMS(true);
+    setSmsError('');
+
+    try {
+      const estimateDataToSend = completeData || estimateData;
+
+      if (!estimateDataToSend) {
+        throw new Error('No estimate data available.');
+      }
+
+      const finalEstimateData = {
+        ...estimateDataToSend,
+        estimateResult: estimate
+      };
+
+      const requestData = {
+        estimateData: finalEstimateData,
+        recipientPhone: contactInfo.phone,
+        recipientName: `${contactInfo.firstName} ${contactInfo.lastName}`
+      };
+
+      const response = await fetch('/api/send-estimate-sms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        setSmsSent(true);
+      } else {
+        const errorData = await response.json();
+        console.error('SMS API Error:', errorData);
+        throw new Error(errorData.error || 'Failed to send text message');
+      }
+    } catch (error) {
+      console.error('SMS send error:', error);
+      setSmsError(error instanceof Error ? error.message : 'Failed to send text message. Please try again.');
+    } finally {
+      setIsSendingSMS(false);
     }
   };
 
@@ -121,7 +169,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
           </div>
 
           {/* Contact Information and Action Section */}
-          {!emailSent ? (
+          {!emailSent && !smsSent ? (
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Contact Information</h3>
@@ -158,13 +206,32 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     <span>Schedule a Call with our team</span>
                   </button>
 
+                  {/* Send Estimate by Text Button */}
+                  <button
+                    onClick={handleSendSMS}
+                    disabled={isSendingSMS}
+                    className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                  >
+                    {isSendingSMS ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      <>
+                        <MessageSquare className="w-4 h-4" />
+                        <span>Send Estimate by Text</span>
+                      </>
+                    )}
+                  </button>
+
                   {/* Send Estimate by Email Button */}
                   <button
                     onClick={handleSendEstimate}
-                    disabled={isSending}
+                    disabled={isSendingEmail}
                     className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
                   >
-                    {isSending ? (
+                    {isSendingEmail ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                         <span>Sending...</span>
@@ -179,11 +246,28 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                 </div>
               </div>
 
+              {smsError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{smsError}</p>
+                </div>
+              )}
+
               {emailError && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <p className="text-red-600 text-sm">{emailError}</p>
                 </div>
               )}
+            </div>
+          ) : smsSent ? (
+            <div className="text-center space-y-4">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+              <h3 className="text-lg font-semibold text-gray-900">Estimate Sent!</h3>
+              <p className="text-gray-600">
+                Your estimate has been sent via text to <strong>{contactInfo.phone}</strong>
+              </p>
+              <p className="text-sm text-gray-500">
+                We&apos;ve also sent the details to our team. Someone will contact you shortly.
+              </p>
             </div>
           ) : (
             <div className="text-center space-y-4">

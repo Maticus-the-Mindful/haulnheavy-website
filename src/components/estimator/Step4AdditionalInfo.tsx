@@ -232,23 +232,49 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
                 Dedicated loading/Unloading assistance will be available at:
               </label>
             </div>
-            <div className="flex space-x-6">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={formData.assistanceAvailable.pickup}
-                  onChange={(e) => handleAssistanceChange('pickup', e.target.checked)}
-                  className="text-yellow-500 focus:ring-yellow-500"
-                />
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={formData.assistanceAvailable.pickup}
+                    onChange={(e) => handleAssistanceChange('pickup', e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                    formData.assistanceAvailable.pickup
+                      ? 'bg-yellow-500 border-yellow-500'
+                      : 'bg-white border-gray-300'
+                  }`}>
+                    {formData.assistanceAvailable.pickup && (
+                      <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
                 <span className="text-sm text-gray-700 font-medium">PICK-UP</span>
               </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={formData.assistanceAvailable.dropoff}
-                  onChange={(e) => handleAssistanceChange('dropoff', e.target.checked)}
-                  className="text-yellow-500 focus:ring-yellow-500"
-                />
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={formData.assistanceAvailable.dropoff}
+                    onChange={(e) => handleAssistanceChange('dropoff', e.target.checked)}
+                    className="sr-only"
+                  />
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                    formData.assistanceAvailable.dropoff
+                      ? 'bg-yellow-500 border-yellow-500'
+                      : 'bg-white border-gray-300'
+                  }`}>
+                    {formData.assistanceAvailable.dropoff && (
+                      <svg className="w-3 h-3 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
                 <span className="text-sm text-gray-700 font-medium">DROP-OFF</span>
               </label>
             </div>

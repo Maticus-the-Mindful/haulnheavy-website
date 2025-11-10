@@ -16,7 +16,7 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
   const [formData, setFormData] = useState({
     pickup: {
       address: existingData?.pickup?.address || '',
-      addressType: (existingData?.pickup?.addressType || '') as '' | 'business' | 'residential' | 'port',
+      addressType: (existingData?.pickup?.addressType || '') as '' | 'exact' | 'city' | 'area',
       isVerified: existingData?.pickup?.isVerified || false,
       verificationStatus: (existingData?.pickup?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
       verifiedAddress: existingData?.pickup?.verifiedAddress || '',
@@ -25,14 +25,13 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
     },
     dropoff: {
       address: existingData?.dropoff?.address || '',
-      addressType: (existingData?.dropoff?.addressType || '') as '' | 'business' | 'residential' | 'port',
+      addressType: (existingData?.dropoff?.addressType || '') as '' | 'exact' | 'city' | 'area',
       isVerified: existingData?.dropoff?.isVerified || false,
       verificationStatus: (existingData?.dropoff?.verificationStatus || 'none') as 'none' | 'verifying' | 'verified' | 'error',
       verifiedAddress: existingData?.dropoff?.verifiedAddress || '',
       error: existingData?.dropoff?.error || '',
       suggestions: existingData?.dropoff?.suggestions || [] as Array<{display_name: string, place_id: string}>
     },
-    isLoadDrivable: existingData?.isLoadDrivable !== undefined ? existingData.isLoadDrivable : null as boolean | null,
     doYouOwnLoad: existingData?.doYouOwnLoad !== undefined ? existingData.doYouOwnLoad : null as boolean | null
   });
 
@@ -51,7 +50,7 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
     }));
   };
 
-  const handleAddressTypeChange = (location: 'pickup' | 'dropoff', type: 'business' | 'residential' | 'port') => {
+  const handleAddressTypeChange = (location: 'pickup' | 'dropoff', type: 'exact' | 'city' | 'area') => {
     setFormData(prev => ({
       ...prev,
       [location]: {
@@ -238,7 +237,6 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
         dropoff: formData.dropoff
       },
       characteristics: {
-        isLoadDrivable: formData.isLoadDrivable,
         doYouOwnLoad: formData.doYouOwnLoad
       }
     };
@@ -282,9 +280,9 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 className="w-full sm:w-48 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900 flex-shrink-0"
               >
                 <option value="" className="text-gray-500">Select Type</option>
-                <option value="business" className="text-gray-900">Business</option>
-                <option value="residential" className="text-gray-900">Residential</option>
-                <option value="port" className="text-gray-900">Port</option>
+                <option value="exact" className="text-gray-900">Exact Location</option>
+                <option value="city" className="text-gray-900">Closest City</option>
+                <option value="area" className="text-gray-900">General Area</option>
               </select>
             </div>
             {formData.pickup.verificationStatus === 'verifying' ? (
@@ -366,9 +364,9 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
                 className="w-full sm:w-48 px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white text-gray-900 flex-shrink-0"
               >
                 <option value="" className="text-gray-500">Select Type</option>
-                <option value="business" className="text-gray-900">Business</option>
-                <option value="residential" className="text-gray-900">Residential</option>
-                <option value="port" className="text-gray-900">Port</option>
+                <option value="exact" className="text-gray-900">Exact Location</option>
+                <option value="city" className="text-gray-900">Closest City</option>
+                <option value="area" className="text-gray-900">General Area</option>
               </select>
             </div>
             {formData.dropoff.verificationStatus === 'verifying' ? (
@@ -430,35 +428,6 @@ export default function Step2Locations({ equipmentData, existingData, onNext, on
 
           {/* Load Characteristics Questions */}
           <div className="space-y-6 pt-4">
-            {/* Is this load drivable? */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Is this load drivable? <span className="text-red-500">*</span>
-              </label>
-              <div className="flex space-x-6">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isLoadDrivable"
-                    checked={formData.isLoadDrivable === true}
-                    onChange={() => handleRadioChange('isLoadDrivable', true)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="isLoadDrivable"
-                    checked={formData.isLoadDrivable === false}
-                    onChange={() => handleRadioChange('isLoadDrivable', false)}
-                    className="text-yellow-500 focus:ring-yellow-500"
-                  />
-                  <span className="text-sm text-gray-700">No</span>
-                </label>
-              </div>
-            </div>
-
             {/* Do you already own this load? */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-3">

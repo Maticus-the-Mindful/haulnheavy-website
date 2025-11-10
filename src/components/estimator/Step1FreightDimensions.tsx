@@ -171,9 +171,9 @@ export default function Step1FreightDimensions({ existingData, onNext, onClose, 
             
             {/* Dimensions Diagram */}
             <div className="mb-6 flex justify-center">
-              <img 
-                src="/dimensions-image.png" 
-                alt="Dimensions diagram" 
+              <img
+                src="/dimensions-image_oversized-freight.png"
+                alt="Dimensions diagram"
                 className="max-w-full h-auto"
               />
             </div>

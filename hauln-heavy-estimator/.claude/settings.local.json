@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "WebFetch(domain:mm360-template-3b78ee03e72d9b0b3c8acbfe.webflow.io)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

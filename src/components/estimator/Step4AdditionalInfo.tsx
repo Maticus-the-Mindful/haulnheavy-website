@@ -17,7 +17,10 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
   const [formData, setFormData] = useState({
     loadingMethod: (existingData?.loadingMethod || 'DRIVE ON') as string,
     unloadingMethod: (existingData?.unloadingMethod || 'DRIVE OFF') as string,
-    rampsNeeded: existingData?.rampsNeeded !== undefined ? existingData.rampsNeeded : null as boolean | null,
+    assistanceAvailable: {
+      pickup: existingData?.assistanceAvailable?.pickup || false,
+      dropoff: existingData?.assistanceAvailable?.dropoff || false
+    },
     targetBudget: existingData?.targetBudget || undefined as number | undefined,
     itemValue: existingData?.itemValue || undefined as number | undefined
   });
@@ -46,10 +49,13 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
     }));
   };
 
-  const handleRampsChange = (value: boolean) => {
+  const handleAssistanceChange = (location: 'pickup' | 'dropoff', checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      rampsNeeded: value
+      assistanceAvailable: {
+        ...prev.assistanceAvailable,
+        [location]: checked
+      }
     }));
   };
 
@@ -219,34 +225,31 @@ export default function Step4AdditionalInfo({ equipmentData, locationsData, sche
             </div>
           </div>
 
-          {/* Ramps Required */}
+          {/* Dedicated Assistance Available */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <label className="text-sm font-semibold text-gray-700">
-                Are ramps needed?
+                Dedicated loading/Unloading assistance will be available at:
               </label>
-              <span className="text-red-500">*</span>
             </div>
             <div className="flex space-x-6">
               <label className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  name="rampsNeeded"
-                  checked={formData.rampsNeeded === true}
-                  onChange={() => handleRampsChange(true)}
+                  type="checkbox"
+                  checked={formData.assistanceAvailable.pickup}
+                  onChange={(e) => handleAssistanceChange('pickup', e.target.checked)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
-                <span className="text-sm text-gray-700">Yes</span>
+                <span className="text-sm text-gray-700">Pick-Up</span>
               </label>
               <label className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  name="rampsNeeded"
-                  checked={formData.rampsNeeded === false}
-                  onChange={() => handleRampsChange(false)}
+                  type="checkbox"
+                  checked={formData.assistanceAvailable.dropoff}
+                  onChange={(e) => handleAssistanceChange('dropoff', e.target.checked)}
                   className="text-yellow-500 focus:ring-yellow-500"
                 />
-                <span className="text-sm text-gray-700">No</span>
+                <span className="text-sm text-gray-700">Drop-Off</span>
               </label>
             </div>
           </div>

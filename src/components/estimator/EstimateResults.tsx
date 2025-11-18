@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, CheckCircle, Phone, Calendar, MessageSquare, Info } from 'lucide-react';
+import { Mail, CheckCircle, Phone, MessageSquare, Info } from 'lucide-react';
+import { PopupButton } from 'react-calendly';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -199,15 +200,12 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                   </a>
 
                   {/* Schedule a Call Button */}
-                  <a
-                    href="https://calendly.com/evan-price-1/haul-n-heavy-quote"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <PopupButton
+                    url="https://calendly.com/evan-price-1/haul-n-heavy-quote"
+                    rootElement={document.body}
+                    text="Schedule a Call"
                     className="w-full flex items-center justify-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span>Schedule a Call</span>
-                  </a>
+                  />
 
                   {/* Send Estimate by Text Button */}
                   <button

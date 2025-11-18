@@ -207,7 +207,10 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     className="w-full flex items-center justify-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
                     prefill={{
                       name: `${contactInfo.firstName} ${contactInfo.lastName}`,
-                      email: contactInfo.email
+                      email: contactInfo.email,
+                      customAnswers: {
+                        a1: contactInfo.phone
+                      }
                     }}
                   />
 

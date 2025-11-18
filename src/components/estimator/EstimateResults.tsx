@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, CheckCircle, Phone, Calendar, MessageSquare } from 'lucide-react';
+import { Mail, CheckCircle, Phone, Calendar, MessageSquare, Info } from 'lucide-react';
 import { EstimateResult } from '@/types/estimator';
 
 interface EstimateResultsProps {
@@ -22,6 +22,8 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
   const [emailError, setEmailError] = useState('');
   const [smsError, setSmsError] = useState('');
   const [sharingType] = useState<'email'>('email');
+  const [smsOptIn, setSmsOptIn] = useState(false);
+  const [showSmsTooltip, setShowSmsTooltip] = useState(false);
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -210,8 +212,12 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                   {/* Send Estimate by Text Button */}
                   <button
                     onClick={handleSendSMS}
-                    disabled={isSendingSMS}
-                    className="w-full flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                    disabled={isSendingSMS || !smsOptIn}
+                    className={`w-full flex items-center justify-center space-x-2 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide ${
+                      smsOptIn
+                        ? 'bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300'
+                        : 'bg-gray-400 cursor-not-allowed'
+                    }`}
                   >
                     {isSendingSMS ? (
                       <>
@@ -244,6 +250,58 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                       </>
                     )}
                   </button>
+                </div>
+
+                {/* SMS Opt-in Checkbox */}
+                <div className="mt-4 max-w-md mx-auto">
+                  <div className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      id="smsOptIn"
+                      checked={smsOptIn}
+                      onChange={(e) => setSmsOptIn(e.target.checked)}
+                      className="mt-1 h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500"
+                    />
+                    <div className="flex-1">
+                      <label htmlFor="smsOptIn" className="text-xs text-gray-600 leading-tight cursor-pointer">
+                        Yes, send my freight estimate via SMS to the phone number provided. I agree to receive automated text messages from Hauln Heavy regarding my freight quote, shipment updates, and related notifications. Message and data rates may apply. Message frequency varies based on your requests. Reply STOP to cancel, HELP for assistance.
+                      </label>
+                      <div className="mt-2 flex items-center space-x-2">
+                        <div className="relative">
+                          <button
+                            type="button"
+                            onClick={() => setShowSmsTooltip(!showSmsTooltip)}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            <Info className="w-4 h-4" />
+                          </button>
+                          {showSmsTooltip && (
+                            <div className="absolute bottom-6 left-0 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg z-10">
+                              By checking, I consent to receive automated SMS messages from Hauln Heavy about my quotes and shipments. Msg &amp; data rates apply. Reply STOP to cancel. Not required to use service.
+                              <div className="absolute bottom-0 left-2 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-800"></div>
+                            </div>
+                          )}
+                        </div>
+                        <a
+                          href="https://www.haulnheavy.com/terms"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          Terms
+                        </a>
+                        <span className="text-gray-400">|</span>
+                        <a
+                          href="https://www.haulnheavy.com/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          Privacy Policy
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

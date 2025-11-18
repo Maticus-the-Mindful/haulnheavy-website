@@ -186,7 +186,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
                   To lock in an exact quote, pick what works best for you below
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-3 max-w-xs mx-auto">
                   {/* Call Now Button */}
                   <a
                     href="tel:7018702144"
@@ -196,21 +196,22 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     <span>Call Now</span>
                   </a>
 
-                  {/* Schedule a Call Button (Placeholder) */}
-                  <button
-                    onClick={() => alert('Calendar booking feature coming soon!')}
-                    className="w-full flex items-center justify-center space-x-2 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide cursor-not-allowed opacity-75"
-                    disabled
+                  {/* Schedule a Call Button */}
+                  <a
+                    href="https://calendly.com/evan-price-1/haul-n-heavy-quote"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
                   >
                     <Calendar className="w-4 h-4" />
-                    <span>Schedule a Call with our team</span>
-                  </button>
+                    <span>Schedule a Call</span>
+                  </a>
 
                   {/* Send Estimate by Text Button */}
                   <button
                     onClick={handleSendSMS}
                     disabled={isSendingSMS}
-                    className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                    className="w-full flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
                   >
                     {isSendingSMS ? (
                       <>
@@ -220,7 +221,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     ) : (
                       <>
                         <MessageSquare className="w-4 h-4" />
-                        <span>Send Estimate by Text</span>
+                        <span>Text Estimate</span>
                       </>
                     )}
                   </button>
@@ -229,7 +230,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                   <button
                     onClick={handleSendEstimate}
                     disabled={isSendingEmail}
-                    className="w-full flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
+                    className="w-full flex items-center justify-center space-x-2 bg-orange-700 hover:bg-orange-800 disabled:bg-orange-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors uppercase tracking-wide"
                   >
                     {isSendingEmail ? (
                       <>
@@ -239,7 +240,7 @@ export default function EstimateResults({ estimate, estimateData, completeData, 
                     ) : (
                       <>
                         <Mail className="w-4 h-4" />
-                        <span>Send Estimate by Email</span>
+                        <span>Email Estimate</span>
                       </>
                     )}
                   </button>

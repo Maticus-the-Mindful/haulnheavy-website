@@ -1,8 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)",
-      "Bash(git rev-parse:*)"
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: clean up codebase and update category labels\n\n- Remove test API routes (test-geoapify, test-geoapify-direct, test-geoapify-us-filter, test-simple)\n- Remove unused Step2LoadCharacteristics component\n- Clean up console.log statements from EstimatorModal\n- Update category selection labels: \"Heavy Equipment\" and \"Oversized Freight\"\n- Remove non-existent src/pages path from Tailwind config\n- Add oversized freight icon\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: update category icons with new designs\n\n- Add heavy-equipment-icon-01.png for Heavy Equipment category\n- Add oversized-freight-icon-01.png for Oversized Freight category\n- Update Step0CategorySelection to use new icon files\n- Remove old oversized-freight-icon-01.webp\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "WebFetch(domain:www.npmjs.com)"
     ],
     "deny": [],
     "ask": []

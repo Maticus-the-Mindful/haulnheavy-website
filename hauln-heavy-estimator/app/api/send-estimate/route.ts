@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
     // Email to your business (client notification)
     const clientEmail = await resend.emails.send({
       from: 'Hauln Heavy <noreply@maticusmedia360.com>',
-      to: process.env.CLIENT_EMAIL || 'evan.price@priceassetgroup.com',
+      to: process.env.CLIENT_EMAIL || 'sales@haulnheavy.com',
       subject: `New Estimate Request - Email`,
       html: generateClientNotificationEmail(estimateData, senderName, senderEmail, 'email'),
     });
